@@ -354,8 +354,8 @@
 <p>当A的列数大于行数，对于上述的线性方程，可能有多个解。</p>
 <p>当A的行数大于列数，对于上述的线性方程，可能没有解。这时，只能求得近似解了。</p>
 <hr>
-<h3 id="矩阵的迹"><a href="#矩阵的迹" class="headerlink" title="矩阵的迹"></a>矩阵的迹</h3><p>一般来说，矩阵的迹就是矩阵的主对角线对角元素的和。<br>$$<br>Tr(A)=\sum<em>iA</em>{i,j}<br>$$<br>这个可以来解释许多不太好解释、计算的操作。例如，计算Frobenius范数，<br>$$<br>\vert\vert{A}\vert\vert_F=\sqrt{Tr(AA^T)}<br>$$<br>这比把所有元素的平方和计算一遍快得多了。</p>
-<p>迹有许多特性，例如，矩阵的迹等于矩阵的转置的迹<br>$$<br>Tr(A)=Tr(A^\top)<br>$$<br>多个矩阵乘积的迹也可以有一个伪交换律的性质——最后一个可以拿到前面来，不能随便交换<br>$$<br>Tr(ABC)=Tr(CAB)=Tr(BCA)<br>$$<br>Or<br>$$<br>Tr(\prod^n<em>{i=1}F^{(i)})=Tr(F^{(n)}\prod^{n-1}</em>{i=1}F^{(i)})<br>$$<br>方向不能变哦,这个伪交换律无需考虑是否方阵</p>
+<h3 id="矩阵的迹"><a href="#矩阵的迹" class="headerlink" title="矩阵的迹"></a>矩阵的迹</h3><p>一般来说，矩阵的迹就是矩阵的主对角线对角元素的和。<br>$$<br>Tr(A)=\sum_iA_{i,j}<br>$$<br>这个可以来解释许多不太好解释、计算的操作。例如，计算Frobenius范数，<br>$$<br>\vert\vert{A}\vert\vert_F=\sqrt{Tr(AA^T)}<br>$$<br>这比把所有元素的平方和计算一遍快得多了。</p>
+<p>迹有许多特性，例如，矩阵的迹等于矩阵的转置的迹<br>$$<br>Tr(A)=Tr(A^\top)<br>$$<br>多个矩阵乘积的迹也可以有一个伪交换律的性质——最后一个可以拿到前面来，不能随便交换<br>$$<br>Tr(ABC)=Tr(CAB)=Tr(BCA)<br>$$<br>Or<br>$$<br>Tr(\prod^n_{i=1}F^{(i)})=Tr(F^{(n)}\prod^{n-1}_{i=1}F^{(i)})<br>$$<br>方向不能变哦,这个伪交换律无需考虑是否方阵</p>
 <p>标量的迹就是其本身。</p>
 <hr>
 <h3 id="行列式"><a href="#行列式" class="headerlink" title="行列式"></a>行列式</h3><h2 id="待补充"><a href="#待补充" class="headerlink" title="待补充"></a>待补充</h2>
