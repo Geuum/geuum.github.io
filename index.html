@@ -335,8 +335,9 @@
 </blockquote>
 <p>对称矩阵经常用在那种由两个参数构成却和参数顺序无关的函数构成中。</p>
 <p><strong>单位向量</strong>：$L^2$范数为1的向量。<br>$$<br>\vert\vert{\mathbf{x}}\vert\vert_2=1<br>$$<br><strong>正交</strong>：分为向量正交和矩阵正交，两向量正交，意味着<br>$$<br>\mathbf{x}^\top\mathbf{y}=0<br>$$<br>矩阵正交则<br>$$<br>\mathbf{A}^\top\mathbf{A}=\mathbf{A}\mathbf{A}^\top=I<br>$$</p>
-<p>所以有<br>$$<br>\mathbf{A}^{-1}=\mathbf{A}^\top</p>
-<h2 id=""><a href="#" class="headerlink" title="$$"></a>$$</h2><h3 id="矩阵的特征分解"><a href="#矩阵的特征分解" class="headerlink" title="矩阵的特征分解"></a>矩阵的特征分解</h3><p>OK，就像是一个非素数可以成多个素数的乘积一样，矩阵也可以分解，这里学习一种分解方法——特征分解（<em>Eigendecomposition</em>），矩阵就被分解为特征向量和特征值了。</p>
+<p>所以有<br>$$<br>\mathbf{A}^{-1}=\mathbf{A}^\top<br>$$</p>
+<hr>
+<h3 id="矩阵的特征分解"><a href="#矩阵的特征分解" class="headerlink" title="矩阵的特征分解"></a>矩阵的特征分解</h3><p>OK，就像是一个非素数可以成多个素数的乘积一样，矩阵也可以分解，这里学习一种分解方法——特征分解（<em>Eigendecomposition</em>），矩阵就被分解为特征向量和特征值了。</p>
 <p>$$<br>\mathbf{Av}=\mathbf{\lambda v}<br>$$<br>由上面可以知道，最初的定义就是矩阵和其特征向量乘积等于特征值和特征向量的乘积。</p>
 <p>如果特征向量有很多，那么可以组成一个亲友团，不对，应该是亲友矩阵$\mathbf{V}=[\mathbf{v}^{(1)},……,\mathbf{v}^{(n)}]$，而特征值则可以组成亲友向量$\mathbf{\lambda}=[\lambda_1,……,\lambda_n]$,于是原矩阵<strong>A</strong>就能分解为<br>$$<br>A=Vdiag(\lambda)V^{-1}<br>$$</p>
 <p>当然并非所有矩阵都可以有特征向量和特征值啦。首先，对称矩阵一定有。</p>
