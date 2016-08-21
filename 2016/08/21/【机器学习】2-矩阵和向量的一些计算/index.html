@@ -84,19 +84,22 @@
 
 
 
-<meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
+<meta name="description" content="之前复习了一些矩阵的概念，还学习了一些范数的概念，现在是不是信心满满呢？
+特殊的矩阵和向量Diagonal Matrices:对角矩阵，即除了中间i=j的地方，都是0的矩阵。单位矩阵也是对角矩阵。我们用$$diag(\mathbf{v})$$来表示对角矩阵，这里的v是向量，不是矩阵，是将对角矩阵的对角上的值，做成一个向量。
+而一般来说计算和对角矩阵的乘积，只要算这个向量和要乘3的矩阵的点乘就好了$">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://yoursite.com/2016/08/15/hello-world/index.html">
+<meta property="og:title" content="【机器学习】2-矩阵和向量的一些计算">
+<meta property="og:url" content="http://yoursite.com/2016/08/21/【机器学习】2-矩阵和向量的一些计算/index.html">
 <meta property="og:site_name" content="Lvvan的博客">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
-<meta property="og:updated_time" content="2016-08-15T14:24:01.844Z">
+<meta property="og:description" content="之前复习了一些矩阵的概念，还学习了一些范数的概念，现在是不是信心满满呢？
+特殊的矩阵和向量Diagonal Matrices:对角矩阵，即除了中间i=j的地方，都是0的矩阵。单位矩阵也是对角矩阵。我们用$$diag(\mathbf{v})$$来表示对角矩阵，这里的v是向量，不是矩阵，是将对角矩阵的对角上的值，做成一个向量。
+而一般来说计算和对角矩阵的乘积，只要算这个向量和要乘3的矩阵的点乘就好了$">
+<meta property="og:updated_time" content="2016-08-21T13:00:35.495Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
+<meta name="twitter:title" content="【机器学习】2-矩阵和向量的一些计算">
+<meta name="twitter:description" content="之前复习了一些矩阵的概念，还学习了一些范数的概念，现在是不是信心满满呢？
+特殊的矩阵和向量Diagonal Matrices:对角矩阵，即除了中间i=j的地方，都是0的矩阵。单位矩阵也是对角矩阵。我们用$$diag(\mathbf{v})$$来表示对角矩阵，这里的v是向量，不是矩阵，是将对角矩阵的对角上的值，做成一个向量。
+而一般来说计算和对角矩阵的乘积，只要算这个向量和要乘3的矩阵的点乘就好了$">
 
 
 
@@ -117,9 +120,9 @@ Quick">
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/08/15/hello-world/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/08/21/【机器学习】2-矩阵和向量的一些计算/"/>
 
-  <title> Hello World | Lvvan的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title> 【机器学习】2-矩阵和向量的一些计算 | Lvvan的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -255,7 +258,7 @@ Quick">
             
             
               
-                Hello World
+                【机器学习】2-矩阵和向量的一些计算
               
             
           </h1>
@@ -267,8 +270,8 @@ Quick">
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-15T21:50:52+08:00" content="2016-08-15">
-              2016-08-15
+            <time itemprop="dateCreated" datetime="2016-08-21T20:57:26+08:00" content="2016-08-21">
+              2016-08-21
             </time>
           </span>
 
@@ -278,8 +281,8 @@ Quick">
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/08/15/hello-world/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/15/hello-world/" itemprop="commentsCount"></span>
+                <a href="/2016/08/21/【机器学习】2-矩阵和向量的一些计算/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/21/【机器学习】2-矩阵和向量的一些计算/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -302,16 +305,39 @@ Quick">
       
 
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
+        <p>之前复习了一些矩阵的概念，还学习了一些范数的概念，现在是不是信心满满呢？</p>
+<h3 id="特殊的矩阵和向量"><a href="#特殊的矩阵和向量" class="headerlink" title="特殊的矩阵和向量"></a>特殊的矩阵和向量</h3><p><strong>Diagonal Matrices</strong>:对角矩阵，即除了中间i=j的地方，都是0的矩阵。单位矩阵也是对角矩阵。我们用<br>$$<br>diag(\mathbf{v})<br>$$<br>来表示对角矩阵，这里的<strong>v</strong>是<strong>向量</strong>，不是矩阵，是将对角矩阵的对角上的值，做成一个向量。</p>
+<p>而一般来说计算和对角矩阵的乘积，只要算这个向量和要乘3的矩阵的点乘就好了<br>$$<br>diag(\mathbf{v}) \mathbf{x}=\mathbf{v}\odot\mathbf{x}</p>
+<p>$$<br><strong>对称矩阵</strong>：自己和自己的转置相等的矩阵。即<br>$$<br>\mathbf{A}=\mathbf{A}^\top<br>$$</p>
+<blockquote>
+<p>Symmetric matrices often arise when the entries are generated by some function of two arguments that does not depend on the order of the arguments.</p>
+</blockquote>
+<p>对称矩阵经常用在那种由两个参数构成却和参数顺序无关的函数构成中。</p>
+<p><strong>单位向量</strong>：$L^2$范数为1的向量。<br>$$<br>\vert\vert{\mathbf{x}}\vert\vert_2=1<br>$$<br><strong>正交</strong>：分为向量正交和矩阵正交，两向量正交，意味着<br>$$<br>\mathbf{x}^\top\mathbf{y}=0<br>$$<br>矩阵正交则<br>$$<br>\mathbf{A}^\top\mathbf{A}=\mathbf{A}\mathbf{A}^\top=I<br>$$</p>
+<p>所以有<br>$$<br>\mathbf{A}^{-1}=\mathbf{A}^\top</p>
+<h2 id=""><a href="#" class="headerlink" title="$$"></a>$$</h2><h3 id="矩阵的特征分解"><a href="#矩阵的特征分解" class="headerlink" title="矩阵的特征分解"></a>矩阵的特征分解</h3><p>OK，就像是一个非素数可以成多个素数的乘积一样，矩阵也可以分解，这里学习一种分解方法——特征分解（<em>Eigendecomposition</em>），矩阵就被分解为特征向量和特征值了。</p>
+<p>$$<br>\mathbf{Av}=\mathbf{\lambda v}<br>$$<br>由上面可以知道，最初的定义就是矩阵和其特征向量乘积等于特征值和特征向量的乘积。</p>
+<p>如果特征向量有很多，那么可以组成一个亲友团，不对，应该是亲友矩阵$\mathbf{V}=[\mathbf{v}^{(1)},……,\mathbf{v}^{(n)}]$，而特征值则可以组成亲友向量$\mathbf{\lambda}=[\lambda_1,……,\lambda_n]$,于是原矩阵<strong>A</strong>就能分解为<br>$$<br>A=Vdiag(\lambda)V^{-1}<br>$$</p>
+<p>当然并非所有矩阵都可以有特征向量和特征值啦。首先，对称矩阵一定有。</p>
+<p>还有一些矩阵的特征向量和特征值的特性，之后再补充吧！</p>
+<hr>
+<h3 id="奇异值分解"><a href="#奇异值分解" class="headerlink" title="奇异值分解"></a>奇异值分解</h3><p>我们以前就学过矩阵分解为特征值和特征向量，其实矩阵还可以分解为奇异值和奇异向量，这个分解就叫做奇异值分解SVD（<em>Singular Value Decomposition</em>）。<br>$$<br>A=UDV^\top<br>$$</p>
+<p>和特征分解不同，每一个实矩阵都有奇异值分解。假设$A_{m\times n}$是一个矩阵，于是U是一个m×m矩阵，V是一个n×n的矩阵，而D也是一个m×n的矩阵。U和V是正交矩阵，D是对角矩阵。当然D不必是方阵。但是D的对角上的元素都是A矩阵的奇异值。</p>
+<p>U的每一列称之为左奇异向量，V的每一列称之为右奇异向量。</p>
+<p>奇异向量和特征向量是有一定关系的，A的左奇异向量就是$AA^\top$的特征向量；A的右奇异向量就是$A^\top A$的特征向量。A的非零奇异值是$AA^\top$和$A^\top A$的特征值的开方。</p>
+<p>这个分解 主要是为了下面的广义逆矩阵的学习。</p>
+<hr>
+<h3 id="广义逆矩阵"><a href="#广义逆矩阵" class="headerlink" title="广义逆矩阵"></a>广义逆矩阵</h3><p>我们之前的逆矩阵一般都是方阵。<br>一个线性方程组<br>$$<br>Ax=y<br>$$<br>如果A可逆，那么可以变为<br>$$<br>x=A^{-1}y<br>$$<br>如果A是奇异矩阵或者不是方阵的时候，怎么办呢？</p>
+<p>广义逆矩阵的方法允许我们定义A的广义逆为<br>$$<br>A^+=\lim_{\alpha\to0}(A^\top A+\alpha I)^{-1}A^\top<br>$$<br>一般用下面的公式代替。</p>
+<p>$$<br>A^+=VD^+U^\top<br>$$<br>U,D,V是A的奇异值分解的结果。而对角矩阵D的广义逆$D^+$即<strong>把D的非零元素取倒数，然后转置就可得到。</strong></p>
+<p>当A的列数大于行数，对于上述的线性方程，可能有多个解。</p>
+<p>当A的行数大于列数，对于上述的线性方程，可能没有解。这时，只能求得近似解了。</p>
+<hr>
+<h3 id="矩阵的迹"><a href="#矩阵的迹" class="headerlink" title="矩阵的迹"></a>矩阵的迹</h3><p>一般来说，矩阵的迹就是矩阵的主对角线对角元素的和。<br>$$<br>Tr(A)=\sum<em>iA</em>{i,j}<br>$$<br>这个可以来解释许多不太好解释、计算的操作。例如，计算Frobenius范数，<br>$$<br>\vert\vert{A}\vert\vert_F=\sqrt{Tr(AA^T)}<br>$$<br>这比把所有元素的平方和计算一遍快得多了。</p>
+<p>迹有许多特性，例如，矩阵的迹等于矩阵的转置的迹<br>$$<br>Tr(A)=Tr(A^\top)<br>$$<br>多个矩阵乘积的迹也可以有一个伪交换律的性质——最后一个可以拿到前面来，不能随便交换<br>$$<br>Tr(ABC)=Tr(CAB)=Tr(BCA)<br>$$<br>Or<br>$$<br>Tr(\prod^n<em>{i=1}F^{(i)})=Tr(F^{(n)}\prod^{n-1}</em>{i=1}F^{(i)})<br>$$<br>方向不能变哦,这个伪交换律无需考虑是否方阵</p>
+<p>标量的迹就是其本身。</p>
+<hr>
+<h3 id="行列式"><a href="#行列式" class="headerlink" title="行列式"></a>行列式</h3><h2 id="待补充"><a href="#待补充" class="headerlink" title="待补充"></a>待补充</h2>
       
     </div>
 
@@ -341,13 +367,13 @@ Quick">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2016/08/21/【机器学习】1-从线性代数开始/" rel="next" title="【机器学习】1-从线性代数开始">
+                <i class="fa fa-chevron-left"></i> 【机器学习】1-从线性代数开始
+              </a>
+            
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/08/21/【机器学习】1-从线性代数开始/" rel="prev" title="【机器学习】1-从线性代数开始">
-                【机器学习】1-从线性代数开始 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -411,8 +437,8 @@ Quick">
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/08/15/hello-world/"
-           data-title="Hello World" data-url="http://yoursite.com/2016/08/15/hello-world/">
+      <div class="ds-thread" data-thread-key="2016/08/21/【机器学习】2-矩阵和向量的一些计算/"
+           data-title="【机器学习】2-矩阵和向量的一些计算" data-url="http://yoursite.com/2016/08/21/【机器学习】2-矩阵和向量的一些计算/">
       </div>
     
   </div>
@@ -504,7 +530,7 @@ Quick">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#特殊的矩阵和向量"><span class="nav-number">1.</span> <span class="nav-text">特殊的矩阵和向量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#"><span class="nav-number"></span> <span class="nav-text">$$</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#矩阵的特征分解"><span class="nav-number">1.</span> <span class="nav-text">矩阵的特征分解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#奇异值分解"><span class="nav-number">2.</span> <span class="nav-text">奇异值分解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#广义逆矩阵"><span class="nav-number">3.</span> <span class="nav-text">广义逆矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#矩阵的迹"><span class="nav-number">4.</span> <span class="nav-text">矩阵的迹</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#行列式"><span class="nav-number">5.</span> <span class="nav-text">行列式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#待补充"><span class="nav-number"></span> <span class="nav-text">待补充</span></a></div>
             
           </div>
         </section>
