@@ -98,7 +98,7 @@ $\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
 Scalars, Vectors, Matrices and Tensors【标量、向量、矩阵、张量】标量、向量的概念就不多说了关于矩阵的公式在这里列几个吧：
 
 $\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
-<meta property="og:updated_time" content="2016-08-22T02:19:06.079Z">
+<meta property="og:updated_time" content="2016-08-22T02:26:15.639Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【机器学习】1-从线性代数开始">
 <meta name="twitter:description" content="本科时候，已经学过了线性代数，考研的时候也是重点之一，但是时间过去略久，以我的没记性的脑子还是再来复习一下吧！主要是概念上的。
@@ -309,11 +309,11 @@ $\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
 <li>$\mathbf{C}=\mathbf{A}+\mathbf{b}$ where  $ C _{i,j}=a \bullet B _{i,j}+b _j $</li>
 <li>$\mathbf{C}=\mathbf{AB}$ where  $ C _{i,j}=\sum _kA _{i,k}B _{j,k} $</li>
 </ol>
-<p>$$<br>C=AB=\begin{pmatrix} 1 &amp; 2 &amp; 3 \4 &amp; 5 &amp; 6 \end{pmatrix} \begin{pmatrix}1 &amp; 4\ 2&amp;5\ 3&amp;6 \end{pmatrix}=\begin{pmatrix} 1\times1+2\times2+3\times3 &amp; 1\times4+2\times5+3\times6  \4\times1+5\times2+6\times3&amp; 4\times4+5\times5+6\times6 \end{pmatrix}=\begin{pmatrix} 14 &amp; 32 \32 &amp; 77 \end{pmatrix}<br>$$</p>
+<p>$$<br>C=AB=\begin{pmatrix} 1 &amp; 2 &amp; 3 \\4 &amp; 5 &amp; 6 \end{pmatrix} \begin{pmatrix}1 &amp; 4\\ 2&amp;5\\ 3&amp;6 \end{pmatrix}=\begin{pmatrix} 1\times1+2\times2+3\times3 &amp; 1\times4+2\times5+3\times6  \\4\times1+5\times2+6\times3&amp; 4\times4+5\times5+6\times6 \end{pmatrix}=\begin{pmatrix} 14 &amp; 32 \\32 &amp; 77 \end{pmatrix}<br>$$</p>
 <ol>
 <li><strong>Hadamard product:</strong> $\mathbf{A}\bigodot\mathbf{B}$  where  ${A\bigodot B}_{i,j}=a_{i,j}b_{i,j}$ </li>
 </ol>
-<p>$$<br>\begin{pmatrix} 1 &amp; 3 &amp; 2 \1 &amp; 0 &amp; 0\1&amp;2&amp;2 \end{pmatrix}\bigodot \begin{pmatrix}0&amp;0 &amp;2\ 7&amp;5&amp;0\ 2&amp;1&amp;1 \end{pmatrix}=\begin{pmatrix} 1\times0&amp;3\times0&amp;2\times0\ 1\times7&amp;0\times5&amp;0\times0 \1\times3&amp;2\times1&amp;2\times1\end{pmatrix}=\begin{pmatrix} 0 &amp; 0&amp;4 \7 &amp; 0&amp;0\2&amp;2&amp;2 \end{pmatrix}<br>$$</p>
+<p>$$<br>\begin{pmatrix} 1 &amp; 3 &amp; 2 \\1 &amp; 0 &amp; 0\\1&amp;2&amp;2 \end{pmatrix}\bigodot \begin{pmatrix}0&amp;0 &amp;2\\ 7&amp;5&amp;0\\ 2&amp;1&amp;1 \end{pmatrix}=\begin{pmatrix} 1\times0&amp;3\times0&amp;2\times0\\ 1\times7&amp;0\times5&amp;0\times0 \\1\times3&amp;2\times1&amp;2\times1\end{pmatrix}=\begin{pmatrix} 0 &amp; 0&amp;4 \\7 &amp; 0&amp;0\\2&amp;2&amp;2 \end{pmatrix}<br>$$</p>
 <ol>
 <li>部分乘法公式：</li>
 </ol>
