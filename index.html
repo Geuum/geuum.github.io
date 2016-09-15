@@ -279,6 +279,191 @@
             
               
                 
+                <a class="post-title-link" href="/2016/09/15/【python机器学习】多层感知器与BP模型/" itemprop="url">
+                  【python机器学习】多层感知器与BP模型
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-15T21:57:54+08:00" content="2016-09-15">
+              2016-09-15
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/15/【python机器学习】多层感知器与BP模型/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/15/【python机器学习】多层感知器与BP模型/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本文的关键词有两个</p>
+<ul>
+<li>多层感知器（<em>Multilayer Perceptron</em>）</li>
+<li>BP算法（<em>Back propagation algorithm</em>） </li>
+</ul>
+<p>首先，还是要提一下回归模型，回归模型中，我们通过输入输出训练出一个线性或非线性的回归模型，用回归模型来预测新输入的输出值。通过这种方法来创建分类器。逻辑回归模型是一种单层感知器。</p>
+<p>BP算法在回归模型上加入了一个隐层的概念，也有人称之为中间层。叫是这样叫的，但是其实BP算法是一个多层LR嵌套的模型。根据<a href="http://www.zhihu.com/question/27823925" target="_blank" rel="external">知乎说法</a>，输入层和中间那些隐层，可以把它们看成一种特征提取的过程，就是把 Logistic Regression 的输出当作特征，然后再将它送入下一个 Logistic Regression，一层层变换。神经网络的训练，实际上就是同时训练特征提取算法以及最后的 Logistic Regression的参数。</p>
+<p>于是BP算法就被叫做多层感知器了。它的拟合能力很强，可以处理很多 Logistic Regression处理不了的数据，但是也更容易过拟合。而且损失函数不是凸的，给优化带来一些困难。</p>
+<h1 id="感知器和LMS算法"><a href="#感知器和LMS算法" class="headerlink" title="感知器和LMS算法"></a>感知器和LMS算法</h1><p>说了这么长时间的感知器，那么什么是感知器？</p>
+<blockquote>
+<p>在神经网络中，对外部环境提供的模式样本进行学习训练，并能存储这种模式，则称为感知器；对外部环境有适应能力，能自动提取外部环境变化特征，则称为认知器。</p>
+</blockquote>
+<p>意思就是说感知器是蠢材，要别人教他，他才会做。认知器是天才，生下来就会做。</p>
+<p>感知器在斯坦福的中有一个LMS（<em>Least mean squares</em>）算法，实际上就是一种Logistic Regression的一种，作为单层感知器的。其实际上是基于LMS的梯度下降法。</p>
+<p><img src="http://images.cnitblog.com/blog/533521/201306/03233254-3176ade5771e42988b03c18fc7c1d331.png" alt="image"></p>
+<p>$x_1,x_2$都是变量，通过参数$\theta_0,\theta_1,\theta_2$确定得到的结果。</p>
+<p>公式表达：</p>
+<p>$$<br>h_{\theta}=\theta^{\top}=\theta_0+\theta_1x_1+\theta_2x_2<br>$$</p>
+<p>我们定义损失函数$J(\theta)$是这样一个二乘的形式</p>
+<p>$$<br>J(\theta)=\frac{1}{2}\sum^m_{i=1}(h_{\theta}(x^{(i)})-y^{(i)})^2<br>$$</p>
+<p>类似前面的LR，我们要求$J(\theta)$最小时的$\theta$，这里我们使用了梯度下降法。</p>
+<p>首先我们需要猜一下一个初始的$\theta$，然后通过寻找局部梯度下降最快的时候来更新$\theta$，从而进一步梯度下降，直到降到不能继续降低为止。$\theta$更新的公式如下</p>
+<p>$$<br>\theta_j:=\theta_j-\alpha\frac{\partial}{\partial\theta_j}J(\theta)<br>$$</p>
+<p>其中$\alpha$是学习率，$\frac{\partial}{\partial\theta_j}J(\theta)$计算得到</p>
+<p>$$<br>\frac{\partial}{\partial\theta_j}J(\theta)=(h_{\theta}(x)-y)x_j<br>$$</p>
+<p>所以最后我们只要对结果不断更新参数，直到一定条件，即可得到此时的$h_{\theta}(x)$。</p>
+<h1 id="MLP的python实现"><a href="#MLP的python实现" class="headerlink" title="MLP的python实现"></a>MLP的python实现</h1><p>BP算法在Logistic Regression算法中加入了隐层，这个中间层要求是非线性的一个function，一般使用<em>tanh</em>函数$tanh(a)=\frac{e^a-e^{-a}}{e^a+e^{-a}}$，或者<em>sigmoid</em>函数，$sigmoid(a)=\frac{1}{1+e^{-a}}$。</p>
+<p>MLP模型如下</p>
+<p><img src="http://deeplearning.net/tutorial/_images/mlp.png" alt="image"></p>
+<p>假设x为输入向量，$f(x)$是输出向量，有</p>
+<p>$$<br>f(x)=G(b^{(2)}+W^{(2)}(s(b^{(1)}+W^{(1)}x)))<br>$$</p>
+<p>对于这个式子可以拆解开来，首先另$h(x)=\phi(x)=s(b^{(1)}+W^{(1)}x)$，这代表了从input layer到hidden layer的运算，而其中的$W^{(1)}x)$和$b^{(1)}$代表这一过程的权重矩阵和偏置向量，$W^{(1)}x)$的每一列都代表了从输入向量x到达每一个神经元的权重。</p>
+<p>这里的s就是我们需要的从input layer到hidden layer的预处理的过程，我们使用<em>tanh</em>函数。我们直到tanh函数的值从-1到1之间的s型变化。</p>
+<p>于是上式变为</p>
+<p>$$<br>f(x)=G(b^{(2)}+W^{(2)}h(x))<br>$$</p>
+<p>这个形式和我们之前的Logistic Regression十分类似，之前有<br>$$<br>P(Y=i|x,W,b)=softmax_i(Wx+b)<br>$$</p>
+<p>所以我们这里也选择G函数为softmax函数，关于softmax回归，standord有一个专门的<a href="http://deeplearning.stanford.edu/wiki/index.php/Softmax%E5%9B%9E%E5%BD%92" target="_blank" rel="external">讲解</a>，对于初学者只要了解softmax的功能是logistic的拓展，logistic是二标签分类，输出值0或1；softmax是多标签分类，输出值0-1之间，可以看成是属于某个标签的概率。一般是两级分化的。</p>
+<p>我们在这里求参数使用MSGD方法，和之前的LR用同样的方法。不过LR求的参数是$\theta={W,b}$，而MLP是$\theta={W^{(2)},b^{(2)},W^{(1)},b^{(1)}}$。</p>
+<p>BP算法我们在求梯度的时候是链式求偏导。不过在python这些都是集成好的。</p>
+<h2 id="定义隐层class"><a href="#定义隐层class" class="headerlink" title="定义隐层class"></a>定义隐层class</h2><p>类似LR中的定义LRClass，首先要进行初始化，其初始化注意几个参数</p>
+<ul>
+<li>rng：numpy方法，用来生成一个随机数来初始化权重矩阵</li>
+<li>n_in：输入矩阵的维度</li>
+<li>n_out：隐层的神经元个数</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">HiddenLayer</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, rng, input, n_in, n_out, W=None, b=None,</span></span></div><div class="line">                 activation=T.tanh):</div><div class="line">        self.input = input</div><div class="line">        </div><div class="line">        <span class="comment"># 若W为空，则用rng对其初始化</span></div><div class="line">        <span class="keyword">if</span> W <span class="keyword">is</span> <span class="keyword">None</span>:</div><div class="line">            W_values = numpy.asarray(</div><div class="line">                rng.uniform(</div><div class="line">                    low=-numpy.sqrt(<span class="number">6.</span> / (n_in + n_out)),</div><div class="line">                    high=numpy.sqrt(<span class="number">6.</span> / (n_in + n_out)),</div><div class="line">                    size=(n_in, n_out)</div><div class="line">                ),</div><div class="line">                dtype=theano.config.floatX</div><div class="line">            )</div><div class="line">            <span class="keyword">if</span> activation == theano.tensor.nnet.sigmoid:</div><div class="line">                W_values *= <span class="number">4</span></div><div class="line"></div><div class="line">            W = theano.shared(value=W_values, name=<span class="string">'W'</span>, borrow=<span class="keyword">True</span>)</div><div class="line"></div><div class="line">        <span class="comment"># 若b为空，创建一个隐层神经元个数的0向量（数组）</span></div><div class="line">        <span class="keyword">if</span> b <span class="keyword">is</span> <span class="keyword">None</span>:</div><div class="line">            b_values = numpy.zeros((n_out,), dtype=theano.config.floatX)</div><div class="line">            b = theano.shared(value=b_values, name=<span class="string">'b'</span>, borrow=<span class="keyword">True</span>)</div><div class="line"></div><div class="line">        self.W = W</div><div class="line">        self.b = b</div><div class="line">        </div><div class="line">        lin_output = T.dot(input, self.W) + self.b</div><div class="line">        self.output = (</div><div class="line">            lin_output <span class="keyword">if</span> activation <span class="keyword">is</span> <span class="keyword">None</span></div><div class="line">            <span class="keyword">else</span> activation(lin_output)</div><div class="line">        )</div></pre></td></tr></table></figure>
+<p>我们知道隐层HiddenLayer是模拟$h(x)=\phi(x)=s(b^{(1)}+W^{(1)}x)$，而梯度下降的前提需要有一个初值。我们用numpy产生随机数模块的uniform生成一个<code>n_in×n_out</code>大小的随机矩阵，其所有的元素都在$[-\sqrt{\frac{6}{n_in+n_out}},\sqrt{\frac{6}{n_in+n_out}}]$之间。若b为空，则生成一个<code>n_out</code>大小的0向量。</p>
+<p>完成了这些，实际上你只要把HiddenLayer的输出放入之前的LogisticRegression的输入，就成了MLP。但我们还是要定义一下MLP Class。</p>
+<h2 id="定义MLP-Class"><a href="#定义MLP-Class" class="headerlink" title="定义MLP Class"></a>定义MLP Class</h2><p>MLP Class共定义了两个部分</p>
+<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MLP</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, rng, input, n_in, n_hidden, n_out)</span>:</span></div><div class="line">        self.hiddenLayer = HiddenLayer(</div><div class="line">            rng=rng,</div><div class="line">            input=input,</div><div class="line">            n_in=n_in,</div><div class="line">            n_out=n_hidden,</div><div class="line">            activation=T.tanh</div><div class="line">        )</div><div class="line"></div><div class="line">        self.logRegressionLayer = LogisticRegression(</div><div class="line">            input=self.hiddenLayer.output,</div><div class="line">            n_in=n_hidden,</div><div class="line">            n_out=n_out</div><div class="line">        )</div><div class="line">        </div><div class="line">        self.L1 = (</div><div class="line">            abs(self.hiddenLayer.W).sum()</div><div class="line">            + abs(self.logRegressionLayer.W).sum()</div><div class="line">        )</div><div class="line"></div><div class="line">        self.L2_sqr = (</div><div class="line">            (self.hiddenLayer.W ** <span class="number">2</span>).sum()</div><div class="line">            + (self.logRegressionLayer.W ** <span class="number">2</span>).sum()</div><div class="line">        )</div><div class="line"></div><div class="line">        self.negative_log_likelihood = (</div><div class="line">            self.logRegressionLayer.negative_log_likelihood</div><div class="line">        )</div><div class="line"></div><div class="line">        self.errors = self.logRegressionLayer.errors</div><div class="line"></div><div class="line">        self.params = self.hiddenLayer.params + self.logRegressionLayer.params</div><div class="line">        </div><div class="line">        self.input = input</div></pre></td></tr></table></figure>
+<p>初始化中的参数</p>
+<ul>
+<li>n_in：input layer中神经元个数（或输入参数个数）</li>
+<li>n_hidden：参数表示的是隐层的神经元数目</li>
+<li>n_out：输出层中神经元个数，也表示标签空间维度</li>
+</ul>
+<p>首先调用了HiddenLayer和LogisticRegression两个模块。</p>
+<p>接着，定义了$L_1$范数和$L_2$范数开方,其余都和LogisticRegression的方法差不多，注意param（$\theta$）是以前的两倍长度，因为多了一层。</p>
+<h3 id="MLP测试"><a href="#MLP测试" class="headerlink" title="MLP测试"></a>MLP测试</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_mlp</span><span class="params">(learning_rate=<span class="number">0.01</span>, L1_reg=<span class="number">0.00</span>, L2_reg=<span class="number">0.0001</span>, n_epochs=<span class="number">1000</span>,</span></span></div><div class="line">             dataset=<span class="string">'mnist.pkl.gz'</span>, batch_size=<span class="number">20</span>, n_hidden=<span class="number">500</span>):</div><div class="line">    </div><div class="line">    datasets = load_data(dataset)</div><div class="line"></div><div class="line">    train_set_x, train_set_y = datasets[<span class="number">0</span>]</div><div class="line">    valid_set_x, valid_set_y = datasets[<span class="number">1</span>]</div><div class="line">    test_set_x, test_set_y = datasets[<span class="number">2</span>]</div><div class="line"></div><div class="line">    n_train_batches = train_set_x.get_value(borrow=<span class="keyword">True</span>).shape[<span class="number">0</span>] // batch_size</div><div class="line">    n_valid_batches = valid_set_x.get_value(borrow=<span class="keyword">True</span>).shape[<span class="number">0</span>] // batch_size</div><div class="line">    n_test_batches = test_set_x.get_value(borrow=<span class="keyword">True</span>).shape[<span class="number">0</span>] // batch_size</div><div class="line"></div><div class="line">    print(<span class="string">'... building the model'</span>)</div><div class="line"></div><div class="line">    index = T.lscalar()  <span class="comment"># index to a [mini]batch</span></div><div class="line">    x = T.matrix(<span class="string">'x'</span>)  <span class="comment"># the data is presented as rasterized images</span></div><div class="line">    y = T.ivector(<span class="string">'y'</span>)  <span class="comment"># the labels are presented as 1D vector of</span></div><div class="line">                        <span class="comment"># [int] labels</span></div><div class="line"></div><div class="line">    rng = numpy.random.RandomState(<span class="number">1234</span>)</div><div class="line"></div><div class="line">    classifier = MLP(</div><div class="line">        rng=rng,</div><div class="line">        input=x,</div><div class="line">        n_in=<span class="number">28</span> * <span class="number">28</span>,</div><div class="line">        n_hidden=n_hidden,</div><div class="line">        n_out=<span class="number">10</span></div><div class="line">    )</div><div class="line"></div><div class="line">    cost = (</div><div class="line">        classifier.negative_log_likelihood(y)</div><div class="line">        + L1_reg * classifier.L1</div><div class="line">        + L2_reg * classifier.L2_sqr</div><div class="line">    )</div><div class="line"></div><div class="line">    test_model = theano.function(</div><div class="line">        inputs=[index],</div><div class="line">        outputs=classifier.errors(y),</div><div class="line">        givens=&#123;</div><div class="line">            x: test_set_x[index * batch_size:(index + <span class="number">1</span>) * batch_size],</div><div class="line">            y: test_set_y[index * batch_size:(index + <span class="number">1</span>) * batch_size]</div><div class="line">        &#125;</div><div class="line">    )</div><div class="line"></div><div class="line">    validate_model = theano.function(</div><div class="line">        inputs=[index],</div><div class="line">        outputs=classifier.errors(y),</div><div class="line">        givens=&#123;</div><div class="line">            x: valid_set_x[index * batch_size:(index + <span class="number">1</span>) * batch_size],</div><div class="line">            y: valid_set_y[index * batch_size:(index + <span class="number">1</span>) * batch_size]</div><div class="line">        &#125;</div><div class="line">    )</div><div class="line"></div><div class="line">    gparams = [T.grad(cost, param) <span class="keyword">for</span> param <span class="keyword">in</span> classifier.params]</div><div class="line"></div><div class="line">    updates = [</div><div class="line">        (param, param - learning_rate * gparam)</div><div class="line">        <span class="keyword">for</span> param, gparam <span class="keyword">in</span> zip(classifier.params, gparams)</div><div class="line">    ]</div><div class="line"></div><div class="line">    train_model = theano.function(</div><div class="line">        inputs=[index],</div><div class="line">        outputs=cost,</div><div class="line">        updates=updates,</div><div class="line">        givens=&#123;</div><div class="line">            x: train_set_x[index * batch_size: (index + <span class="number">1</span>) * batch_size],</div><div class="line">            y: train_set_y[index * batch_size: (index + <span class="number">1</span>) * batch_size]</div><div class="line">        &#125;</div><div class="line">    )</div><div class="line">    </div><div class="line">    print(<span class="string">'... training'</span>)</div><div class="line"></div><div class="line">    patience = <span class="number">10000</span>  <span class="comment"># look as this many examples regardless</span></div><div class="line">    patience_increase = <span class="number">2</span>  <span class="comment"># wait this much longer when a new best is</span></div><div class="line">                           <span class="comment"># found</span></div><div class="line">    improvement_threshold = <span class="number">0.995</span>  <span class="comment"># a relative improvement of this much is</span></div><div class="line">                                   <span class="comment"># considered significant</span></div><div class="line">    validation_frequency = min(n_train_batches, patience // <span class="number">2</span>)</div><div class="line">                                  <span class="comment"># go through this many</span></div><div class="line">                                  <span class="comment"># minibatche before checking the network</span></div><div class="line">                                  <span class="comment"># on the validation set; in this case we</span></div><div class="line">                                  <span class="comment"># check every epoch</span></div><div class="line"></div><div class="line">    best_validation_loss = numpy.inf</div><div class="line">    best_iter = <span class="number">0</span></div><div class="line">    test_score = <span class="number">0.</span></div><div class="line">    start_time = timeit.default_timer()</div><div class="line"></div><div class="line">    epoch = <span class="number">0</span></div><div class="line">    done_looping = <span class="keyword">False</span></div><div class="line"></div><div class="line">    <span class="keyword">while</span> (epoch &lt; n_epochs) <span class="keyword">and</span> (<span class="keyword">not</span> done_looping):</div><div class="line">        epoch = epoch + <span class="number">1</span></div><div class="line">        <span class="keyword">for</span> minibatch_index <span class="keyword">in</span> range(n_train_batches):</div><div class="line"></div><div class="line">            minibatch_avg_cost = train_model(minibatch_index)</div><div class="line">            <span class="comment"># iteration number</span></div><div class="line">            iter = (epoch - <span class="number">1</span>) * n_train_batches + minibatch_index</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (iter + <span class="number">1</span>) % validation_frequency == <span class="number">0</span>:</div><div class="line">                <span class="comment"># compute zero-one loss on validation set</span></div><div class="line">                validation_losses = [validate_model(i) <span class="keyword">for</span> i</div><div class="line">                                     <span class="keyword">in</span> range(n_valid_batches)]</div><div class="line">                this_validation_loss = numpy.mean(validation_losses)</div><div class="line"></div><div class="line">                print(</div><div class="line">                    <span class="string">'epoch %i, minibatch %i/%i, validation error %f %%'</span> %</div><div class="line">                    (</div><div class="line">                        epoch,</div><div class="line">                        minibatch_index + <span class="number">1</span>,</div><div class="line">                        n_train_batches,</div><div class="line">                        this_validation_loss * <span class="number">100.</span></div><div class="line">                    )</div><div class="line">                )</div><div class="line"></div><div class="line">                <span class="comment"># if we got the best validation score until now</span></div><div class="line">                <span class="keyword">if</span> this_validation_loss &lt; best_validation_loss:</div><div class="line">                    <span class="comment">#improve patience if loss improvement is good enough</span></div><div class="line">                    <span class="keyword">if</span> (</div><div class="line">                        this_validation_loss &lt; best_validation_loss *</div><div class="line">                        improvement_threshold</div><div class="line">                    ):</div><div class="line">                        patience = max(patience, iter * patience_increase)</div><div class="line"></div><div class="line">                    best_validation_loss = this_validation_loss</div><div class="line">                    best_iter = iter</div><div class="line"></div><div class="line">                    <span class="comment"># test it on the test set</span></div><div class="line">                    test_losses = [test_model(i) <span class="keyword">for</span> i</div><div class="line">                                   <span class="keyword">in</span> range(n_test_batches)]</div><div class="line">                    test_score = numpy.mean(test_losses)</div><div class="line"></div><div class="line">                    print((<span class="string">'     epoch %i, minibatch %i/%i, test error of '</span></div><div class="line">                           <span class="string">'best model %f %%'</span>) %</div><div class="line">                          (epoch, minibatch_index + <span class="number">1</span>, n_train_batches,</div><div class="line">                           test_score * <span class="number">100.</span>))</div><div class="line"></div><div class="line">            <span class="keyword">if</span> patience &lt;= iter:</div><div class="line">                done_looping = <span class="keyword">True</span></div><div class="line">                <span class="keyword">break</span></div><div class="line"></div><div class="line">    end_time = timeit.default_timer()</div><div class="line">    print((<span class="string">'Optimization complete. Best validation score of %f %% '</span></div><div class="line">           <span class="string">'obtained at iteration %i, with test performance %f %%'</span>) %</div><div class="line">          (best_validation_loss * <span class="number">100.</span>, best_iter + <span class="number">1</span>, test_score * <span class="number">100.</span>))</div><div class="line">    print((<span class="string">'The code for file '</span> +</div><div class="line">           os.path.split(__file__)[<span class="number">1</span>] +</div><div class="line">           <span class="string">' ran for %.2fm'</span> % ((end_time - start_time) / <span class="number">60.</span>)), file=sys.stderr)</div></pre></td></tr></table></figure>
+<p>MLP测试的函数test_mlp，初始函数输入包括如下几个</p>
+<ul>
+<li>learning_rate=0.01：学习率</li>
+<li>L1_reg=0.00：损失函数中$L_1$范数的权重</li>
+<li>L2_reg=0.0001：损失函数中$L_2$范数的权重</li>
+<li>n_epochs=1000：优化的最大计算次数</li>
+<li>dataset=’mnist.pkl.gz’：MINIST数据集</li>
+<li>batch_size=20：每个batch的大小</li>
+<li>n_hidden=500：隐层神经元个数</li>
+</ul>
+<p>接下来加载数据集和LR中的是一样的。</p>
+<p>注意rng随机数的产生方式：<code>rng = numpy.random.RandomState(1234)</code>。</p>
+<p>分类器classifier定义为MLP类，输入为28*28的图像，输出是10个y。</p>
+<p>其参数更新是</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">gparams = [T.grad(cost, param) <span class="keyword">for</span> param <span class="keyword">in</span> classifier.params]</div><div class="line">updates = [</div><div class="line">    (param, param - learning_rate * gparam)</div><div class="line">    <span class="keyword">for</span> param, gparam <span class="keyword">in</span> zip(classifier.params, gparams)</div><div class="line">]</div></pre></td></tr></table></figure>
+<p>还记得LMS里面的更新公式$\theta_j:=\theta_j-\alpha\frac{\partial}{\partial\theta_j}J(\theta)$，最终想要表达的就是这个意思。</p>
+<p>接下来，进行训练，代码根据机器不同，运行时间不一，本人机器较差，每运行一个batch约要15min，大约共需要要十几个小时。</p>
+<p>引用教程中的运行结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Optimization complete. Best validation score of 1.690000 % obtained at iteration 2070000, with test performance 1.650000 %</div><div class="line">The code for file mlp.py ran for 97.34m</div></pre></td></tr></table></figure>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>使用上面的代码，说实话很难求出最后的超参，找到一个最优的参数不太行得通。有些参数是离散值，有些确实实数。还有这个优化问题是非凸的，这给计算带来了很大困难。但是科学家还是找到了很多解决之道。</p>
+<hr>
+<p><strong>参考</strong></p>
+<ol>
+<li>庞晶, 乔洪宾. 神经网络BP算法与回归分析算法进行统计预测的比较研究[J]. 内蒙古工业大学学报:社会科学版, 1998(1):83-88.</li>
+<li>Standford ML Lecture，<a href="http://cs229.stanford.edu/notes/cs229-notes1.pdf" target="_blank" rel="external">cs229-notes1</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/09/14/【python机器学习】用逻辑回归分析来分类MINIST数据集/" itemprop="url">
                   【python机器学习】用逻辑回归分析来分类MINIST数据集
                 </a>
@@ -930,7 +1115,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-count">5</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
