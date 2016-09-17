@@ -1,0 +1,828 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python,机器学习," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="说到CNN，还是要提一下BP算法。
+BP算法在本来的MLPs的基础上，后向展开损失函数，然后对包含了所有参数的损失函数$J(\theta)$求偏导，来使得$J(\theta)$尽可能小。通过极小化误差反向传播调整权值矩阵，不断循环直到最佳。
+问题是，当所给输入足够大的时候，求取那么多参数对计算机是很大负担，也不是很现实，比如输入如果是一张128×128的图片进行训练，那么训练十几个小时也不是不可能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【python机器学习】Convolutional Neural Networks卷积神经网络和LeNet">
+<meta property="og:url" content="http://lvvan.top/2016/09/17/【python机器学习】Convolutional-Neural-Networks卷积神经网络和LeNet/index.html">
+<meta property="og:site_name" content="Lvvan的博客">
+<meta property="og:description" content="说到CNN，还是要提一下BP算法。
+BP算法在本来的MLPs的基础上，后向展开损失函数，然后对包含了所有参数的损失函数$J(\theta)$求偏导，来使得$J(\theta)$尽可能小。通过极小化误差反向传播调整权值矩阵，不断循环直到最佳。
+问题是，当所给输入足够大的时候，求取那么多参数对计算机是很大负担，也不是很现实，比如输入如果是一张128×128的图片进行训练，那么训练十几个小时也不是不可能">
+<meta property="og:image" content="http://www.36dsj.com/wp-content/uploads/2015/03/115.png">
+<meta property="og:image" content="http://www.36dsj.com/wp-content/uploads/2015/03/34.png">
+<meta property="og:image" content="http://deeplearning.net/tutorial/_images/sparse_1D_nn.png">
+<meta property="og:image" content="http://www.36dsj.com/wp-content/uploads/2015/03/511-600x224.jpg">
+<meta property="og:image" content="http://deeplearning.net/tutorial/_images/conv_1D_nn.png">
+<meta property="og:image" content="http://deeplearning.net/tutorial/_images/cnn_explained.png">
+<meta property="og:image" content="http://img1.ph.126.net/7ozUm-0Z28ZcNIfXL8X6zw==/6631701084398814898.png">
+<meta property="og:image" content="http://deeplearning.net/tutorial/_images/mylenet.png">
+<meta property="og:image" content="http://img2.ph.126.net/91RStDgcpkATuDkX1q5QKQ==/6631565844468601421.jpg">
+<meta property="og:updated_time" content="2016-09-17T01:37:19.365Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【python机器学习】Convolutional Neural Networks卷积神经网络和LeNet">
+<meta name="twitter:description" content="说到CNN，还是要提一下BP算法。
+BP算法在本来的MLPs的基础上，后向展开损失函数，然后对包含了所有参数的损失函数$J(\theta)$求偏导，来使得$J(\theta)$尽可能小。通过极小化误差反向传播调整权值矩阵，不断循环直到最佳。
+问题是，当所给输入足够大的时候，求取那么多参数对计算机是很大负担，也不是很现实，比如输入如果是一张128×128的图片进行训练，那么训练十几个小时也不是不可能">
+<meta name="twitter:image" content="http://www.36dsj.com/wp-content/uploads/2015/03/115.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://lvvan.top/2016/09/17/【python机器学习】Convolutional-Neural-Networks卷积神经网络和LeNet/"/>
+
+  <title> 【python机器学习】Convolutional Neural Networks卷积神经网络和LeNet | Lvvan的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lvvan的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">夜合花开香满庭，夜深微雨醉初醒</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                【python机器学习】Convolutional Neural Networks卷积神经网络和LeNet
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-17T09:32:20+08:00" content="2016-09-17">
+              2016-09-17
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/17/【python机器学习】Convolutional-Neural-Networks卷积神经网络和LeNet/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/17/【python机器学习】Convolutional-Neural-Networks卷积神经网络和LeNet/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv"><i class="fa fa-file-o"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>说到CNN，还是要提一下BP算法。</p>
+<p>BP算法在本来的MLPs的基础上，后向展开损失函数，然后对包含了所有参数的损失函数$J(\theta)$求偏导，来使得$J(\theta)$尽可能小。通过极小化误差反向传播调整权值矩阵，不断循环直到最佳。</p>
+<p>问题是，当所给输入足够大的时候，求取那么多参数对计算机是很大负担，也不是很现实，比如输入如果是一张128×128的图片进行训练，那么训练十几个小时也不是不可能。</p>
+<p>在六七十年代，机器学习的低谷时期，Hubel和Wiesel等人在研究猫脑皮层中用于局部敏感和方向选择的神经元时，发现其独特的网络结构可以有效地降低反馈神经网络的复杂性，继而提出了卷积神经网络（Convolutional Neural Networks-简称CNN）。</p>
+<p>在那之后，CNN却没有获得足够的重视，直到1980年K.Fukushima年提出的新识别机(<em>neocognitron</em>)是卷积神经网络的第一个实现网络。随后，CNN不断发展，到目前为止，CNN已经成为众多科学领域的研究热点之一，特别是在模式分类领域，由于该网络避免了对图像的复杂前期预处理，可以直接输入原始图像，因而得到了更为广泛的应用。</p>
+<p>一般地，CNN的基本结构包括两层</p>
+<ul>
+<li>其一为特征提取层，每个神经元的输入与前一层的局部接受域相连，并提取该局部的特征。一旦该局部特征被提取后，它与其它特征间的位置关系也随之确定下来</li>
+<li>其二是特征映射层，网络的每个计算层由多个特征映射组成，每个特征映射是一个平面，平面上所有神经元的权值相等。</li>
+</ul>
+<p>特征映射结构采用影响函数核小的sigmoid函数作为卷积网络的激活函数，使得特征映射具有位移不变性。此外，由于一个映射面上的神经元共享权值，因而减少了网络自由参数的个数。卷积神经网络中的每一个卷积层都紧跟着一个用来求局部平均与二次提取的计算层，这种特有的两次特征提取结构减小了特征分辨率。</p>
+<h1 id="神经网络"><a href="#神经网络" class="headerlink" title="神经网络"></a>神经网络</h1><p>我们之前已经学习了LR模型，MLP模型，实际上在一定意义上已经构成了神经网络。</p>
+<p>神经网络每个神经元结构都是一个LR</p>
+<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/115.png" alt="image"></p>
+<p>然后，在input layer和output layer中间插入hidden layer就变成了MLPs模型，hidden layer越多，训练越精确。</p>
+<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/34.png" alt="image"></p>
+<p>在训练过程中，使用BP算法反向求取各个参数。</p>
+<h1 id="卷积神经网络CNN"><a href="#卷积神经网络CNN" class="headerlink" title="卷积神经网络CNN"></a>卷积神经网络CNN</h1><h2 id="稀疏连通"><a href="#稀疏连通" class="headerlink" title="稀疏连通"></a>稀疏连通</h2><p>首先再看一下之前的MLPs模型，从input layer到hidden layer，每一个输入都和隐层的每一个神经元相连接，这个代价是参数太多。</p>
+<p>CNN把全连通变成了稀疏连通，可以看下图的结构。</p>
+<p><img src="http://deeplearning.net/tutorial/_images/sparse_1D_nn.png" alt="image"></p>
+<p>看这个图，图中，从下往上是信息传递的过程。</p>
+<p>从低层向高层的连接，最多是3连通。假如m-1层是输入，m+1层是输出。那么隐层每个神经元只能收到3个input的信息，但是最终的output却仍然可以收到全部的5个输入信息。</p>
+<p>所以，在其中间层的每一个单元，只能反应其连通的区域变化，只要管好自己的一亩三分地就好了。</p>
+<p>这也叫局部感知。它的道理就是，我们看东西都是从局部到整体的，你一下子看一整个图显然比较吃力，但是我们一部分一部分看，就容易多了。而只考虑部分也使得对局部的掌握更加准确。</p>
+<p>局部感知最大的好处就是减少了参数，像是我们之前的图中，假如每一条都是一个参数的话，从input layer到hidden layer需要9个参数，而如果是全连通的方式的话，需要3×5=15个参数。</p>
+<p>而网络上有一个更明显的说明图</p>
+<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/511-600x224.jpg" alt="image"></p>
+<p>假设有一张1000*1000的图像作为input layer，假设有1000000个隐层神经元。左边是全连通的方式，需要多少参数呢？答案很简单：$1000\times1000\times1000000=10^{12}$个参数。而假如把这1000000个神经元平铺开来，每人管一块$10\times10$区域，那么只需要$100\times1000000=10^{8}$个参数。这个道理就像是我有许多人才，全放在中央没那么多岗位，让每个人都管全国，严重资源浪费，效率还不高。不如把这些人都派到各个县市，做个地方官，然后各自治理，然后把结果汇报中央就好了，省了不少事情。</p>
+<h2 id="共享权值"><a href="#共享权值" class="headerlink" title="共享权值"></a>共享权值</h2><p>把隐层神经元分配下去之后，还觉得参数太多，怎么办？</p>
+<p>有一个办法，那就让每个神经元连接的参数都相同。那么1000000个神经元也还是只要$10\times10=100$个参数。但是这样也是有弊端的，只能监测某一个特性。那么怎么办呢？那就多给你几个参数组呗，你们每个神经元对每个参数组都来一遍。这样就全面了吧！实际上，就相当于那么多人都到地方去任职了，中央要求所有地方管理要全部按照一定规矩，然后计生要全部按计生的规矩，民政要按民政的规矩等等，反正全国统一，又面面俱到。</p>
+<p><img src="http://deeplearning.net/tutorial/_images/conv_1D_nn.png" alt="image"></p>
+<p>如图所示，同一个颜色的线代表这同一个参数，这里计算参数梯度只要求各个梯度然后求取平均值即可。</p>
+<h2 id="特征映射（Feature-Map）"><a href="#特征映射（Feature-Map）" class="headerlink" title="特征映射（Feature Map）"></a>特征映射（<em>Feature Map</em>）</h2><p>二维空间上的局部接受域使得神经网络可以从输入图像中提取初级视觉特征，如特定角度的边缘，端点和拐角等。</p>
+<p>权值共享迫使那些共享同一组权值的神经元在输入的不同位置检测同一种特征。卷积神经网络把每层共享相同权值的神经元组织成一个二维平面，称为特征映射(Feature Map)</p>
+<p>一个feature map里面的所有神经元的输入都可以有同样的表达方式，因为他们的参数相同。</p>
+<p>假如第k个feature map表示为$h^k$，其权重矩阵为$W^k$，偏置向量为$b_k$。我们使用tanh作为非线性激活函数。那么</p>
+<p>$$<br>h^k_{ij}=tanh((W^k*x)_{ij}+b_k)<br>$$</p>
+<p>我们知道每一个隐层都是由多个feature map构成。</p>
+<p><img src="http://deeplearning.net/tutorial/_images/cnn_explained.png" alt="image"></p>
+<p>如图，展现了两层，其中m-1层包含4个feature map，而m层包含2个。$W_{ij}^{kl}$ 表示在 $m-1$ 层的第 $k$ 幅特征图的每一个像素与第 $m$ 层的第 $l$ 幅特征图的像素 $(i,j)$ 之间的连接权重。</p>
+<h2 id="python中的卷积运算"><a href="#python中的卷积运算" class="headerlink" title="python中的卷积运算"></a>python中的卷积运算</h2><p>引用<a href="http://blog.csdn.net/niuwei22007/article/details/48025939" target="_blank" rel="external">深度学习(DL)与卷积神经网络(CNN)学习笔记随笔-02-基于Python的卷积运算
+</a>的注释，加上部分自己理解，首先源码如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#-*- coding: UTF-8 -*- </span></div><div class="line"><span class="keyword">import</span> theano</div><div class="line"><span class="keyword">import</span> numpy</div><div class="line"><span class="keyword">import</span> pylab</div><div class="line"><span class="keyword">from</span> theano <span class="keyword">import</span> tensor <span class="keyword">as</span> T</div><div class="line"><span class="keyword">from</span> theano.tensor.nnet <span class="keyword">import</span> conv</div><div class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</div><div class="line"></div><div class="line">rng = numpy.random.RandomState(<span class="number">23455</span>)</div><div class="line">input = T.tensor4(name=<span class="string">'input'</span>)</div><div class="line">w_shp = (<span class="number">2</span>, <span class="number">3</span>, <span class="number">9</span>, <span class="number">9</span>) </div><div class="line">w_bound = numpy.sqrt(<span class="number">3</span> * <span class="number">9</span> * <span class="number">9</span>)</div><div class="line">W = theano.shared( numpy.asarray(</div><div class="line">            rng.uniform(</div><div class="line">                low=<span class="number">-1.0</span> / w_bound,</div><div class="line">                high=<span class="number">1.0</span> / w_bound,</div><div class="line">                size=w_shp),</div><div class="line">            dtype=input.dtype), name =<span class="string">'W'</span>)</div><div class="line">b_shp = (<span class="number">2</span>,)</div><div class="line">b = theano.shared(numpy.asarray(</div><div class="line">            rng.uniform(low=<span class="number">-.5</span>, high=<span class="number">.5</span>, size=b_shp),</div><div class="line">            dtype=input.dtype), name =<span class="string">'b'</span>)</div><div class="line">conv_out = conv.conv2d(input, W)</div><div class="line">output = T.nnet.sigmoid(conv_out + b.dimshuffle(<span class="string">'x'</span>, <span class="number">0</span>, <span class="string">'x'</span>, <span class="string">'x'</span>))</div><div class="line"></div><div class="line">f = theano.function([input], output)</div><div class="line"></div><div class="line">img = Image.open(<span class="string">'g:\\b.jpg'</span>)</div><div class="line">img_w, img_h = img.size</div><div class="line">img = numpy.asarray(img, dtype=<span class="string">'float32'</span>) / <span class="number">256.</span></div><div class="line">img_ = img.transpose(<span class="number">2</span>, <span class="number">0</span>, <span class="number">1</span>).reshape(<span class="number">1</span>, <span class="number">3</span>, img_h, img_w)</div><div class="line">filtered_img = f(img_)</div><div class="line">pylab.subplot(<span class="number">1</span>, <span class="number">3</span>, <span class="number">1</span>); pylab.axis(<span class="string">'off'</span>); pylab.imshow(img)</div><div class="line">pylab.gray();</div><div class="line"></div><div class="line">pylab.subplot(<span class="number">1</span>, <span class="number">3</span>, <span class="number">2</span>); pylab.axis(<span class="string">'off'</span>); pylab.imshow(filtered_img[<span class="number">0</span>, <span class="number">0</span>, :, :])</div><div class="line">pylab.subplot(<span class="number">1</span>, <span class="number">3</span>, <span class="number">3</span>); pylab.axis(<span class="string">'off'</span>); pylab.imshow(filtered_img[<span class="number">0</span>, <span class="number">1</span>, :, :])</div><div class="line">pylab.show()</div></pre></td></tr></table></figure></p>
+<p><code>w_shp</code>用来定义一个矩阵形状，该大小可以理解为是一个2行3列的矩阵，其中每个矩阵元素又是一个9行9列的矩阵。</p>
+<p>W和b赋予随机初值，这里的b不能赋值0，是因为其需要之间进行计算。</p>
+<p>通过<code>conv.conv2d(input,W)</code>来计算input和W的卷积。为了能使得卷积后还能和b相加，需要对b改变维度，<code>b.dimshuffle(&#39;x&#39;,0,&#39;x&#39;,&#39;x&#39;)</code></p>
+<p>这是这个python代码最主要完成的工作。接着输入图像，输出结果</p>
+<p><img src="http://img1.ph.126.net/7ozUm-0Z28ZcNIfXL8X6zw==/6631701084398814898.png" alt="image"></p>
+<h2 id="最大池"><a href="#最大池" class="headerlink" title="最大池"></a>最大池</h2><p>这是一种采样的方法，称之为非线性下采样。最大池化将输入图像划分为不重叠的矩阵块，每一个子区域输出其最大值。</p>
+<p>在通过卷积获得了特征 (features) 之后，下一步我们希望利用这些特征去做分类。理论上讲，人们可以用所有提取得到的特征去训练分类器，例如 softmax 分类器，但这样做面临计算量的挑战。例如：对于一个 96X96 像素的图像，假设我们已经学习得到了400个定义在8X8输入上的特征，每一个特征和图像卷积都会得到一个 (96 − 8 + 1) × (96 − 8 + 1) = 7921 维的卷积特征，由于有 400 个特征，所以每个样例 (example) 都会得到一个 7921 × 400 = 3,168,400 维的卷积特征向量。学习一个拥有超过 3 百万特征输入的分类器十分不便，并且容易出现过拟合 (over-fitting)。</p>
+<p>为了解决这个问题，首先回忆一下，我们之所以决定使用卷积后的特征是因为图像具有一种“静态性”的属性，这也就意味着在一个图像区域有用的特征极有可能在另一个区域同样适用。因此，为了描述大的图像，一个很自然的想法就是对不同位置的特征进行聚合统计，例如，人们可以计算图像一个区域上的某个特定特征的平均值 (或最大值)。这些概要统计特征不仅具有低得多的维度 (相比使用所有提取得到的特征)，同时还会改善结果(不容易过拟合)。这种聚合的操作就叫做池化 (pooling)，有时也称为平均池化或者最大池化 (取决于计算池化的方法)。</p>
+<h1 id="CNN应用之LeNet"><a href="#CNN应用之LeNet" class="headerlink" title="CNN应用之LeNet"></a>CNN应用之LeNet</h1><p>一种典型的用来识别数字的卷积网络是LeNet-5。当年美国大多数银行就是用它来识别支票上面的手写数字的。能够达到这种商用的地步，它的准确性可想而知。毕竟目前学术界和工业界的结合是最受争议的。</p>
+<p>支持这个算法只需要我们上面讲的稀疏、卷积和最大池就可以了。算法结构图如下：</p>
+<p><img src="http://deeplearning.net/tutorial/_images/mylenet.png" alt="image"></p>
+<p>如图所示，整个算法分为了许多层，从前往后分别是S1，C1，S2，C2以及输出层。</p>
+<p>我们从源码来分析原理。</p>
+<p>首先代码分为了两大块，分别是定义LeNet Class的LeNetConvPoolLayer，和训练LeNet的evaluate_lenet5。</p>
+<h2 id="LeNetConvPoolLayer-Class"><a href="#LeNetConvPoolLayer-Class" class="headerlink" title="LeNetConvPoolLayer Class"></a>LeNetConvPoolLayer Class</h2><p>先来看LeNetConvPoolLayer。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">LeNetConvPoolLayer</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, rng, input, filter_shape, image_shape, poolsize=<span class="params">(<span class="number">2</span>, <span class="number">2</span>)</span>)</span>:</span></div><div class="line">        <span class="keyword">assert</span> image_shape[<span class="number">1</span>] == filter_shape[<span class="number">1</span>]</div><div class="line">        self.input = input</div><div class="line">        fan_in = numpy.prod(filter_shape[<span class="number">1</span>:])</div><div class="line">        fan_out = (filter_shape[<span class="number">0</span>] * numpy.prod(filter_shape[<span class="number">2</span>:]) //</div><div class="line">                   numpy.prod(poolsize))</div><div class="line">        W_bound = numpy.sqrt(<span class="number">6.</span> / (fan_in + fan_out))</div><div class="line">        self.W = theano.shared(</div><div class="line">            numpy.asarray(</div><div class="line">                rng.uniform(low=-W_bound, high=W_bound, size=filter_shape),</div><div class="line">                dtype=theano.config.floatX</div><div class="line">            ),</div><div class="line">            borrow=<span class="keyword">True</span></div><div class="line">        )</div><div class="line"></div><div class="line">        b_values = numpy.zeros((filter_shape[<span class="number">0</span>],), dtype=theano.config.floatX)</div><div class="line">        self.b = theano.shared(value=b_values, borrow=<span class="keyword">True</span>)</div><div class="line"></div><div class="line">        conv_out = conv2d(</div><div class="line">            input=input,</div><div class="line">            filters=self.W,</div><div class="line">            filter_shape=filter_shape,</div><div class="line">            input_shape=image_shape</div><div class="line">        )</div><div class="line"></div><div class="line">        pooled_out = pool.pool_2d(</div><div class="line">            input=conv_out,</div><div class="line">            ds=poolsize,</div><div class="line">            ignore_border=<span class="keyword">True</span></div><div class="line">        )</div><div class="line"></div><div class="line">        self.output = T.tanh(pooled_out + self.b.dimshuffle(<span class="string">'x'</span>, <span class="number">0</span>, <span class="string">'x'</span>, <span class="string">'x'</span>))</div><div class="line"></div><div class="line">        self.params = [self.W, self.b]</div><div class="line"></div><div class="line">        self.input = input</div></pre></td></tr></table></figure>
+<p>首先其初始化函数<code>__init__</code>有几个参数需要注意，分别是</p>
+<ul>
+<li>filter_shape：滤波器形状，包括4个参数的元组（滤波器数目，输入特征映射数目，滤波器高，滤波器宽）</li>
+<li>image_shape：（设置的batch大小，输入特征映射数目，图像高，图像宽）</li>
+<li>poolsize：最大池取样参数（行、列）</li>
+</ul>
+<p>接着随机均匀初始化权值W，设置偏置向量b初值0。</p>
+<p>关键点在于<code>self.output = T.tanh(pooled_out + self.b.dimshuffle(&#39;x&#39;, 0, &#39;x&#39;, &#39;x&#39;))</code>,这句话模拟公式</p>
+<p>$$<br>h^k_{ij}=tanh((W^k*x)_{ij}+b_k)<br>$$<br>pooled_out是卷积并最大池采样后的结果，结果是4维的，为了能和b相加，必须对b变型，这里使用了dimshuffle方法。</p>
+<p>其形式是</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Pool&#123;ds=(<span class="number">2</span>, <span class="number">2</span>), ignore_border=<span class="keyword">True</span>, st=(<span class="number">2</span>, <span class="number">2</span>), padding=(<span class="number">0</span>, <span class="number">0</span>), mode=<span class="string">'max'</span>&#125;<span class="number">.0</span></div></pre></td></tr></table></figure>
+<p>可以看出conv_out是feature map平面的所有feature map形成的向量，pooled_out则是最大池采样后的结果。所以在程序中，直接把特征提取和特征映射变为了一个操作。意即S1和C1一起操作，S2，C2一起操作。</p>
+<p>另外，conv_out是卷积的方法，其包含4个参数</p>
+<ul>
+<li>input</li>
+<li>filters</li>
+<li>filter_shape</li>
+<li>input_shape</li>
+</ul>
+<p>在这里需要了解的是这个卷积</p>
+<p><img src="http://img2.ph.126.net/91RStDgcpkATuDkX1q5QKQ==/6631565844468601421.jpg" alt="image"></p>
+<p>原输入【28*28】矩阵和作为滤波器【5*5】的矩阵卷积，得到的是一个相对小的矩阵，这个矩阵就是feature map。</p>
+<p>定义卷积操作和最大池取样操作。</p>
+<h2 id="训练和验证的evaluate-lenet5函数"><a href="#训练和验证的evaluate-lenet5函数" class="headerlink" title="训练和验证的evaluate_lenet5函数"></a>训练和验证的evaluate_lenet5函数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">evaluate_lenet5</span><span class="params">(learning_rate=<span class="number">0.1</span>, n_epochs=<span class="number">200</span>,</span></span></div><div class="line">                    dataset=<span class="string">'mnist.pkl.gz'</span>,</div><div class="line">                    nkerns=[<span class="number">20</span>, <span class="number">50</span>], batch_size=<span class="number">500</span>):</div><div class="line"></div><div class="line">    rng = numpy.random.RandomState(<span class="number">23455</span>)</div><div class="line"></div><div class="line">    datasets = load_data(dataset)</div><div class="line"></div><div class="line">    train_set_x, train_set_y = datasets[<span class="number">0</span>]</div><div class="line">    valid_set_x, valid_set_y = datasets[<span class="number">1</span>]</div><div class="line">    test_set_x, test_set_y = datasets[<span class="number">2</span>]</div><div class="line"></div><div class="line">    n_train_batches = train_set_x.get_value(borrow=<span class="keyword">True</span>).shape[<span class="number">0</span>]</div><div class="line">    n_valid_batches = valid_set_x.get_value(borrow=<span class="keyword">True</span>).shape[<span class="number">0</span>]</div><div class="line">    n_test_batches = test_set_x.get_value(borrow=<span class="keyword">True</span>).shape[<span class="number">0</span>]</div><div class="line">    n_train_batches //= batch_size</div><div class="line">    n_valid_batches //= batch_size</div><div class="line">    n_test_batches //= batch_size</div><div class="line"></div><div class="line">    index = T.lscalar()  <span class="comment"># index to a [mini]batch</span></div><div class="line"></div><div class="line">    <span class="comment"># start-snippet-1</span></div><div class="line">    x = T.matrix(<span class="string">'x'</span>)   <span class="comment"># the data is presented as rasterized images</span></div><div class="line">    y = T.ivector(<span class="string">'y'</span>)  <span class="comment"># the labels are presented as 1D vector of</span></div><div class="line">                        <span class="comment"># [int] labels</span></div><div class="line"></div><div class="line">    print(<span class="string">'... building the model'</span>)</div><div class="line"></div><div class="line">    layer0_input = x.reshape((batch_size, <span class="number">1</span>, <span class="number">28</span>, <span class="number">28</span>))</div><div class="line"></div><div class="line">    layer0 = LeNetConvPoolLayer(</div><div class="line">        rng,</div><div class="line">        input=layer0_input,</div><div class="line">        image_shape=(batch_size, <span class="number">1</span>, <span class="number">28</span>, <span class="number">28</span>),</div><div class="line">        filter_shape=(nkerns[<span class="number">0</span>], <span class="number">1</span>, <span class="number">5</span>, <span class="number">5</span>),</div><div class="line">        poolsize=(<span class="number">2</span>, <span class="number">2</span>)</div><div class="line">    )</div><div class="line"></div><div class="line">    layer1 = LeNetConvPoolLayer(</div><div class="line">        rng,</div><div class="line">        input=layer0.output,</div><div class="line">        image_shape=(batch_size, nkerns[<span class="number">0</span>], <span class="number">12</span>, <span class="number">12</span>),</div><div class="line">        filter_shape=(nkerns[<span class="number">1</span>], nkerns[<span class="number">0</span>], <span class="number">5</span>, <span class="number">5</span>),</div><div class="line">        poolsize=(<span class="number">2</span>, <span class="number">2</span>)</div><div class="line">    )</div><div class="line"></div><div class="line">    layer2_input = layer1.output.flatten(<span class="number">2</span>)</div><div class="line"></div><div class="line">    <span class="comment"># construct a fully-connected sigmoidal layer</span></div><div class="line">    layer2 = HiddenLayer(</div><div class="line">        rng,</div><div class="line">        input=layer2_input,</div><div class="line">        n_in=nkerns[<span class="number">1</span>] * <span class="number">4</span> * <span class="number">4</span>,</div><div class="line">        n_out=<span class="number">500</span>,</div><div class="line">        activation=T.tanh</div><div class="line">    )</div><div class="line"></div><div class="line">    <span class="comment"># classify the values of the fully-connected sigmoidal layer</span></div><div class="line">    layer3 = LogisticRegression(input=layer2.output, n_in=<span class="number">500</span>, n_out=<span class="number">10</span>)</div><div class="line"></div><div class="line">    <span class="comment"># the cost we minimize during training is the NLL of the model</span></div><div class="line">    cost = layer3.negative_log_likelihood(y)</div><div class="line"></div><div class="line">    <span class="comment"># create a function to compute the mistakes that are made by the model</span></div><div class="line">    test_model = theano.function(</div><div class="line">        [index],</div><div class="line">        layer3.errors(y),</div><div class="line">        givens=&#123;</div><div class="line">            x: test_set_x[index * batch_size: (index + <span class="number">1</span>) * batch_size],</div><div class="line">            y: test_set_y[index * batch_size: (index + <span class="number">1</span>) * batch_size]</div><div class="line">        &#125;</div><div class="line">    )</div><div class="line"></div><div class="line">    validate_model = theano.function(</div><div class="line">        [index],</div><div class="line">        layer3.errors(y),</div><div class="line">        givens=&#123;</div><div class="line">            x: valid_set_x[index * batch_size: (index + <span class="number">1</span>) * batch_size],</div><div class="line">            y: valid_set_y[index * batch_size: (index + <span class="number">1</span>) * batch_size]</div><div class="line">        &#125;</div><div class="line">    )</div><div class="line"></div><div class="line">    params = layer3.params + layer2.params + layer1.params + layer0.params</div><div class="line"></div><div class="line">    grads = T.grad(cost, params)</div><div class="line"></div><div class="line">    updates = [</div><div class="line">        (param_i, param_i - learning_rate * grad_i)</div><div class="line">        <span class="keyword">for</span> param_i, grad_i <span class="keyword">in</span> zip(params, grads)</div><div class="line">    ]</div><div class="line"></div><div class="line">    train_model = theano.function(</div><div class="line">        [index],</div><div class="line">        cost,</div><div class="line">        updates=updates,</div><div class="line">        givens=&#123;</div><div class="line">            x: train_set_x[index * batch_size: (index + <span class="number">1</span>) * batch_size],</div><div class="line">            y: train_set_y[index * batch_size: (index + <span class="number">1</span>) * batch_size]</div><div class="line">        &#125;</div><div class="line">    )</div><div class="line"></div><div class="line">    print(<span class="string">'... training'</span>)</div><div class="line">    patience = <span class="number">10000</span>  </div><div class="line">    patience_increase = <span class="number">2</span> </div><div class="line">    improvement_threshold = <span class="number">0.995</span>  </div><div class="line">    validation_frequency = min(n_train_batches, patience // <span class="number">2</span>)</div><div class="line">    best_validation_loss = numpy.inf</div><div class="line">    best_iter = <span class="number">0</span></div><div class="line">    test_score = <span class="number">0.</span></div><div class="line">    start_time = timeit.default_timer()</div><div class="line"></div><div class="line">    epoch = <span class="number">0</span></div><div class="line">    done_looping = <span class="keyword">False</span></div><div class="line"></div><div class="line">    <span class="keyword">while</span> (epoch &lt; n_epochs) <span class="keyword">and</span> (<span class="keyword">not</span> done_looping):</div><div class="line">        epoch = epoch + <span class="number">1</span></div><div class="line">        <span class="keyword">for</span> minibatch_index <span class="keyword">in</span> range(n_train_batches):</div><div class="line"></div><div class="line">            iter = (epoch - <span class="number">1</span>) * n_train_batches + minibatch_index</div><div class="line"></div><div class="line">            <span class="keyword">if</span> iter % <span class="number">100</span> == <span class="number">0</span>:</div><div class="line">                print(<span class="string">'training @ iter = '</span>, iter)</div><div class="line">            cost_ij = train_model(minibatch_index)</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (iter + <span class="number">1</span>) % validation_frequency == <span class="number">0</span>:</div><div class="line"></div><div class="line">                <span class="comment"># compute zero-one loss on validation set</span></div><div class="line">                validation_losses = [validate_model(i) <span class="keyword">for</span> i</div><div class="line">                                     <span class="keyword">in</span> range(n_valid_batches)]</div><div class="line">                this_validation_loss = numpy.mean(validation_losses)</div><div class="line">                print(<span class="string">'epoch %i, minibatch %i/%i, validation error %f %%'</span> %</div><div class="line">                      (epoch, minibatch_index + <span class="number">1</span>, n_train_batches,</div><div class="line">                       this_validation_loss * <span class="number">100.</span>))</div><div class="line"></div><div class="line">                <span class="comment"># if we got the best validation score until now</span></div><div class="line">                <span class="keyword">if</span> this_validation_loss &lt; best_validation_loss:</div><div class="line"></div><div class="line">                    <span class="comment">#improve patience if loss improvement is good enough</span></div><div class="line">                    <span class="keyword">if</span> this_validation_loss &lt; best_validation_loss *  \</div><div class="line">                       improvement_threshold:</div><div class="line">                        patience = max(patience, iter * patience_increase)</div><div class="line"></div><div class="line">                    <span class="comment"># save best validation score and iteration number</span></div><div class="line">                    best_validation_loss = this_validation_loss</div><div class="line">                    best_iter = iter</div><div class="line"></div><div class="line">                    <span class="comment"># test it on the test set</span></div><div class="line">                    test_losses = [</div><div class="line">                        test_model(i)</div><div class="line">                        <span class="keyword">for</span> i <span class="keyword">in</span> range(n_test_batches)</div><div class="line">                    ]</div><div class="line">                    test_score = numpy.mean(test_losses)</div><div class="line">                    print((<span class="string">'     epoch %i, minibatch %i/%i, test error of '</span></div><div class="line">                           <span class="string">'best model %f %%'</span>) %</div><div class="line">                          (epoch, minibatch_index + <span class="number">1</span>, n_train_batches,</div><div class="line">                           test_score * <span class="number">100.</span>))</div><div class="line"></div><div class="line">            <span class="keyword">if</span> patience &lt;= iter:</div><div class="line">                done_looping = <span class="keyword">True</span></div><div class="line">                <span class="keyword">break</span></div><div class="line"></div><div class="line">    end_time = timeit.default_timer()</div><div class="line">    print(<span class="string">'Optimization complete.'</span>)</div><div class="line">    print(<span class="string">'Best validation score of %f %% obtained at iteration %i, '</span></div><div class="line">          <span class="string">'with test performance %f %%'</span> %</div><div class="line">          (best_validation_loss * <span class="number">100.</span>, best_iter + <span class="number">1</span>, test_score * <span class="number">100.</span>))</div><div class="line">    print((<span class="string">'The code for file '</span> +</div><div class="line">           os.path.split(__file__)[<span class="number">1</span>] +</div><div class="line">           <span class="string">' ran for %.2fm'</span> % ((end_time - start_time) / <span class="number">60.</span>)), file=sys.stderr)</div></pre></td></tr></table></figure>
+<p>首先函数定义了几个参数</p>
+<ul>
+<li>learning_rate：学习率</li>
+<li>n_epochs：最大迭代次数</li>
+<li>dataset：</li>
+<li>nkerns：卷积核数目</li>
+<li></li>
+</ul>
+<h3 id="第0层，S1层-C1层"><a href="#第0层，S1层-C1层" class="headerlink" title="第0层，S1层+C1层"></a>第0层，S1层+C1层</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">layer0_input = x.reshape((batch_size, <span class="number">1</span>, <span class="number">28</span>, <span class="number">28</span>))</div><div class="line"></div><div class="line">layer0 = LeNetConvPoolLayer(</div><div class="line">    rng,</div><div class="line">    input=layer0_input,</div><div class="line">    image_shape=(batch_size, <span class="number">1</span>, <span class="number">28</span>, <span class="number">28</span>),</div><div class="line">    filter_shape=(nkerns[<span class="number">0</span>], <span class="number">1</span>, <span class="number">5</span>, <span class="number">5</span>),</div><div class="line">    poolsize=(<span class="number">2</span>, <span class="number">2</span>)</div><div class="line">)</div></pre></td></tr></table></figure>
+<p>建模的开始和MLPs是一样的，但是输入数据要重构reshape，从2D转换为4D，通过<code>x.reshape((batch_size, 1, 28, 28))</code>将数据转化为batch_size行，1行1个样本，每行有28*28列。这代表了第S1层，模拟的是卷积过程，只需要调用LeNetConvPoolLayer模块即可进行运算。</p>
+<h3 id="第1层-S2层-C2层"><a href="#第1层-S2层-C2层" class="headerlink" title="第1层 S2层+C2层"></a>第1层 S2层+C2层</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">layer1 = LeNetConvPoolLayer(</div><div class="line">    rng,</div><div class="line">    input=layer0.output,</div><div class="line">    image_shape=(batch_size, nkerns[<span class="number">0</span>], <span class="number">12</span>, <span class="number">12</span>),</div><div class="line">    filter_shape=(nkerns[<span class="number">1</span>], nkerns[<span class="number">0</span>], <span class="number">5</span>, <span class="number">5</span>),</div><div class="line">    poolsize=(<span class="number">2</span>, <span class="number">2</span>)</div><div class="line">)</div></pre></td></tr></table></figure>
+<p>发现其图像的特征映射变成了20，而滤波器数目变为50。</p>
+<h3 id="第2层-MLP隐层"><a href="#第2层-MLP隐层" class="headerlink" title="第2层 MLP隐层"></a>第2层 MLP隐层</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">layer2_input = layer1.output.flatten(<span class="number">2</span>)</div><div class="line"></div><div class="line"><span class="comment"># construct a fully-connected sigmoidal layer</span></div><div class="line">layer2 = HiddenLayer(</div><div class="line">    rng,</div><div class="line">    input=layer2_input,</div><div class="line">    n_in=nkerns[<span class="number">1</span>] * <span class="number">4</span> * <span class="number">4</span>,</div><div class="line">    n_out=<span class="number">500</span>,</div><div class="line">    activation=T.tanh</div><div class="line">)</div></pre></td></tr></table></figure>
+<p>最后的操作是要继续将其变为2维，然后进行MLP的计算。</p>
+<h3 id="第3层-lR层"><a href="#第3层-lR层" class="headerlink" title="第3层 lR层"></a>第3层 lR层</h3><p>然后需要进行LR操作来训练</p>
+<p>接下来进行梯度下降法进行训练参数。</p>
+<h2 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div><div class="line">284</div><div class="line">285</div><div class="line">286</div><div class="line">287</div><div class="line">288</div><div class="line">289</div><div class="line">290</div><div class="line">291</div><div class="line">292</div><div class="line">293</div><div class="line">294</div><div class="line">295</div><div class="line">296</div><div class="line">297</div><div class="line">298</div><div class="line">299</div><div class="line">300</div><div class="line">301</div><div class="line">302</div><div class="line">303</div><div class="line">304</div><div class="line">305</div><div class="line">306</div><div class="line">307</div><div class="line">308</div><div class="line">309</div><div class="line">310</div><div class="line">311</div><div class="line">312</div><div class="line">313</div><div class="line">314</div><div class="line">315</div><div class="line">316</div><div class="line">317</div><div class="line">318</div><div class="line">319</div><div class="line">320</div><div class="line">321</div><div class="line">322</div><div class="line">323</div><div class="line">324</div><div class="line">325</div><div class="line">326</div><div class="line">327</div><div class="line">328</div><div class="line">329</div><div class="line">330</div><div class="line">331</div><div class="line">332</div><div class="line">333</div><div class="line">334</div><div class="line">335</div><div class="line">336</div><div class="line">337</div><div class="line">338</div><div class="line">339</div><div class="line">340</div><div class="line">341</div><div class="line">342</div><div class="line">343</div><div class="line">344</div><div class="line">345</div><div class="line">346</div><div class="line">347</div><div class="line">348</div><div class="line">349</div><div class="line">350</div><div class="line">351</div><div class="line">352</div><div class="line">353</div><div class="line">354</div><div class="line">355</div><div class="line">356</div><div class="line">357</div><div class="line">358</div><div class="line">359</div><div class="line">360</div><div class="line">361</div><div class="line">362</div><div class="line">363</div><div class="line">364</div><div class="line">365</div><div class="line">366</div><div class="line">367</div><div class="line">368</div><div class="line">369</div><div class="line">370</div><div class="line">371</div><div class="line">372</div><div class="line">373</div><div class="line">374</div><div class="line">375</div><div class="line">376</div><div class="line">377</div><div class="line">378</div><div class="line">379</div><div class="line">380</div><div class="line">381</div><div class="line">382</div><div class="line">383</div><div class="line">384</div><div class="line">385</div><div class="line">386</div><div class="line">387</div><div class="line">388</div><div class="line">389</div><div class="line">390</div><div class="line">391</div><div class="line">392</div><div class="line">393</div><div class="line">394</div><div class="line">395</div><div class="line">396</div><div class="line">397</div><div class="line">398</div><div class="line">399</div><div class="line">400</div><div class="line">401</div><div class="line">402</div><div class="line">403</div><div class="line">404</div><div class="line">405</div><div class="line">406</div><div class="line">407</div><div class="line">408</div><div class="line">409</div><div class="line">410</div><div class="line">411</div><div class="line">412</div><div class="line">413</div><div class="line">414</div><div class="line">415</div><div class="line">416</div><div class="line">417</div><div class="line">418</div><div class="line">419</div><div class="line">420</div><div class="line">421</div><div class="line">422</div><div class="line">423</div><div class="line">424</div><div class="line">425</div><div class="line">426</div><div class="line">427</div><div class="line">428</div><div class="line">429</div><div class="line">430</div><div class="line">431</div><div class="line">432</div><div class="line">433</div><div class="line">434</div><div class="line">435</div><div class="line">436</div><div class="line">437</div><div class="line">438</div><div class="line">439</div><div class="line">440</div><div class="line">441</div><div class="line">442</div><div class="line">443</div><div class="line">444</div><div class="line">445</div><div class="line">446</div><div class="line">447</div><div class="line">448</div><div class="line">449</div><div class="line">450</div><div class="line">451</div><div class="line">452</div><div class="line">453</div><div class="line">454</div><div class="line">455</div><div class="line">456</div><div class="line">457</div><div class="line">458</div><div class="line">459</div><div class="line">460</div><div class="line">461</div><div class="line">462</div><div class="line">463</div><div class="line">464</div></pre></td><td class="code"><pre><div class="line">... loading data</div><div class="line">... building the model</div><div class="line">Pool&#123;ds=(2, 2), ignore_border=True, st=(2, 2), padding=(0, 0), mode=&apos;max&apos;&#125;.0</div><div class="line">Pool&#123;ds=(2, 2), ignore_border=True, st=(2, 2), padding=(0, 0), mode=&apos;max&apos;&#125;.0</div><div class="line">... training</div><div class="line">training @ iter =  0</div><div class="line">epoch 1, minibatch 100/100, validation error 9.230000 %</div><div class="line">     epoch 1, minibatch 100/100, test error of best model 9.520000 %</div><div class="line">training @ iter =  100</div><div class="line">epoch 2, minibatch 100/100, validation error 6.180000 %</div><div class="line">     epoch 2, minibatch 100/100, test error of best model 6.500000 %</div><div class="line">training @ iter =  200</div><div class="line">epoch 3, minibatch 100/100, validation error 4.640000 %</div><div class="line">     epoch 3, minibatch 100/100, test error of best model 4.850000 %</div><div class="line">training @ iter =  300</div><div class="line">epoch 4, minibatch 100/100, validation error 3.500000 %</div><div class="line">     epoch 4, minibatch 100/100, test error of best model 3.910000 %</div><div class="line">training @ iter =  400</div><div class="line">epoch 5, minibatch 100/100, validation error 3.020000 %</div><div class="line">     epoch 5, minibatch 100/100, test error of best model 3.260000 %</div><div class="line">training @ iter =  500</div><div class="line">epoch 6, minibatch 100/100, validation error 2.780000 %</div><div class="line">     epoch 6, minibatch 100/100, test error of best model 2.800000 %</div><div class="line">training @ iter =  600</div><div class="line">epoch 7, minibatch 100/100, validation error 2.480000 %</div><div class="line">     epoch 7, minibatch 100/100, test error of best model 2.500000 %</div><div class="line">training @ iter =  700</div><div class="line">epoch 8, minibatch 100/100, validation error 2.290000 %</div><div class="line">     epoch 8, minibatch 100/100, test error of best model 2.220000 %</div><div class="line">training @ iter =  800</div><div class="line">epoch 9, minibatch 100/100, validation error 2.160000 %</div><div class="line">     epoch 9, minibatch 100/100, test error of best model 2.010000 %</div><div class="line">training @ iter =  900</div><div class="line">epoch 10, minibatch 100/100, validation error 1.970000 %</div><div class="line">     epoch 10, minibatch 100/100, test error of best model 1.880000 %</div><div class="line">training @ iter =  1000</div><div class="line">epoch 11, minibatch 100/100, validation error 1.880000 %</div><div class="line">     epoch 11, minibatch 100/100, test error of best model 1.790000 %</div><div class="line">training @ iter =  1100</div><div class="line">epoch 12, minibatch 100/100, validation error 1.790000 %</div><div class="line">     epoch 12, minibatch 100/100, test error of best model 1.660000 %</div><div class="line">training @ iter =  1200</div><div class="line">epoch 13, minibatch 100/100, validation error 1.760000 %</div><div class="line">     epoch 13, minibatch 100/100, test error of best model 1.580000 %</div><div class="line">training @ iter =  1300</div><div class="line">epoch 14, minibatch 100/100, validation error 1.710000 %</div><div class="line">     epoch 14, minibatch 100/100, test error of best model 1.550000 %</div><div class="line">training @ iter =  1400</div><div class="line">epoch 15, minibatch 100/100, validation error 1.680000 %</div><div class="line">     epoch 15, minibatch 100/100, test error of best model 1.500000 %</div><div class="line">training @ iter =  1500</div><div class="line">epoch 16, minibatch 100/100, validation error 1.620000 %</div><div class="line">     epoch 16, minibatch 100/100, test error of best model 1.440000 %</div><div class="line">training @ iter =  1600</div><div class="line">epoch 17, minibatch 100/100, validation error 1.590000 %</div><div class="line">     epoch 17, minibatch 100/100, test error of best model 1.410000 %</div><div class="line">training @ iter =  1700</div><div class="line">epoch 18, minibatch 100/100, validation error 1.560000 %</div><div class="line">     epoch 18, minibatch 100/100, test error of best model 1.410000 %</div><div class="line">training @ iter =  1800</div><div class="line">epoch 19, minibatch 100/100, validation error 1.530000 %</div><div class="line">     epoch 19, minibatch 100/100, test error of best model 1.380000 %</div><div class="line">training @ iter =  1900</div><div class="line">epoch 20, minibatch 100/100, validation error 1.520000 %</div><div class="line">     epoch 20, minibatch 100/100, test error of best model 1.330000 %</div><div class="line">training @ iter =  2000</div><div class="line">epoch 21, minibatch 100/100, validation error 1.490000 %</div><div class="line">     epoch 21, minibatch 100/100, test error of best model 1.270000 %</div><div class="line">training @ iter =  2100</div><div class="line">epoch 22, minibatch 100/100, validation error 1.460000 %</div><div class="line">     epoch 22, minibatch 100/100, test error of best model 1.270000 %</div><div class="line">training @ iter =  2200</div><div class="line">epoch 23, minibatch 100/100, validation error 1.430000 %</div><div class="line">     epoch 23, minibatch 100/100, test error of best model 1.240000 %</div><div class="line">training @ iter =  2300</div><div class="line">epoch 24, minibatch 100/100, validation error 1.410000 %</div><div class="line">     epoch 24, minibatch 100/100, test error of best model 1.230000 %</div><div class="line">training @ iter =  2400</div><div class="line">epoch 25, minibatch 100/100, validation error 1.380000 %</div><div class="line">     epoch 25, minibatch 100/100, test error of best model 1.190000 %</div><div class="line">training @ iter =  2500</div><div class="line">epoch 26, minibatch 100/100, validation error 1.340000 %</div><div class="line">     epoch 26, minibatch 100/100, test error of best model 1.150000 %</div><div class="line">training @ iter =  2600</div><div class="line">epoch 27, minibatch 100/100, validation error 1.320000 %</div><div class="line">     epoch 27, minibatch 100/100, test error of best model 1.150000 %</div><div class="line">training @ iter =  2700</div><div class="line">epoch 28, minibatch 100/100, validation error 1.300000 %</div><div class="line">     epoch 28, minibatch 100/100, test error of best model 1.120000 %</div><div class="line">training @ iter =  2800</div><div class="line">epoch 29, minibatch 100/100, validation error 1.270000 %</div><div class="line">     epoch 29, minibatch 100/100, test error of best model 1.120000 %</div><div class="line">training @ iter =  2900</div><div class="line">epoch 30, minibatch 100/100, validation error 1.260000 %</div><div class="line">     epoch 30, minibatch 100/100, test error of best model 1.110000 %</div><div class="line">training @ iter =  3000</div><div class="line">epoch 31, minibatch 100/100, validation error 1.260000 %</div><div class="line">training @ iter =  3100</div><div class="line">epoch 32, minibatch 100/100, validation error 1.250000 %</div><div class="line">     epoch 32, minibatch 100/100, test error of best model 1.100000 %</div><div class="line">training @ iter =  3200</div><div class="line">epoch 33, minibatch 100/100, validation error 1.250000 %</div><div class="line">training @ iter =  3300</div><div class="line">epoch 34, minibatch 100/100, validation error 1.220000 %</div><div class="line">     epoch 34, minibatch 100/100, test error of best model 1.070000 %</div><div class="line">training @ iter =  3400</div><div class="line">epoch 35, minibatch 100/100, validation error 1.220000 %</div><div class="line">training @ iter =  3500</div><div class="line">epoch 36, minibatch 100/100, validation error 1.190000 %</div><div class="line">     epoch 36, minibatch 100/100, test error of best model 1.050000 %</div><div class="line">training @ iter =  3600</div><div class="line">epoch 37, minibatch 100/100, validation error 1.190000 %</div><div class="line">training @ iter =  3700</div><div class="line">epoch 38, minibatch 100/100, validation error 1.180000 %</div><div class="line">     epoch 38, minibatch 100/100, test error of best model 1.070000 %</div><div class="line">training @ iter =  3800</div><div class="line">epoch 39, minibatch 100/100, validation error 1.180000 %</div><div class="line">training @ iter =  3900</div><div class="line">epoch 40, minibatch 100/100, validation error 1.170000 %</div><div class="line">     epoch 40, minibatch 100/100, test error of best model 1.070000 %</div><div class="line">training @ iter =  4000</div><div class="line">epoch 41, minibatch 100/100, validation error 1.150000 %</div><div class="line">     epoch 41, minibatch 100/100, test error of best model 1.080000 %</div><div class="line">training @ iter =  4100</div><div class="line">epoch 42, minibatch 100/100, validation error 1.150000 %</div><div class="line">training @ iter =  4200</div><div class="line">epoch 43, minibatch 100/100, validation error 1.140000 %</div><div class="line">     epoch 43, minibatch 100/100, test error of best model 1.060000 %</div><div class="line">training @ iter =  4300</div><div class="line">epoch 44, minibatch 100/100, validation error 1.130000 %</div><div class="line">     epoch 44, minibatch 100/100, test error of best model 1.050000 %</div><div class="line">training @ iter =  4400</div><div class="line">epoch 45, minibatch 100/100, validation error 1.130000 %</div><div class="line">training @ iter =  4500</div><div class="line">epoch 46, minibatch 100/100, validation error 1.120000 %</div><div class="line">     epoch 46, minibatch 100/100, test error of best model 1.050000 %</div><div class="line">training @ iter =  4600</div><div class="line">epoch 47, minibatch 100/100, validation error 1.110000 %</div><div class="line">     epoch 47, minibatch 100/100, test error of best model 1.040000 %</div><div class="line">training @ iter =  4700</div><div class="line">epoch 48, minibatch 100/100, validation error 1.090000 %</div><div class="line">     epoch 48, minibatch 100/100, test error of best model 1.050000 %</div><div class="line">training @ iter =  4800</div><div class="line">epoch 49, minibatch 100/100, validation error 1.090000 %</div><div class="line">training @ iter =  4900</div><div class="line">epoch 50, minibatch 100/100, validation error 1.090000 %</div><div class="line">training @ iter =  5000</div><div class="line">epoch 51, minibatch 100/100, validation error 1.100000 %</div><div class="line">training @ iter =  5100</div><div class="line">epoch 52, minibatch 100/100, validation error 1.090000 %</div><div class="line">training @ iter =  5200</div><div class="line">epoch 53, minibatch 100/100, validation error 1.080000 %</div><div class="line">     epoch 53, minibatch 100/100, test error of best model 1.030000 %</div><div class="line">training @ iter =  5300</div><div class="line">epoch 54, minibatch 100/100, validation error 1.070000 %</div><div class="line">     epoch 54, minibatch 100/100, test error of best model 1.030000 %</div><div class="line">training @ iter =  5400</div><div class="line">epoch 55, minibatch 100/100, validation error 1.070000 %</div><div class="line">training @ iter =  5500</div><div class="line">epoch 56, minibatch 100/100, validation error 1.080000 %</div><div class="line">training @ iter =  5600</div><div class="line">epoch 57, minibatch 100/100, validation error 1.080000 %</div><div class="line">training @ iter =  5700</div><div class="line">epoch 58, minibatch 100/100, validation error 1.070000 %</div><div class="line">training @ iter =  5800</div><div class="line">epoch 59, minibatch 100/100, validation error 1.060000 %</div><div class="line">     epoch 59, minibatch 100/100, test error of best model 0.990000 %</div><div class="line">training @ iter =  5900</div><div class="line">epoch 60, minibatch 100/100, validation error 1.070000 %</div><div class="line">training @ iter =  6000</div><div class="line">epoch 61, minibatch 100/100, validation error 1.070000 %</div><div class="line">training @ iter =  6100</div><div class="line">epoch 62, minibatch 100/100, validation error 1.070000 %</div><div class="line">training @ iter =  6200</div><div class="line">epoch 63, minibatch 100/100, validation error 1.070000 %</div><div class="line">training @ iter =  6300</div><div class="line">epoch 64, minibatch 100/100, validation error 1.070000 %</div><div class="line">training @ iter =  6400</div><div class="line">epoch 65, minibatch 100/100, validation error 1.070000 %</div><div class="line">training @ iter =  6500</div><div class="line">epoch 66, minibatch 100/100, validation error 1.060000 %</div><div class="line">training @ iter =  6600</div><div class="line">epoch 67, minibatch 100/100, validation error 1.060000 %</div><div class="line">training @ iter =  6700</div><div class="line">epoch 68, minibatch 100/100, validation error 1.070000 %</div><div class="line">training @ iter =  6800</div><div class="line">epoch 69, minibatch 100/100, validation error 1.070000 %</div><div class="line">training @ iter =  6900</div><div class="line">epoch 70, minibatch 100/100, validation error 1.050000 %</div><div class="line">     epoch 70, minibatch 100/100, test error of best model 0.970000 %</div><div class="line">training @ iter =  7000</div><div class="line">epoch 71, minibatch 100/100, validation error 1.030000 %</div><div class="line">     epoch 71, minibatch 100/100, test error of best model 0.970000 %</div><div class="line">training @ iter =  7100</div><div class="line">epoch 72, minibatch 100/100, validation error 1.030000 %</div><div class="line">training @ iter =  7200</div><div class="line">epoch 73, minibatch 100/100, validation error 1.020000 %</div><div class="line">     epoch 73, minibatch 100/100, test error of best model 0.970000 %</div><div class="line">training @ iter =  7300</div><div class="line">epoch 74, minibatch 100/100, validation error 1.000000 %</div><div class="line">     epoch 74, minibatch 100/100, test error of best model 0.960000 %</div><div class="line">training @ iter =  7400</div><div class="line">epoch 75, minibatch 100/100, validation error 1.000000 %</div><div class="line">training @ iter =  7500</div><div class="line">epoch 76, minibatch 100/100, validation error 0.980000 %</div><div class="line">     epoch 76, minibatch 100/100, test error of best model 0.970000 %</div><div class="line">training @ iter =  7600</div><div class="line">epoch 77, minibatch 100/100, validation error 0.970000 %</div><div class="line">     epoch 77, minibatch 100/100, test error of best model 0.970000 %</div><div class="line">training @ iter =  7700</div><div class="line">epoch 78, minibatch 100/100, validation error 0.970000 %</div><div class="line">training @ iter =  7800</div><div class="line">epoch 79, minibatch 100/100, validation error 0.990000 %</div><div class="line">training @ iter =  7900</div><div class="line">epoch 80, minibatch 100/100, validation error 0.990000 %</div><div class="line">training @ iter =  8000</div><div class="line">epoch 81, minibatch 100/100, validation error 1.000000 %</div><div class="line">training @ iter =  8100</div><div class="line">epoch 82, minibatch 100/100, validation error 1.000000 %</div><div class="line">training @ iter =  8200</div><div class="line">epoch 83, minibatch 100/100, validation error 0.990000 %</div><div class="line">training @ iter =  8300</div><div class="line">epoch 84, minibatch 100/100, validation error 0.990000 %</div><div class="line">training @ iter =  8400</div><div class="line">epoch 85, minibatch 100/100, validation error 0.980000 %</div><div class="line">training @ iter =  8500</div><div class="line">epoch 86, minibatch 100/100, validation error 0.980000 %</div><div class="line">training @ iter =  8600</div><div class="line">epoch 87, minibatch 100/100, validation error 0.980000 %</div><div class="line">training @ iter =  8700</div><div class="line">epoch 88, minibatch 100/100, validation error 0.970000 %</div><div class="line">training @ iter =  8800</div><div class="line">epoch 89, minibatch 100/100, validation error 0.960000 %</div><div class="line">     epoch 89, minibatch 100/100, test error of best model 0.970000 %</div><div class="line">training @ iter =  8900</div><div class="line">epoch 90, minibatch 100/100, validation error 0.970000 %</div><div class="line">training @ iter =  9000</div><div class="line">epoch 91, minibatch 100/100, validation error 0.970000 %</div><div class="line">training @ iter =  9100</div><div class="line">epoch 92, minibatch 100/100, validation error 0.950000 %</div><div class="line">     epoch 92, minibatch 100/100, test error of best model 0.970000 %</div><div class="line">training @ iter =  9200</div><div class="line">epoch 93, minibatch 100/100, validation error 0.940000 %</div><div class="line">     epoch 93, minibatch 100/100, test error of best model 0.980000 %</div><div class="line">training @ iter =  9300</div><div class="line">epoch 94, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  9400</div><div class="line">epoch 95, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  9500</div><div class="line">epoch 96, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  9600</div><div class="line">epoch 97, minibatch 100/100, validation error 0.930000 %</div><div class="line">     epoch 97, minibatch 100/100, test error of best model 0.960000 %</div><div class="line">training @ iter =  9700</div><div class="line">epoch 98, minibatch 100/100, validation error 0.930000 %</div><div class="line">training @ iter =  9800</div><div class="line">epoch 99, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  9900</div><div class="line">epoch 100, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  10000</div><div class="line">epoch 101, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  10100</div><div class="line">epoch 102, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  10200</div><div class="line">epoch 103, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  10300</div><div class="line">epoch 104, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  10400</div><div class="line">epoch 105, minibatch 100/100, validation error 0.950000 %</div><div class="line">training @ iter =  10500</div><div class="line">epoch 106, minibatch 100/100, validation error 0.950000 %</div><div class="line">training @ iter =  10600</div><div class="line">epoch 107, minibatch 100/100, validation error 0.950000 %</div><div class="line">training @ iter =  10700</div><div class="line">epoch 108, minibatch 100/100, validation error 0.950000 %</div><div class="line">training @ iter =  10800</div><div class="line">epoch 109, minibatch 100/100, validation error 0.950000 %</div><div class="line">training @ iter =  10900</div><div class="line">epoch 110, minibatch 100/100, validation error 0.950000 %</div><div class="line">training @ iter =  11000</div><div class="line">epoch 111, minibatch 100/100, validation error 0.950000 %</div><div class="line">training @ iter =  11100</div><div class="line">epoch 112, minibatch 100/100, validation error 0.950000 %</div><div class="line">training @ iter =  11200</div><div class="line">epoch 113, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  11300</div><div class="line">epoch 114, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  11400</div><div class="line">epoch 115, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  11500</div><div class="line">epoch 116, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  11600</div><div class="line">epoch 117, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  11700</div><div class="line">epoch 118, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  11800</div><div class="line">epoch 119, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  11900</div><div class="line">epoch 120, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  12000</div><div class="line">epoch 121, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  12100</div><div class="line">epoch 122, minibatch 100/100, validation error 0.930000 %</div><div class="line">training @ iter =  12200</div><div class="line">epoch 123, minibatch 100/100, validation error 0.930000 %</div><div class="line">training @ iter =  12300</div><div class="line">epoch 124, minibatch 100/100, validation error 0.930000 %</div><div class="line">training @ iter =  12400</div><div class="line">epoch 125, minibatch 100/100, validation error 0.930000 %</div><div class="line">training @ iter =  12500</div><div class="line">epoch 126, minibatch 100/100, validation error 0.930000 %</div><div class="line">training @ iter =  12600</div><div class="line">epoch 127, minibatch 100/100, validation error 0.930000 %</div><div class="line">training @ iter =  12700</div><div class="line">epoch 128, minibatch 100/100, validation error 0.930000 %</div><div class="line">training @ iter =  12800</div><div class="line">epoch 129, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  12900</div><div class="line">epoch 130, minibatch 100/100, validation error 0.950000 %</div><div class="line">training @ iter =  13000</div><div class="line">epoch 131, minibatch 100/100, validation error 0.950000 %</div><div class="line">training @ iter =  13100</div><div class="line">epoch 132, minibatch 100/100, validation error 0.950000 %</div><div class="line">training @ iter =  13200</div><div class="line">epoch 133, minibatch 100/100, validation error 0.950000 %</div><div class="line">training @ iter =  13300</div><div class="line">epoch 134, minibatch 100/100, validation error 0.950000 %</div><div class="line">training @ iter =  13400</div><div class="line">epoch 135, minibatch 100/100, validation error 0.950000 %</div><div class="line">training @ iter =  13500</div><div class="line">epoch 136, minibatch 100/100, validation error 0.950000 %</div><div class="line">training @ iter =  13600</div><div class="line">epoch 137, minibatch 100/100, validation error 0.950000 %</div><div class="line">training @ iter =  13700</div><div class="line">epoch 138, minibatch 100/100, validation error 0.950000 %</div><div class="line">training @ iter =  13800</div><div class="line">epoch 139, minibatch 100/100, validation error 0.950000 %</div><div class="line">training @ iter =  13900</div><div class="line">epoch 140, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  14000</div><div class="line">epoch 141, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  14100</div><div class="line">epoch 142, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  14200</div><div class="line">epoch 143, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  14300</div><div class="line">epoch 144, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  14400</div><div class="line">epoch 145, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  14500</div><div class="line">epoch 146, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  14600</div><div class="line">epoch 147, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  14700</div><div class="line">epoch 148, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  14800</div><div class="line">epoch 149, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  14900</div><div class="line">epoch 150, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  15000</div><div class="line">epoch 151, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  15100</div><div class="line">epoch 152, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  15200</div><div class="line">epoch 153, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  15300</div><div class="line">epoch 154, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  15400</div><div class="line">epoch 155, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  15500</div><div class="line">epoch 156, minibatch 100/100, validation error 0.940000 %</div><div class="line">training @ iter =  15600</div><div class="line">epoch 157, minibatch 100/100, validation error 0.930000 %</div><div class="line">training @ iter =  15700</div><div class="line">epoch 158, minibatch 100/100, validation error 0.930000 %</div><div class="line">training @ iter =  15800</div><div class="line">epoch 159, minibatch 100/100, validation error 0.930000 %</div><div class="line">training @ iter =  15900</div><div class="line">epoch 160, minibatch 100/100, validation error 0.930000 %</div><div class="line">training @ iter =  16000</div><div class="line">epoch 161, minibatch 100/100, validation error 0.920000 %</div><div class="line">     epoch 161, minibatch 100/100, test error of best model 0.930000 %</div><div class="line">training @ iter =  16100</div><div class="line">epoch 162, minibatch 100/100, validation error 0.920000 %</div><div class="line">training @ iter =  16200</div><div class="line">epoch 163, minibatch 100/100, validation error 0.920000 %</div><div class="line">training @ iter =  16300</div><div class="line">epoch 164, minibatch 100/100, validation error 0.920000 %</div><div class="line">training @ iter =  16400</div><div class="line">epoch 165, minibatch 100/100, validation error 0.920000 %</div><div class="line">training @ iter =  16500</div><div class="line">epoch 166, minibatch 100/100, validation error 0.920000 %</div><div class="line">training @ iter =  16600</div><div class="line">epoch 167, minibatch 100/100, validation error 0.920000 %</div><div class="line">training @ iter =  16700</div><div class="line">epoch 168, minibatch 100/100, validation error 0.920000 %</div><div class="line">training @ iter =  16800</div><div class="line">epoch 169, minibatch 100/100, validation error 0.920000 %</div><div class="line">training @ iter =  16900</div><div class="line">epoch 170, minibatch 100/100, validation error 0.920000 %</div><div class="line">training @ iter =  17000</div><div class="line">epoch 171, minibatch 100/100, validation error 0.920000 %</div><div class="line">training @ iter =  17100</div><div class="line">epoch 172, minibatch 100/100, validation error 0.920000 %</div><div class="line">training @ iter =  17200</div><div class="line">epoch 173, minibatch 100/100, validation error 0.920000 %</div><div class="line">training @ iter =  17300</div><div class="line">epoch 174, minibatch 100/100, validation error 0.920000 %</div><div class="line">training @ iter =  17400</div><div class="line">epoch 175, minibatch 100/100, validation error 0.920000 %</div><div class="line">training @ iter =  17500</div><div class="line">epoch 176, minibatch 100/100, validation error 0.920000 %</div><div class="line">training @ iter =  17600</div><div class="line">epoch 177, minibatch 100/100, validation error 0.920000 %</div><div class="line">training @ iter =  17700</div><div class="line">epoch 178, minibatch 100/100, validation error 0.920000 %</div><div class="line">training @ iter =  17800</div><div class="line">epoch 179, minibatch 100/100, validation error 0.920000 %</div><div class="line">training @ iter =  17900</div><div class="line">epoch 180, minibatch 100/100, validation error 0.920000 %</div><div class="line">training @ iter =  18000</div><div class="line">epoch 181, minibatch 100/100, validation error 0.920000 %</div><div class="line">training @ iter =  18100</div><div class="line">epoch 182, minibatch 100/100, validation error 0.920000 %</div><div class="line">training @ iter =  18200</div><div class="line">epoch 183, minibatch 100/100, validation error 0.910000 %</div><div class="line">     epoch 183, minibatch 100/100, test error of best model 0.920000 %</div><div class="line">training @ iter =  18300</div><div class="line">epoch 184, minibatch 100/100, validation error 0.910000 %</div><div class="line">training @ iter =  18400</div><div class="line">epoch 185, minibatch 100/100, validation error 0.910000 %</div><div class="line">training @ iter =  18500</div><div class="line">epoch 186, minibatch 100/100, validation error 0.910000 %</div><div class="line">training @ iter =  18600</div><div class="line">epoch 187, minibatch 100/100, validation error 0.910000 %</div><div class="line">training @ iter =  18700</div><div class="line">epoch 188, minibatch 100/100, validation error 0.910000 %</div><div class="line">training @ iter =  18800</div><div class="line">epoch 189, minibatch 100/100, validation error 0.910000 %</div><div class="line">training @ iter =  18900</div><div class="line">epoch 190, minibatch 100/100, validation error 0.910000 %</div><div class="line">training @ iter =  19000</div><div class="line">epoch 191, minibatch 100/100, validation error 0.910000 %</div><div class="line">training @ iter =  19100</div><div class="line">epoch 192, minibatch 100/100, validation error 0.910000 %</div><div class="line">training @ iter =  19200</div><div class="line">epoch 193, minibatch 100/100, validation error 0.910000 %</div><div class="line">training @ iter =  19300</div><div class="line">epoch 194, minibatch 100/100, validation error 0.910000 %</div><div class="line">training @ iter =  19400</div><div class="line">epoch 195, minibatch 100/100, validation error 0.910000 %</div><div class="line">training @ iter =  19500</div><div class="line">epoch 196, minibatch 100/100, validation error 0.910000 %</div><div class="line">training @ iter =  19600</div><div class="line">epoch 197, minibatch 100/100, validation error 0.910000 %</div><div class="line">training @ iter =  19700</div><div class="line">epoch 198, minibatch 100/100, validation error 0.910000 %</div><div class="line">training @ iter =  19800</div><div class="line">epoch 199, minibatch 100/100, validation error 0.910000 %</div><div class="line">training @ iter =  19900</div><div class="line">epoch 200, minibatch 100/100, validatiThe code for file convolutional_mlp.py ran for 446.13m</div><div class="line">on error 0.910000 %</div><div class="line">Optimization complete.</div><div class="line">Best validation score of 0.910000 % obtained at iteration 18300, with test performance 0.920000 %</div></pre></td></tr></table></figure>
+<p>可以看到运行了446.13分钟，电脑没有GPU，不能GPU加速，/(ㄒoㄒ)/~~。据说好的GPU只要20分钟就能运行完成。</p>
+<hr>
+<p><strong>参考</strong></p>
+<ol>
+<li><a href="http://www.gageet.com/2014/0878.php#%E4%B8%80%EF%BC%9A%E5%89%8D%E5%AF%BC%C2%A0Back%C2%A0Propagation%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E7%AE%97%E6%B3%95" target="_blank" rel="external">Convolutional Neural Networks卷积神经网络</a></li>
+<li><a href="http://www.36dsj.com/archives/24006" target="_blank" rel="external">技术向：一文读懂卷积神经网络</a></li>
+<li><a href="http://blog.csdn.net/zouxy09/article/details/8781543/" target="_blank" rel="external">Deep Learning（深度学习）学习笔记整理系列之（七）</a></li>
+<li><a href="http://blog.csdn.net/niuwei22007/article/details/48950347" target="_blank" rel="external">深度学习(DL)与卷积神经网络(CNN)学习随笔-05-基于Python的LeNet之CNN</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/pay.JPG" alt="百色梵 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>觉得作者写的不错，就给点赏钱吧！_(:з」∠)_</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag">#python</a>
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/15/【python机器学习】多层感知器与BP模型/" rel="next" title="【python机器学习】多层感知器与BP模型">
+                <i class="fa fa-chevron-left"></i> 【python机器学习】多层感知器与BP模型
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/09/17/【python机器学习】Convolutional-Neural-Networks卷积神经网络和LeNet/"
+           data-title="【python机器学习】Convolutional Neural Networks卷积神经网络和LeNet" data-url="http://lvvan.top/2016/09/17/【python机器学习】Convolutional-Neural-Networks卷积神经网络和LeNet/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://img1.doubanio.com/icon/ul61277596-19.jpg"
+               alt="百色梵" />
+          <p class="site-author-name" itemprop="name">百色梵</p>
+          <p class="site-description motion-element" itemprop="description">是翩翩公子，也是浊世烟枪
+是三分剑侠，又是三分骚客
+爱自由又言慎独
+明是非却性激愤
+轻装上阵，不忘万里山河
+欲登云天，谁人去我阡陌
+将错就错无人之过
+似醒非醒本是寂寞
+</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#神经网络"><span class="nav-number">1.</span> <span class="nav-text">神经网络</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#卷积神经网络CNN"><span class="nav-number">2.</span> <span class="nav-text">卷积神经网络CNN</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#稀疏连通"><span class="nav-number">2.1.</span> <span class="nav-text">稀疏连通</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#共享权值"><span class="nav-number">2.2.</span> <span class="nav-text">共享权值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特征映射（Feature-Map）"><span class="nav-number">2.3.</span> <span class="nav-text">特征映射（Feature Map）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#python中的卷积运算"><span class="nav-number">2.4.</span> <span class="nav-text">python中的卷积运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最大池"><span class="nav-number">2.5.</span> <span class="nav-text">最大池</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CNN应用之LeNet"><span class="nav-number">3.</span> <span class="nav-text">CNN应用之LeNet</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#LeNetConvPoolLayer-Class"><span class="nav-number">3.1.</span> <span class="nav-text">LeNetConvPoolLayer Class</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#训练和验证的evaluate-lenet5函数"><span class="nav-number">3.2.</span> <span class="nav-text">训练和验证的evaluate_lenet5函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第0层，S1层-C1层"><span class="nav-number">3.2.1.</span> <span class="nav-text">第0层，S1层+C1层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第1层-S2层-C2层"><span class="nav-number">3.2.2.</span> <span class="nav-text">第1层 S2层+C2层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第2层-MLP隐层"><span class="nav-number">3.2.3.</span> <span class="nav-text">第2层 MLP隐层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第3层-lR层"><span class="nav-number">3.2.4.</span> <span class="nav-text">第3层 lR层</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行结果"><span class="nav-number">3.3.</span> <span class="nav-text">运行结果</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">百色梵</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"lvvan"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
