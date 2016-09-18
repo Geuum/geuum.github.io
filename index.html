@@ -279,6 +279,204 @@
             
               
                 
+                <a class="post-title-link" href="/2016/09/18/【python机器学习】从Autoencoder到dA再到SdA/" itemprop="url">
+                  【python机器学习】从Autoencoder到dA再到SdA
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-18T21:56:38+08:00" content="2016-09-18">
+              2016-09-18
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/18/【python机器学习】从Autoencoder到dA再到SdA/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/18/【python机器学习】从Autoencoder到dA再到SdA/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在学习什么是Denoising Autoencoders之前，首先要了解什么是Autoencoder。</p>
+<h1 id="Autoencoder"><a href="#Autoencoder" class="headerlink" title="Autoencoder"></a>Autoencoder</h1><p>AE是一种无监督的学习算法，他利用反向传播算法，让目标值等于输入值。</p>
+<p><img src="http://deeplearning.stanford.edu/wiki/images/thumb/f/f9/Autoencoder636.png/400px-Autoencoder636.png" alt="image"></p>
+<p>AE本身的目的是训练一个$h_{w,b}(x)\approx{x}$的函数。为了让输入更好的拥有一些。</p>
+<p>假设我们有输入$x\in[0,1]^d$，将其映射到隐层上</p>
+<p>$$<br>y=s(Wx+b)<br>$$</p>
+<p>s是非线性函数，例如sigmoid函数。接着再对y重构使其逼近x</p>
+<p>$$<br>z=s(W’x+b’)<br>$$</p>
+<p>这里的z不能和x画上等号，只能说z是x的预测。而重构的权重矩阵$W’$可以由前面映射的权重矩阵限制，有$W’=W^{\top}$，这被叫做tied weights。这样在这个过程中只需要确定三个参数W，b，b’。</p>
+<p>重构是预测的过程，既然是预测，那就有误差。我们用均方误差就能计算</p>
+<p>$$<br>L(xz)=||x-z||^2<br>$$</p>
+<p>如果输入可以看作是位向量或者概率向量，交叉熵也可以用来衡量：</p>
+<p>$$<br>L_H(x,z)=-\sum^d_{k=1}[x_k\log{z_k}+(1-x_k)\log{(1-z_k)}]<br>$$</p>
+<p>我们希望编码y是分布式的，可以捕捉到输入数据变化的主元的坐标，有一点类似于PCA。</p>
+<p>下面来看一下代码构成</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(</span></span></div><div class="line">       self,</div><div class="line">       numpy_rng,</div><div class="line">       theano_rng=None,</div><div class="line">       input=None,</div><div class="line">       n_visible=<span class="number">784</span>,</div><div class="line">       n_hidden=<span class="number">500</span>,</div><div class="line">       W=None,</div><div class="line">       bhid=None,</div><div class="line">       bvis=None</div><div class="line">   ):</div><div class="line">      </div><div class="line">       self.n_visible = n_visible</div><div class="line">       self.n_hidden = n_hidden</div><div class="line"></div><div class="line">       <span class="keyword">if</span> <span class="keyword">not</span> theano_rng:</div><div class="line">           theano_rng = RandomStreams(numpy_rng.randint(<span class="number">2</span> ** <span class="number">30</span>))</div><div class="line"></div><div class="line">       <span class="keyword">if</span> <span class="keyword">not</span> W:</div><div class="line">           initial_W = numpy.asarray(</div><div class="line">               numpy_rng.uniform(</div><div class="line">                   low=<span class="number">-4</span> * numpy.sqrt(<span class="number">6.</span> / (n_hidden + n_visible)),</div><div class="line">                   high=<span class="number">4</span> * numpy.sqrt(<span class="number">6.</span> / (n_hidden + n_visible)),</div><div class="line">                   size=(n_visible, n_hidden)</div><div class="line">               ),</div><div class="line">               dtype=theano.config.floatX</div><div class="line">           )</div><div class="line">           W = theano.shared(value=initial_W, name=<span class="string">'W'</span>, borrow=<span class="keyword">True</span>)</div><div class="line"></div><div class="line">       <span class="keyword">if</span> <span class="keyword">not</span> bvis:</div><div class="line">           bvis = theano.shared(</div><div class="line">               value=numpy.zeros(</div><div class="line">                   n_visible,</div><div class="line">                   dtype=theano.config.floatX</div><div class="line">               ),</div><div class="line">               borrow=<span class="keyword">True</span></div><div class="line">           )</div><div class="line"></div><div class="line">       <span class="keyword">if</span> <span class="keyword">not</span> bhid:</div><div class="line">           bhid = theano.shared(</div><div class="line">               value=numpy.zeros(</div><div class="line">                   n_hidden,</div><div class="line">                   dtype=theano.config.floatX</div><div class="line">               ),</div><div class="line">               name=<span class="string">'b'</span>,</div><div class="line">               borrow=<span class="keyword">True</span></div><div class="line">           )</div><div class="line"></div><div class="line">       self.W = W</div><div class="line">       self.b = bhid</div><div class="line">       self.b_prime = bvis</div><div class="line">       self.W_prime = self.W.T</div><div class="line">       self.theano_rng = theano_rng</div><div class="line">       <span class="keyword">if</span> input <span class="keyword">is</span> <span class="keyword">None</span>:</div><div class="line">           self.x = T.dmatrix(name=<span class="string">'input'</span>)</div><div class="line">       <span class="keyword">else</span>:</div><div class="line">           self.x = input</div><div class="line"></div><div class="line">       self.params = [self.W, self.b, self.b_prime]</div></pre></td></tr></table></figure>
+<p>这是AE的初始化函数（也是之后的dA初始化函数），包含几个参数</p>
+<ul>
+<li>numpy_rng：numpy随机数生成器来构建权重</li>
+<li>theano_rng：theano随机数生成器</li>
+<li>input</li>
+<li>n_visible：输入层单元数</li>
+<li>n_hidden：隐层单元数</li>
+<li>W：</li>
+<li>bhid：隐层的blas变量</li>
+<li>bvis：显层的blas变量</li>
+</ul>
+<p>再看下AE的流程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">graph LR</div><div class="line">A[input]--&gt;B[hidden value]</div><div class="line">B--&gt;C[reconstract value]</div></pre></td></tr></table></figure>
+<p>因此，我们首先需要对input做$y=s(Wx+b)$操作</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_hidden_values</span><span class="params">(self, input)</span>:</span></div><div class="line">    <span class="keyword">return</span> T.nnet.sigmoid(T.dot(input, self.W) + self.b)</div></pre></td></tr></table></figure>
+<p>接着对隐层输出y再进行$z=s(W’x+b’)$操作</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_reconstructed_input</span><span class="params">(self, hidden)</span>:</span></div><div class="line">    <span class="keyword">return</span> T.nnet.sigmoid(T.dot(hidden, self.W_prime) + self.b_prime)</div></pre></td></tr></table></figure>
+<p>这里，因为研究表面$W’=W^{\top}$可以减少运算，实际上$W’$本身也无太大意义，所以这里的<code>W_prime</code>就是我们之前定义的<code>self.W_prime = self.W.T</code></p>
+<p>我们最终的目的还是通过最小化$L_H(x,z)=-\sum^d_{k=1}[x_k\log{z_k}+(1-x_k)\log{(1-z_k)}]$来计算三个参数$W,b,b’$的值。后面的流程和之前的MLPs，LR等类似。</p>
+<h1 id="Denoising-Autoencoders-dA"><a href="#Denoising-Autoencoders-dA" class="headerlink" title="Denoising Autoencoders (dA)"></a>Denoising Autoencoders (dA)</h1><p>Denoising Autoencoders实际上就是AE的加强版。我们知道生物视觉是可以重现，或者是自动补全残损的部分，而补全的是通过大脑计算获得的最优。可能比无残损本身的还要优化。这里就是用了这样一个道理，dA在AE的基础上加入了噪声，然后再进行AE操作。</p>
+<p>教材上这样解释</p>
+<blockquote>
+<p>Hence the denoising auto-encoder is trying to predict the corrupted (i.e. missing) values from the uncorrupted (i.e., non-missing) values, for randomly selected subsets of missing patterns. </p>
+</blockquote>
+<p>意即dA通过预测来补全噪声区域，实际上补全的过程加入了一些其他特性，当然是对我有利的，所以用这种方法重构的结果作为输出，效果比原图本身还要好。</p>
+<p>一个降噪自动编码器就是去通过把一些加噪声的输入映射到隐层空间，然后再映射回输入空间来重构真实的输入。</p>
+<ol>
+<li>首先把真实输入加噪声</li>
+<li>把加噪声的输入映射到隐层空间</li>
+<li>重构真实输入</li>
+<li>计算重构误差</li>
+</ol>
+<p>代码上只要模拟公式</p>
+<p>$$<br>\tilde{x} \backsim q_D(\tilde{x}|x)<br>$$</p>
+<p>将其放到AEinput之前就好了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_corrupted_input</span><span class="params">(self, input, corruption_level)</span>:</span></div><div class="line">    <span class="keyword">return</span> self.theano_rng.binomial(size=input.shape, n=<span class="number">1</span>,</div><div class="line">                                    p=<span class="number">1</span> - corruption_level,</div><div class="line">                                    dtype=theano.config.floatX) * input</div></pre></td></tr></table></figure>
+<blockquote>
+<p>This function keeps <code>1-corruption_level</code> entries of the inputs the same and zero-out randomly selected subset of size <code>coruption_level</code></p>
+</blockquote>
+<p>这个函数的功能就是对输入加噪声。之后将以这个加噪的输入作为输入进行隐层操作。</p>
+<p>将不加噪重构（AE）和加噪重构（dA）的输入对比</p>
+<p><img src="http://deeplearning.net/tutorial/_images/filters_corruption_0.png" alt="image">   <img src="http://deeplearning.net/tutorial/_images/filters_corruption_30.png" alt="image"></p>
+<p>左边是不加噪，右边是加30%噪声</p>
+<h1 id="Stacked-Denoising-Autoencoders-SdA"><a href="#Stacked-Denoising-Autoencoders-SdA" class="headerlink" title="Stacked Denoising Autoencoders (SdA)"></a>Stacked Denoising Autoencoders (SdA)</h1><p>将dA的操作进行堆叠，意即进行多次，每一个dA的输入都是上一个dA的输出。把单层寻找最优输出的过程叫做pre-train。</p>
+<p>当所有堆叠的dA都pre-train完毕之后，接下来需要进行fine-tune。这个过程是一个监督学习过程，首先在之前的output之后加入一个LR层，接着将整个网络作为MLP训练</p>
+<p><img src="http://img2.ph.126.net/RaHhD40I-9IWhhS987W7BQ==/6631470186957042581.png" alt="image"></p>
+<p>代码在原有的dA基础上加入for循环</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(self.n_layers):</div><div class="line">    <span class="keyword">if</span> i == <span class="number">0</span>:</div><div class="line">        input_size = n_ins</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        input_size = hidden_layers_sizes[i - <span class="number">1</span>]</div><div class="line"></div><div class="line">    <span class="keyword">if</span> i == <span class="number">0</span>:</div><div class="line">        layer_input = self.x</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        layer_input = self.sigmoid_layers[<span class="number">-1</span>].output</div><div class="line"></div><div class="line">    sigmoid_layer = HiddenLayer(rng=numpy_rng,</div><div class="line">                                input=layer_input,</div><div class="line">                                n_in=input_size,</div><div class="line">                                n_out=hidden_layers_sizes[i],</div><div class="line">                                activation=T.nnet.sigmoid)</div><div class="line">                                </div><div class="line">    self.sigmoid_layers.append(sigmoid_layer)</div><div class="line">    </div><div class="line">    self.params.extend(sigmoid_layer.params)</div><div class="line"></div><div class="line">    dA_layer = dA(numpy_rng=numpy_rng,</div><div class="line">                  theano_rng=theano_rng,</div><div class="line">                  input=layer_input,</div><div class="line">                  n_visible=input_size,</div><div class="line">                  n_hidden=hidden_layers_sizes[i],</div><div class="line">                  W=sigmoid_layer.W,</div><div class="line">                  bhid=sigmoid_layer.b)</div><div class="line">    self.dA_layers.append(dA_layer)</div></pre></td></tr></table></figure>
+<p>我们用<code>self.sigmoid_layers</code>将每一个隐层存储起来，而用<code>self.dA_layers</code>将dA存储起来，注意到他们的输入都是<code>layer_input</code>，所以他们是并行关系。</p>
+<p>接下来在最后加入LR模块</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">self.logLayer = LogisticRegression(</div><div class="line">        input=self.sigmoid_layers[<span class="number">-1</span>].output,</div><div class="line">        n_in=hidden_layers_sizes[<span class="number">-1</span>],</div><div class="line">        n_out=n_outs</div><div class="line">    )</div><div class="line"></div><div class="line">self.params.extend(self.logLayer.params)</div><div class="line">self.finetune_cost = self.logLayer.negative_log_likelihood(self.y)</div><div class="line">self.errors = self.logLayer.errors(self.y)</div></pre></td></tr></table></figure>
+<p>注意其输入是<code>elf.sigmoid_layers[-1].output</code>是隐层最后一个的输出，所以最后的输出就是LR之后的params，finetune_cost，errors，这些全部是LR里面的算法。</p>
+<p>接着就是我们说的pre-train模块。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">pretraining_functions</span><span class="params">(self, train_set_x, batch_size)</span>:</span></div><div class="line">   index = T.lscalar(<span class="string">'index'</span>)  <span class="comment"># index to a minibatch</span></div><div class="line">   corruption_level = T.scalar(<span class="string">'corruption'</span>)  <span class="comment"># % of corruption to use</span></div><div class="line">   learning_rate = T.scalar(<span class="string">'lr'</span>)  <span class="comment"># learning rate to use</span></div><div class="line">   <span class="comment"># begining of a batch, given `index`</span></div><div class="line">   batch_begin = index * batch_size</div><div class="line">   <span class="comment"># ending of a batch given `index`</span></div><div class="line">   batch_end = batch_begin + batch_size</div><div class="line"></div><div class="line">   pretrain_fns = []</div><div class="line">   <span class="keyword">for</span> dA <span class="keyword">in</span> self.dA_layers:</div><div class="line">       <span class="comment"># get the cost and the updates list</span></div><div class="line">       cost, updates = dA.get_cost_updates(corruption_level,</div><div class="line">                                           learning_rate)</div><div class="line">       <span class="comment"># compile the theano function</span></div><div class="line">       fn = theano.function(</div><div class="line">           inputs=[</div><div class="line">               index,</div><div class="line">               theano.In(corruption_level, value=<span class="number">0.2</span>),</div><div class="line">               theano.In(learning_rate, value=<span class="number">0.1</span>)</div><div class="line">           ],</div><div class="line">           outputs=cost,</div><div class="line">           updates=updates,</div><div class="line">           givens=&#123;</div><div class="line">               self.x: train_set_x[batch_begin: batch_end]</div><div class="line">           &#125;</div><div class="line">       )</div><div class="line">       <span class="comment"># append `fn` to the list of functions</span></div><div class="line">       pretrain_fns.append(fn)</div><div class="line"></div><div class="line">   <span class="keyword">return</span> pretrain_fns</div></pre></td></tr></table></figure>
+<p>我们将每一个dA层（3层）定义为一个theano.function，优化计算后，将其组合成一个列表。</p>
+<p>在pre-train之后就是fit tune过程。fit tune简言之就是将之前的所有层合起来作为一个MLP来训练。</p>
+<p>用train来训练参数，用validate来计算于validation set中的错误率，用test来计算于test set 中打的错误率。</p>
+<p>最终，输入input进行测试。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_SdA</span><span class="params">(finetune_lr=<span class="number">0.1</span>, pretraining_epochs=<span class="number">15</span>,</span></span></div><div class="line">             pretrain_lr=<span class="number">0.001</span>, training_epochs=<span class="number">1000</span>,</div><div class="line">             dataset=<span class="string">'mnist.pkl.gz'</span>, batch_size=<span class="number">1</span>):</div><div class="line">             </div><div class="line">    datasets = load_data(dataset)</div><div class="line"></div><div class="line">    train_set_x, train_set_y = datasets[<span class="number">0</span>]</div><div class="line">    valid_set_x, valid_set_y = datasets[<span class="number">1</span>]</div><div class="line">    test_set_x, test_set_y = datasets[<span class="number">2</span>]</div><div class="line"></div><div class="line">    <span class="comment"># compute number of minibatches for training, validation and testing</span></div><div class="line">    n_train_batches = train_set_x.get_value(borrow=<span class="keyword">True</span>).shape[<span class="number">0</span>]</div><div class="line">    n_train_batches //= batch_size</div><div class="line"></div><div class="line">    <span class="comment"># numpy random generator</span></div><div class="line">    <span class="comment"># start-snippet-3</span></div><div class="line">    numpy_rng = numpy.random.RandomState(<span class="number">89677</span>)</div><div class="line">    print(<span class="string">'... building the model'</span>)</div><div class="line">    <span class="comment"># construct the stacked denoising autoencoder class</span></div><div class="line">    sda = SdA(</div><div class="line">        numpy_rng=numpy_rng,</div><div class="line">        n_ins=<span class="number">28</span> * <span class="number">28</span>,</div><div class="line">        hidden_layers_sizes=[<span class="number">1000</span>, <span class="number">1000</span>, <span class="number">1000</span>],</div><div class="line">        n_outs=<span class="number">10</span></div><div class="line">    )</div><div class="line">    </div><div class="line">    <span class="comment"># end-snippet-3 start-snippet-4</span></div><div class="line">    <span class="comment">#########################</span></div><div class="line">    <span class="comment"># PRETRAINING THE MODEL #</span></div><div class="line">    <span class="comment">#########################</span></div><div class="line">    print(<span class="string">'... getting the pretraining functions'</span>)</div><div class="line">    pretraining_fns = sda.pretraining_functions(train_set_x=train_set_x,</div><div class="line">                                                batch_size=batch_size)</div><div class="line"></div><div class="line">    print(<span class="string">'... pre-training the model'</span>)</div><div class="line">    start_time = timeit.default_timer()</div><div class="line">    <span class="comment">## Pre-train layer-wise</span></div><div class="line">    corruption_levels = [<span class="number">.1</span>, <span class="number">.2</span>, <span class="number">.3</span>]</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(sda.n_layers):</div><div class="line">        <span class="comment"># go through pretraining epochs</span></div><div class="line">        <span class="keyword">for</span> epoch <span class="keyword">in</span> range(pretraining_epochs):</div><div class="line">            <span class="comment"># go through the training set</span></div><div class="line">            c = []</div><div class="line">            <span class="keyword">for</span> batch_index <span class="keyword">in</span> range(n_train_batches):</div><div class="line">                c.append(pretraining_fns[i](index=batch_index,</div><div class="line">                         corruption=corruption_levels[i],</div><div class="line">                         lr=pretrain_lr))</div><div class="line">            print(<span class="string">'Pre-training layer %i, epoch %d, cost %f'</span> % (i, epoch, numpy.mean(c)))</div><div class="line"></div><div class="line">    end_time = timeit.default_timer()</div><div class="line"></div><div class="line">    print((<span class="string">'The pretraining code for file '</span> +</div><div class="line">           os.path.split(__file__)[<span class="number">1</span>] +</div><div class="line">           <span class="string">' ran for %.2fm'</span> % ((end_time - start_time) / <span class="number">60.</span>)), file=sys.stderr)</div><div class="line">    <span class="comment"># end-snippet-4</span></div><div class="line">    </div><div class="line">    <span class="comment">########################</span></div><div class="line">    <span class="comment"># FINETUNING THE MODEL #</span></div><div class="line">    <span class="comment">########################</span></div><div class="line"></div><div class="line">    <span class="comment"># get the training, validation and testing function for the model</span></div><div class="line">    print(<span class="string">'... getting the finetuning functions'</span>)</div><div class="line">    train_fn, validate_model, test_model = sda.build_finetune_functions(</div><div class="line">        datasets=datasets,</div><div class="line">        batch_size=batch_size,</div><div class="line">        learning_rate=finetune_lr</div><div class="line">    )</div><div class="line"></div><div class="line">    print(<span class="string">'... finetunning the model'</span>)</div><div class="line">    <span class="comment"># early-stopping parameters</span></div><div class="line">    patience = <span class="number">10</span> * n_train_batches  <span class="comment"># look as this many examples regardless</span></div><div class="line">    patience_increase = <span class="number">2.</span>  <span class="comment"># wait this much longer when a new best is</span></div><div class="line">                            <span class="comment"># found</span></div><div class="line">    improvement_threshold = <span class="number">0.995</span>  <span class="comment"># a relative improvement of this much is</span></div><div class="line">                                   <span class="comment"># considered significant</span></div><div class="line">    validation_frequency = min(n_train_batches, patience // <span class="number">2</span>)</div><div class="line">                                  <span class="comment"># go through this many</span></div><div class="line">                                  <span class="comment"># minibatche before checking the network</span></div><div class="line">                                  <span class="comment"># on the validation set; in this case we</span></div><div class="line">                                  <span class="comment"># check every epoch</span></div><div class="line"></div><div class="line">    best_validation_loss = numpy.inf</div><div class="line">    test_score = <span class="number">0.</span></div><div class="line">    start_time = timeit.default_timer()</div><div class="line"></div><div class="line">    done_looping = <span class="keyword">False</span></div><div class="line">    epoch = <span class="number">0</span></div><div class="line"></div><div class="line">    <span class="keyword">while</span> (epoch &lt; training_epochs) <span class="keyword">and</span> (<span class="keyword">not</span> done_looping):</div><div class="line">        epoch = epoch + <span class="number">1</span></div><div class="line">        <span class="keyword">for</span> minibatch_index <span class="keyword">in</span> range(n_train_batches):</div><div class="line">            minibatch_avg_cost = train_fn(minibatch_index)</div><div class="line">            iter = (epoch - <span class="number">1</span>) * n_train_batches + minibatch_index</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (iter + <span class="number">1</span>) % validation_frequency == <span class="number">0</span>:</div><div class="line">                validation_losses = validate_model()</div><div class="line">                this_validation_loss = numpy.mean(validation_losses)</div><div class="line">                print(<span class="string">'epoch %i, minibatch %i/%i, validation error %f %%'</span> %</div><div class="line">                      (epoch, minibatch_index + <span class="number">1</span>, n_train_batches,</div><div class="line">                       this_validation_loss * <span class="number">100.</span>))</div><div class="line"></div><div class="line">                <span class="comment"># if we got the best validation score until now</span></div><div class="line">                <span class="keyword">if</span> this_validation_loss &lt; best_validation_loss:</div><div class="line"></div><div class="line">                    <span class="comment">#improve patience if loss improvement is good enough</span></div><div class="line">                    <span class="keyword">if</span> (</div><div class="line">                        this_validation_loss &lt; best_validation_loss *</div><div class="line">                        improvement_threshold</div><div class="line">                    ):</div><div class="line">                        patience = max(patience, iter * patience_increase)</div><div class="line"></div><div class="line">                    <span class="comment"># save best validation score and iteration number</span></div><div class="line">                    best_validation_loss = this_validation_loss</div><div class="line">                    best_iter = iter</div><div class="line"></div><div class="line">                    <span class="comment"># test it on the test set</span></div><div class="line">                    test_losses = test_model()</div><div class="line">                    test_score = numpy.mean(test_losses)</div><div class="line">                    print((<span class="string">'     epoch %i, minibatch %i/%i, test error of '</span></div><div class="line">                           <span class="string">'best model %f %%'</span>) %</div><div class="line">                          (epoch, minibatch_index + <span class="number">1</span>, n_train_batches,</div><div class="line">                           test_score * <span class="number">100.</span>))</div><div class="line"></div><div class="line">            <span class="keyword">if</span> patience &lt;= iter:</div><div class="line">                done_looping = <span class="keyword">True</span></div><div class="line">                <span class="keyword">break</span></div><div class="line"></div><div class="line">    end_time = timeit.default_timer()</div><div class="line">    print(</div><div class="line">        (</div><div class="line">            <span class="string">'Optimization complete with best validation score of %f %%, '</span></div><div class="line">            <span class="string">'on iteration %i, '</span></div><div class="line">            <span class="string">'with test performance %f %%'</span></div><div class="line">        )</div><div class="line">        % (best_validation_loss * <span class="number">100.</span>, best_iter + <span class="number">1</span>, test_score * <span class="number">100.</span>)</div><div class="line">    )</div><div class="line">    print((<span class="string">'The training code for file '</span> +</div><div class="line">           os.path.split(__file__)[<span class="number">1</span>] +</div><div class="line">           <span class="string">' ran for %.2fm'</span> % ((end_time - start_time) / <span class="number">60.</span>)), file=sys.stderr)</div></pre></td></tr></table></figure>
+<h1 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h1><p>SdA的核心就在于</p>
+<ul>
+<li>pre train</li>
+<li>fit tune</li>
+</ul>
+<p>pre train是对每个dA层分别train获得最优的参数，fit tune是将所有的dA组合加上一个LR模型，将其看作是一个MLPs模型进行训练。</p>
+<p>两个的输出都是一个input，输出却是不同的。二者的关系何在呢？</p>
+<p>从代码上看，两个完全是并行，互不相干的。</p>
+<p>对于这一点，教材上是这样解释的</p>
+<blockquote>
+<p>We can see the stacked denoising autoencoder as having two facades: a list of autoencoders, and an MLP. During pre-training we use the first facade, i.e., we treat our model as a list of autoencoders, and train each autoencoder seperately. In the second stage of training, we use the second facade. These two facades are linked because:1.the autoencoders and the sigmoid layers of the MLP share parameters,2.the latent representations computed by intermediate layers of the MLP are fed as input to the autoencoders.</p>
+</blockquote>
+<p>意即这两个东西看似分割，实则不然，有两个原因</p>
+<ul>
+<li>MLP的AE们和sigmoid计算层共享参数</li>
+<li>通过MLP的中间层来计算的隐式表达是作为AE的输入的</li>
+</ul>
+<p>wtf？</p>
+<p>再来分析下代码，发现无论是pretrain还是fittune都是由一个</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">sda = SdA(</div><div class="line">    numpy_rng=numpy_rng,</div><div class="line">    n_ins=<span class="number">28</span> * <span class="number">28</span>,</div><div class="line">    hidden_layers_sizes=[<span class="number">1000</span>, <span class="number">1000</span>, <span class="number">1000</span>],</div><div class="line">    n_outs=<span class="number">10</span></div><div class="line">)</div></pre></td></tr></table></figure>
+<p>来进行操作。</p>
+<p>第二，其实通过第一步的pretrain，sda的参数已然改变，因为过程是无监督的，所以计算出来后的参数也会改变。</p>
+<p>这样，SdA才算真正理解。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/09/17/【python机器学习】Convolutional-Neural-Networks卷积神经网络和LeNet/" itemprop="url">
                   【python机器学习】Convolutional Neural Networks卷积神经网络和LeNet
                 </a>
@@ -1323,7 +1521,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">7</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
