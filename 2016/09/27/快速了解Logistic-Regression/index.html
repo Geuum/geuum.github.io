@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="机器学习," />
+  <meta name="keywords" content="机器学习,回归分析," />
 
 
 
@@ -84,28 +84,25 @@
 
 
 
-<meta name="description" content="本科时候，已经学过了线性代数，考研的时候也是重点之一，但是时间过去略久，以我的没记性的脑子还是再来复习一下吧！主要是概念上的。
+<meta name="description" content="之前学习theano的时候，对于Logistic Regression只有粗略的了解，对于其个中原理还是欠缺认识，今天来补全一下，也是对ML的基础再夯实。
+言归正传，Logistic Regression的定义
 
-Scalars, Vectors, Matrices and Tensors【标量、向量、矩阵、张量】标量、向量的概念就不多说了关于矩阵的公式在这里列几个吧：
-
-$\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
+Logistic regression is the appropriate regression analysis to conduct when the dependent vari">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【机器学习】1-从线性代数开始">
-<meta property="og:url" content="http://lvvan.top/2016/08/21/【机器学习】1-从线性代数开始/index.html">
+<meta property="og:title" content="快速了解Logistic Regression">
+<meta property="og:url" content="http://lvvan.top/2016/09/27/快速了解Logistic-Regression/index.html">
 <meta property="og:site_name" content="Lvvan的博客">
-<meta property="og:description" content="本科时候，已经学过了线性代数，考研的时候也是重点之一，但是时间过去略久，以我的没记性的脑子还是再来复习一下吧！主要是概念上的。
+<meta property="og:description" content="之前学习theano的时候，对于Logistic Regression只有粗略的了解，对于其个中原理还是欠缺认识，今天来补全一下，也是对ML的基础再夯实。
+言归正传，Logistic Regression的定义
 
-Scalars, Vectors, Matrices and Tensors【标量、向量、矩阵、张量】标量、向量的概念就不多说了关于矩阵的公式在这里列几个吧：
-
-$\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
-<meta property="og:updated_time" content="2016-08-22T02:29:08.178Z">
+Logistic regression is the appropriate regression analysis to conduct when the dependent vari">
+<meta property="og:updated_time" content="2016-09-27T07:43:31.684Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="【机器学习】1-从线性代数开始">
-<meta name="twitter:description" content="本科时候，已经学过了线性代数，考研的时候也是重点之一，但是时间过去略久，以我的没记性的脑子还是再来复习一下吧！主要是概念上的。
+<meta name="twitter:title" content="快速了解Logistic Regression">
+<meta name="twitter:description" content="之前学习theano的时候，对于Logistic Regression只有粗略的了解，对于其个中原理还是欠缺认识，今天来补全一下，也是对ML的基础再夯实。
+言归正传，Logistic Regression的定义
 
-Scalars, Vectors, Matrices and Tensors【标量、向量、矩阵、张量】标量、向量的概念就不多说了关于矩阵的公式在这里列几个吧：
-
-$\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
+Logistic regression is the appropriate regression analysis to conduct when the dependent vari">
 
 
 
@@ -126,9 +123,9 @@ $\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
 
 
 
-  <link rel="canonical" href="http://lvvan.top/2016/08/21/【机器学习】1-从线性代数开始/"/>
+  <link rel="canonical" href="http://lvvan.top/2016/09/27/快速了解Logistic-Regression/"/>
 
-  <title> 【机器学习】1-从线性代数开始 | Lvvan的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title> 快速了解Logistic Regression | Lvvan的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -268,7 +265,7 @@ $\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
             
             
               
-                【机器学习】1-从线性代数开始
+                快速了解Logistic Regression
               
             
           </h1>
@@ -280,8 +277,8 @@ $\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-21T16:26:22+08:00" content="2016-08-21">
-              2016-08-21
+            <time itemprop="dateCreated" datetime="2016-09-27T15:37:29+08:00" content="2016-09-27">
+              2016-09-27
             </time>
           </span>
 
@@ -291,8 +288,8 @@ $\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/08/21/【机器学习】1-从线性代数开始/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/21/【机器学习】1-从线性代数开始/" itemprop="commentsCount"></span>
+                <a href="/2016/09/27/快速了解Logistic-Regression/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/27/快速了解Logistic-Regression/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -320,54 +317,65 @@ $\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
       
 
       
-        <p>本科时候，已经学过了线性代数，考研的时候也是重点之一，但是时间过去略久，以我的没记性的脑子还是再来复习一下吧！主要是概念上的。</p>
-<hr>
-<h3 id="Scalars-Vectors-Matrices-and-Tensors"><a href="#Scalars-Vectors-Matrices-and-Tensors" class="headerlink" title="Scalars, Vectors, Matrices and Tensors"></a>Scalars, Vectors, Matrices and Tensors</h3><p>【标量、向量、矩阵、张量】<br>标量、向量的概念就不多说了<br>关于矩阵的公式在这里列几个吧：</p>
-<ol>
-<li>$\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i,j}= A_{i,j}+B_{i,j}$\ ddd $a^{3}_{ij}$\</li>
-<li>$\mathbf{D}=a \bullet \mathbf{B} + c$ where $ D _{i,j}= a \bullet B _{i,j}+c $</li>
-<li>$\mathbf{C}=\mathbf{A}+\mathbf{b}$ where  $ C _{i,j}=a \bullet B _{i,j}+b _j $</li>
-<li>$\mathbf{C}=\mathbf{AB}$ where  $ C _{i,j}=\sum _kA _{i,k}B _{j,k} $</li>
-</ol>
-<p>$$<br>C=AB=\begin{pmatrix} 1 &amp; 2 &amp; 3 \\4 &amp; 5 &amp; 6 \end{pmatrix} \begin{pmatrix}1 &amp; 4\\ 2&amp;5\\ 3&amp;6 \end{pmatrix}=\begin{pmatrix} 1\times1+2\times2+3\times3 &amp; 1\times4+2\times5+3\times6  \\4\times1+5\times2+6\times3&amp; 4\times4+5\times5+6\times6 \end{pmatrix}=\begin{pmatrix} 14 &amp; 32 \\32 &amp; 77 \end{pmatrix}<br>$$</p>
-<ol>
-<li><strong>Hadamard product:</strong> $\mathbf{A}\bigodot\mathbf{B}$  where  ${A\bigodot B}_{i,j}=a_{i,j}b_{i,j}$ </li>
-</ol>
-<p>$$<br>\begin{pmatrix} 1 &amp; 3 &amp; 2 \\1 &amp; 0 &amp; 0\\1&amp;2&amp;2 \end{pmatrix}\bigodot \begin{pmatrix}0&amp;0 &amp;2\\ 7&amp;5&amp;0\\ 2&amp;1&amp;1 \end{pmatrix}=\begin{pmatrix} 1\times0&amp;3\times0&amp;2\times2\\ 1\times7&amp;0\times5&amp;0\times0 \\1\times3&amp;2\times1&amp;2\times1\end{pmatrix}=\begin{pmatrix} 0 &amp; 0&amp;4 \\7 &amp; 0&amp;0\\2&amp;2&amp;2 \end{pmatrix}<br>$$</p>
-<ol>
-<li>部分乘法公式：</li>
-</ol>
-<ul>
-<li><strong><em>A</em></strong>(<strong><em>B</em></strong> + <strong><em>C</em></strong>) = <strong><em>AB</em></strong> + <strong><em>AC</em></strong>. </li>
-<li><strong><em>A</em></strong>(<strong><em>BC</em></strong>) = (<strong><em>AB</em></strong>)<strong><em>C</em></strong>.</li>
-<li>一般不满足交换律</li>
-<li>向量可以满足交换律$\mathbf{x}^{\top}\mathbf{y}=\mathbf{y}^{\top}\mathbf{x}$</li>
-<li>$(\mathbf{AB})^{\top}=\mathbf{B}^{\top}\mathbf{A}^{\top}$</li>
-</ul>
-<ol>
-<li>逆矩阵：$\mathbf{A^{-1}}\mathbf{A}=\mathbf{I_n}$</li>
-</ol>
-<h3 id="Linear-Dependence-and-Span"><a href="#Linear-Dependence-and-Span" class="headerlink" title="Linear Dependence and Span"></a>Linear Dependence and Span</h3><p>根据逆矩阵的定义，我们可以用这个来解<strong><em>Ax=b</em></strong>的解，因为$\mathbf{x}=\mathbf{A^{-1}b}$,但这有一个前提那就是$A^{-a}$必须存在。</p>
-<h3 id="Norms-范数"><a href="#Norms-范数" class="headerlink" title="Norms 范数"></a>Norms 范数</h3><p>关于范数的作用，书里面给出这样的解释：</p>
+        <p>之前学习theano的时候，对于Logistic Regression只有粗略的了解，对于其个中原理还是欠缺认识，今天来补全一下，也是对ML的基础再夯实。</p>
+<p>言归正传，Logistic Regression的定义</p>
 <blockquote>
-<p>Sometimes we need to measure the size of a vector. In machine learning, we usually measure the size of vectors using a function called a norm. Formally, the $L^p$ norm is given by</p>
+<p>Logistic regression is the appropriate regression analysis to conduct when the dependent variable is dichotomous (binary). <a href="http://www.statisticssolutions.com/what-is-logistic-regression/" target="_blank" rel="external">from</a></p>
+<p>Logistic regression is a statistical method for analyzing a dataset in which there are one or more independent variables that determine an outcome. The outcome is measured with a dichotomous variable (in which there are only two possible outcomes).<a href="https://www.medcalc.org/manual/logistic_regression.php" target="_blank" rel="external">from</a></p>
 </blockquote>
-<p>$$<br>\begin{aligned}<br>\vert\vert{x}\vert\vert _p=(\sum_i \vert{x}\vert ^p)^{\frac{1}{p}}<br>\end{aligned}<br>$$<br>for $p\in\mathbb{R},p \ge1$</p>
-<p>对于范数，可以认为是描述向量长度的一个方式，可以看作是一个函数<em>f</em>，那么只要满足下面三个条件，那么都是范数：</p>
+<p>以上，Logistic Regression是一种回归模型，但是它比较特殊的就是output variable是dichotomous的。</p>
+<p>先撇开什么是dichotomous，我们首先要考虑什么是回归模型？（统计没学好，掩面🤦）</p>
+<h1 id="回归模型"><a href="#回归模型" class="headerlink" title="回归模型"></a>回归模型</h1><p>我们平时遇到的变量相关问题，大体可以分为两种</p>
+<ul>
+<li>函数关系</li>
+<li>相关关系</li>
+</ul>
+<p>函数关系，是我们从小学到大的，变量到变量是确切的函数关系，不存在偏差，例如$y=2x+1$，就是典型的函数关系。</p>
+<p>相关关系，变量与变量之间没有确切的函数关系，这个关系是不确定的，但是他们有肯定有一定的关系。典型的就是股票了，股票那条线，和市场，公司经营，决策等等有很大关系，可你又说不出这种关系具体是什么样子的（炒股老司机勿喷）。这种情况下，我们用统计的方法，来模拟其函数关系，这也只能是模拟，无法确切。</p>
+<p>按照输入参数的数目，如果是线性模型，可以分为</p>
 <ol>
-<li>正定性：$f(\mathbf{x})=0\Rightarrow \mathbf{x=0}$，可以理解为若是长度为0，则一定为0向量</li>
-<li>三角不等式：$f(\mathbf{x+y})\le f(\mathbf{x})+f(\mathbf{y})$</li>
-<li>齐次性：$\forall\alpha\in\mathbb{R},f(\alpha x)=\vert\alpha\vert f(x)$,对于标量的乘法应该满足齐次性</li>
+<li>一元线性回归</li>
+<li>多元线性回归</li>
 </ol>
-<p><strong>下面说下几个特殊的范数：</strong></p>
-<p>$L^2$范数,p是2的时候，就是$\vert\vert{\mathbf{x}}\vert\vert$（2的时候可以把2略掉），称为欧几里得范数（<em>Euclidean norm</em>）,它的计算方式很简单就是$\sqrt{\mathbf{x^{\top}x}}$,一般来说，用到2范数的平方更多一些。</p>
-<p>$L^1$范数，一般从$L^2$开始的范数，其变化都是越开始越慢，而只有$L^1$范数可以做到恒定变化。这在做一些初始变化的机器学习中很有帮助。</p>
-<p>在这里要说一下$L^0$范数，有人把<strong>向量中非0元素的个数</strong>称为$L^0$范数。但这是<strong>不规范</strong>的，实际上一般的书上都没有$L^0$范数的说法。因为其不满足上述的第三个条件——齐次性，向量的变化，不会改变非0的数目。所以最好用$L^1$范数来替代。</p>
-<p>$L^\infty$范数，向量中元素绝对值的最大值，即</p>
-<p>$$<br>\begin{aligned}<br>\vert\vert{\mathbf{x}}\vert\vert_\infty=max_{i}\vert{x_i}\vert<br>\end{aligned}<br>$$</p>
-<p>Frobenius norm:前面的范数都是丈量向量的，而Frobenius norm是丈量矩阵的，而且这里尤类似上述的$L^2$范数，</p>
-<p>$$<br>\begin{aligned}<br>\vert\vert{A}\vert\vert_F=\sqrt{\sum_{i,j}A^2_{i,j}}<br>\end{aligned}<br>$$</p>
-<p>向量的点乘可表示为范数的乘机$\mathbf{x}^\top\mathbf{y}=\vert\vert{\mathbf{x}}\vert\vert_2\vert\vert{\mathbf{y}}\vert\vert_2cos\theta$</p>
+<p>一元线性回归</p>
+<p>$$<br>y=\beta_0+\beta_1x<br>$$</p>
+<p>这就称为一元线性回归方程，其特性就不讨论了，可以看出式子逼近的是一个一元线性方程。</p>
+<p>同理，多元线性方程</p>
+<p>$$<br>y=\beta_0+\beta_1x_1+\beta_2x_2+…+\beta_kx_k+\epsilon<br>$$</p>
+<p>当然，情况多起来以后（统计方法，总不能只有一组数据吧），输出的y可以组成一个向量<strong>Y</strong>，输入可以变为一个矩阵<strong>X</strong>，参数可以变为一个向量$\beta$。</p>
+<p>$$<br>Y=<br>\begin{pmatrix}<br>y_1\\<br>y_2\\<br>\vdots\\<br>y_n<br>\end{pmatrix},<br>X=<br>\begin{pmatrix}<br>1&amp;x_{11}&amp;x_{21}&amp;\cdots&amp;x_{k1}\\<br>1&amp;x_{12}&amp;x_{22}&amp;\cdots&amp;x_{k2}\\<br>1&amp;x_{13}&amp;x_{23}&amp;\cdots&amp;x_{k3}\\<br>\vdots&amp;\vdots&amp;\vdots&amp;\vdots&amp;\vdots\\<br>1&amp;x_{1n}&amp;x_{2n}&amp;\cdots&amp;x_{kn}<br>\end{pmatrix},<br>\beta=<br>\begin{pmatrix}<br>\beta_1\\<br>\beta_2\\<br>\vdots\\<br>\beta_n<br>\end{pmatrix},<br>\epsilon=<br>\begin{pmatrix}<br>\epsilon_1\\<br>\epsilon_2\\<br>\vdots\\<br>\epsilon_n<br>\end{pmatrix}<br>$$</p>
+<p>组合起来就是</p>
+<p>$$<br>Y=\beta{X}+\epsilon<br>$$<br>多元线性回归就此完成（基本了解）。</p>
+<p>除了线性回归，回归模型还可以有各种非线性回归，这里暂时不考虑。</p>
+<h1 id="二值逻辑模型"><a href="#二值逻辑模型" class="headerlink" title="二值逻辑模型"></a>二值逻辑模型</h1><p>再回头看下我们的Logistic Regression。和回归模型不同的是，它的y是dichotomous的。</p>
+<p>什么是dichotomous呢？英语翻译是【叉状分枝的；分成两个的】，就是二值的（binary）。</p>
+<p>实际上，我们的y只能取0或者1，也就是无论怎么样的模拟，我们的预测值都会是0-1之间的。这就相当于最简单的分两类问题，比如预测张三是否出轨了，1表示出轨，0表示没出轨。我们预测值一定是在0-1之间徘徊的。</p>
+<p>由上面我们知道多元线性回归模型是</p>
+<p>$$<br>y=\beta_0+\beta_1x_1+\beta_2x_2+…+\beta_kx_k+\epsilon<br>$$</p>
+<p>的一种形式。现在我们把输出限死了是0或者1。这样就可以开始训练并预测了。</p>
+<p>什么概念呢？意思就是我们给定一堆人，给定许多参数，然后告诉你张三出轨了，李四没出轨，王五出轨了等等等。然后给你一个刘小二，给你一些参数，你来预测他出没出轨。然后你预测出来，哦！刘小二出轨的值是0.8，那么他有很大几率出轨。就是这么个道理。</p>
+<p>我们假设$E(Y)$表示其预测值，用$P(Y=i)$表示Y为0或1的概率。对于Y只能取值0和1的二值模型，我们发现</p>
+<p>$$<br>E(Y)=0(P(Y=0))+1(P(Y=1))=0(1-P(Y=1))+1(P(Y=1))=P(Y=1)<br>$$</p>
+<p>所以预测值$E(Y)$就是$Y=1$的概率$P(Y=1)$，所以我们可以说</p>
+<p>$$<br>P(Y=1)=\beta_0+\beta_1x_1+\beta_2x_2+…+\beta_kx_k+\epsilon<br>$$</p>
+<p><strong>问题1</strong>：通过上式，我们并不能保证$P(Y=1)$的值在0-1之间，而实际情况中，我们不需要超过1和小于0的情况。</p>
+<p>所以我们定义预测输出不是$E(Y)$了，而是$E(Y)=logit(E(Y))=\ln{\frac{E(Y)}{1-E(Y)}}$，所以</p>
+<p>$$<br>E(Y)=\frac{e^{\beta_0+\beta_1x_1+\beta_2x_2+…+\beta_kx_k}}{1+e^{\beta_0+\beta_1x_1+\beta_2x_2+…+\beta_kx_k}}=\frac{1}{1+e^{\beta_0+\beta_1x_1+\beta_2x_2+…+\beta_kx_k}}<br>$$</p>
+<p>有的同学这里不能理解，为什么$E(Y)$等号后面的东西完全变了呢？</p>
+<p><strong>其实，我们一开始假设预测的函数是多元线性回归模型，可我们用这个模型来预测却无法达到效果，产生了问题1</strong>。<strong>为了解决问题1，我们势必不能再用线性回归模型，所以我们对整个模型进行了改变，所以预测值也要进行改变</strong>。很显然，改变后的模型很好的解决了问题1。</p>
+<p>到这里，我们建立的模型就叫做logistic模型。</p>
+<h1 id="估算系数"><a href="#估算系数" class="headerlink" title="估算系数"></a>估算系数</h1><p>建立了模型之后，想要我们能够预测，我们当然需要知道的就是各个系数$\beta_0,\beta_1,\cdots,\beta_k$的大小，不然怎么预测。</p>
+<p>我们怎么通过模型来估算这样的系数呢？</p>
+<p>我们可以通过最大似然估计（最小二乘法不适用）来估计参数。</p>
+<p>这里我们使用对数似然函数，假设似然函数是L，如下</p>
+<p>$$<br>L=\prod_{i=1}^n{p(x_i)^{y_i}[1-p(x_i)]^{1-y_i}}<br>$$</p>
+<p>对数似然函数是</p>
+<p>$$<br>\ln{L}=\sum_{i=1}^n{y_i\ln{E(Y)}+(1-y_i)\ln{(1-E(Y))}}<br>$$</p>
+<p>我们的目的是训练$\theta=[\beta_0,\beta_1,\cdots,\beta_k]$使得$\ln{L}$最大。</p>
+<p>在机器学习中，我们有损失函数的说法，意即训练参数使得损失函数最小，可以套用在这，因为损失函数是最小，所以我们在$\ln{L}$前面加上负号。</p>
+<p>$$<br>J(\theta)=-\frac{1}{n}\sum_{i=1}^n{y_i\ln{E(Y)}+(1-y_i)\ln{(1-E(Y))}}<br>$$</p>
+<p>除以n是方便后面计算，现在可以暂时不考虑。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>到这里，相信你对LR模型已经初步了解，也可以动手写程序了。</p>
 
       
     </div>
@@ -397,6 +405,8 @@ $\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
           
             <a href="/tags/机器学习/" rel="tag">#机器学习</a>
           
+            <a href="/tags/回归分析/" rel="tag">#回归分析</a>
+          
         </div>
       
 
@@ -404,13 +414,13 @@ $\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2016/09/18/【python机器学习】从Autoencoder到dA再到SdA/" rel="next" title="【python机器学习】从Autoencoder到dA再到SdA">
+                <i class="fa fa-chevron-left"></i> 【python机器学习】从Autoencoder到dA再到SdA
+              </a>
+            
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/08/21/【机器学习】2-矩阵和向量的一些计算/" rel="prev" title="【机器学习】2-矩阵和向量的一些计算">
-                【机器学习】2-矩阵和向量的一些计算 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -474,8 +484,8 @@ $\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/08/21/【机器学习】1-从线性代数开始/"
-           data-title="【机器学习】1-从线性代数开始" data-url="http://lvvan.top/2016/08/21/【机器学习】1-从线性代数开始/">
+      <div class="ds-thread" data-thread-key="2016/09/27/快速了解Logistic-Regression/"
+           data-title="快速了解Logistic Regression" data-url="http://lvvan.top/2016/09/27/快速了解Logistic-Regression/">
       </div>
     
   </div>
@@ -574,7 +584,7 @@ $\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Scalars-Vectors-Matrices-and-Tensors"><span class="nav-number">1.</span> <span class="nav-text">Scalars, Vectors, Matrices and Tensors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linear-Dependence-and-Span"><span class="nav-number">2.</span> <span class="nav-text">Linear Dependence and Span</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Norms-范数"><span class="nav-number">3.</span> <span class="nav-text">Norms 范数</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#回归模型"><span class="nav-number">1.</span> <span class="nav-text">回归模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二值逻辑模型"><span class="nav-number">2.</span> <span class="nav-text">二值逻辑模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#估算系数"><span class="nav-number">3.</span> <span class="nav-text">估算系数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
           </div>
         </section>

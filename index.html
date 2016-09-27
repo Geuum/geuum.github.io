@@ -279,6 +279,165 @@
             
               
                 
+                <a class="post-title-link" href="/2016/09/27/快速了解Logistic-Regression/" itemprop="url">
+                  快速了解Logistic Regression
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-27T15:37:29+08:00" content="2016-09-27">
+              2016-09-27
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/27/快速了解Logistic-Regression/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/27/快速了解Logistic-Regression/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>之前学习theano的时候，对于Logistic Regression只有粗略的了解，对于其个中原理还是欠缺认识，今天来补全一下，也是对ML的基础再夯实。</p>
+<p>言归正传，Logistic Regression的定义</p>
+<blockquote>
+<p>Logistic regression is the appropriate regression analysis to conduct when the dependent variable is dichotomous (binary). <a href="http://www.statisticssolutions.com/what-is-logistic-regression/" target="_blank" rel="external">from</a></p>
+<p>Logistic regression is a statistical method for analyzing a dataset in which there are one or more independent variables that determine an outcome. The outcome is measured with a dichotomous variable (in which there are only two possible outcomes).<a href="https://www.medcalc.org/manual/logistic_regression.php" target="_blank" rel="external">from</a></p>
+</blockquote>
+<p>以上，Logistic Regression是一种回归模型，但是它比较特殊的就是output variable是dichotomous的。</p>
+<p>先撇开什么是dichotomous，我们首先要考虑什么是回归模型？（统计没学好，掩面🤦）</p>
+<h1 id="回归模型"><a href="#回归模型" class="headerlink" title="回归模型"></a>回归模型</h1><p>我们平时遇到的变量相关问题，大体可以分为两种</p>
+<ul>
+<li>函数关系</li>
+<li>相关关系</li>
+</ul>
+<p>函数关系，是我们从小学到大的，变量到变量是确切的函数关系，不存在偏差，例如$y=2x+1$，就是典型的函数关系。</p>
+<p>相关关系，变量与变量之间没有确切的函数关系，这个关系是不确定的，但是他们有肯定有一定的关系。典型的就是股票了，股票那条线，和市场，公司经营，决策等等有很大关系，可你又说不出这种关系具体是什么样子的（炒股老司机勿喷）。这种情况下，我们用统计的方法，来模拟其函数关系，这也只能是模拟，无法确切。</p>
+<p>按照输入参数的数目，如果是线性模型，可以分为</p>
+<ol>
+<li>一元线性回归</li>
+<li>多元线性回归</li>
+</ol>
+<p>一元线性回归</p>
+<p>$$<br>y=\beta_0+\beta_1x<br>$$</p>
+<p>这就称为一元线性回归方程，其特性就不讨论了，可以看出式子逼近的是一个一元线性方程。</p>
+<p>同理，多元线性方程</p>
+<p>$$<br>y=\beta_0+\beta_1x_1+\beta_2x_2+…+\beta_kx_k+\epsilon<br>$$</p>
+<p>当然，情况多起来以后（统计方法，总不能只有一组数据吧），输出的y可以组成一个向量<strong>Y</strong>，输入可以变为一个矩阵<strong>X</strong>，参数可以变为一个向量$\beta$。</p>
+<p>$$<br>Y=<br>\begin{pmatrix}<br>y_1\\<br>y_2\\<br>\vdots\\<br>y_n<br>\end{pmatrix},<br>X=<br>\begin{pmatrix}<br>1&amp;x_{11}&amp;x_{21}&amp;\cdots&amp;x_{k1}\\<br>1&amp;x_{12}&amp;x_{22}&amp;\cdots&amp;x_{k2}\\<br>1&amp;x_{13}&amp;x_{23}&amp;\cdots&amp;x_{k3}\\<br>\vdots&amp;\vdots&amp;\vdots&amp;\vdots&amp;\vdots\\<br>1&amp;x_{1n}&amp;x_{2n}&amp;\cdots&amp;x_{kn}<br>\end{pmatrix},<br>\beta=<br>\begin{pmatrix}<br>\beta_1\\<br>\beta_2\\<br>\vdots\\<br>\beta_n<br>\end{pmatrix},<br>\epsilon=<br>\begin{pmatrix}<br>\epsilon_1\\<br>\epsilon_2\\<br>\vdots\\<br>\epsilon_n<br>\end{pmatrix}<br>$$</p>
+<p>组合起来就是</p>
+<p>$$<br>Y=\beta{X}+\epsilon<br>$$<br>多元线性回归就此完成（基本了解）。</p>
+<p>除了线性回归，回归模型还可以有各种非线性回归，这里暂时不考虑。</p>
+<h1 id="二值逻辑模型"><a href="#二值逻辑模型" class="headerlink" title="二值逻辑模型"></a>二值逻辑模型</h1><p>再回头看下我们的Logistic Regression。和回归模型不同的是，它的y是dichotomous的。</p>
+<p>什么是dichotomous呢？英语翻译是【叉状分枝的；分成两个的】，就是二值的（binary）。</p>
+<p>实际上，我们的y只能取0或者1，也就是无论怎么样的模拟，我们的预测值都会是0-1之间的。这就相当于最简单的分两类问题，比如预测张三是否出轨了，1表示出轨，0表示没出轨。我们预测值一定是在0-1之间徘徊的。</p>
+<p>由上面我们知道多元线性回归模型是</p>
+<p>$$<br>y=\beta_0+\beta_1x_1+\beta_2x_2+…+\beta_kx_k+\epsilon<br>$$</p>
+<p>的一种形式。现在我们把输出限死了是0或者1。这样就可以开始训练并预测了。</p>
+<p>什么概念呢？意思就是我们给定一堆人，给定许多参数，然后告诉你张三出轨了，李四没出轨，王五出轨了等等等。然后给你一个刘小二，给你一些参数，你来预测他出没出轨。然后你预测出来，哦！刘小二出轨的值是0.8，那么他有很大几率出轨。就是这么个道理。</p>
+<p>我们假设$E(Y)$表示其预测值，用$P(Y=i)$表示Y为0或1的概率。对于Y只能取值0和1的二值模型，我们发现</p>
+<p>$$<br>E(Y)=0(P(Y=0))+1(P(Y=1))=0(1-P(Y=1))+1(P(Y=1))=P(Y=1)<br>$$</p>
+<p>所以预测值$E(Y)$就是$Y=1$的概率$P(Y=1)$，所以我们可以说</p>
+<p>$$<br>P(Y=1)=\beta_0+\beta_1x_1+\beta_2x_2+…+\beta_kx_k+\epsilon<br>$$</p>
+<p><strong>问题1</strong>：通过上式，我们并不能保证$P(Y=1)$的值在0-1之间，而实际情况中，我们不需要超过1和小于0的情况。</p>
+<p>所以我们定义预测输出不是$E(Y)$了，而是$E(Y)=logit(E(Y))=\ln{\frac{E(Y)}{1-E(Y)}}$，所以</p>
+<p>$$<br>E(Y)=\frac{e^{\beta_0+\beta_1x_1+\beta_2x_2+…+\beta_kx_k}}{1+e^{\beta_0+\beta_1x_1+\beta_2x_2+…+\beta_kx_k}}=\frac{1}{1+e^{\beta_0+\beta_1x_1+\beta_2x_2+…+\beta_kx_k}}<br>$$</p>
+<p>有的同学这里不能理解，为什么$E(Y)$等号后面的东西完全变了呢？</p>
+<p><strong>其实，我们一开始假设预测的函数是多元线性回归模型，可我们用这个模型来预测却无法达到效果，产生了问题1</strong>。<strong>为了解决问题1，我们势必不能再用线性回归模型，所以我们对整个模型进行了改变，所以预测值也要进行改变</strong>。很显然，改变后的模型很好的解决了问题1。</p>
+<p>到这里，我们建立的模型就叫做logistic模型。</p>
+<h1 id="估算系数"><a href="#估算系数" class="headerlink" title="估算系数"></a>估算系数</h1><p>建立了模型之后，想要我们能够预测，我们当然需要知道的就是各个系数$\beta_0,\beta_1,\cdots,\beta_k$的大小，不然怎么预测。</p>
+<p>我们怎么通过模型来估算这样的系数呢？</p>
+<p>我们可以通过最大似然估计（最小二乘法不适用）来估计参数。</p>
+<p>这里我们使用对数似然函数，假设似然函数是L，如下</p>
+<p>$$<br>L=\prod_{i=1}^n{p(x_i)^{y_i}[1-p(x_i)]^{1-y_i}}<br>$$</p>
+<p>对数似然函数是</p>
+<p>$$<br>\ln{L}=\sum_{i=1}^n{y_i\ln{E(Y)}+(1-y_i)\ln{(1-E(Y))}}<br>$$</p>
+<p>我们的目的是训练$\theta=[\beta_0,\beta_1,\cdots,\beta_k]$使得$\ln{L}$最大。</p>
+<p>在机器学习中，我们有损失函数的说法，意即训练参数使得损失函数最小，可以套用在这，因为损失函数是最小，所以我们在$\ln{L}$前面加上负号。</p>
+<p>$$<br>J(\theta)=-\frac{1}{n}\sum_{i=1}^n{y_i\ln{E(Y)}+(1-y_i)\ln{(1-E(Y))}}<br>$$</p>
+<p>除以n是方便后面计算，现在可以暂时不考虑。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>到这里，相信你对LR模型已经初步了解，也可以动手写程序了。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/09/18/【python机器学习】从Autoencoder到dA再到SdA/" itemprop="url">
                   【python机器学习】从Autoencoder到dA再到SdA
                 </a>
@@ -1521,7 +1680,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-count">8</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1538,7 +1697,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
