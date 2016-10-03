@@ -1,0 +1,826 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="机器学习,论文研读," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="From
+
+A Dual Coordinate Descent Method for Large-scale Linear SVM
+C.-J. Hsieh, K.-W. Chang, C.-J. Lin, S. Sundararajan, and S. Sathiya Keerthi.
+ICML 2008
+
+
+SVMSVM作为一种十分有效的分类器，其instance、label组成这样的形式${x">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一种基于Dual坐标下降法的SVM">
+<meta property="og:url" content="http://lvvan.top/2016/10/03/一种基于Dual坐标下降法的SVM/index.html">
+<meta property="og:site_name" content="Lvvan的博客">
+<meta property="og:description" content="From
+
+A Dual Coordinate Descent Method for Large-scale Linear SVM
+C.-J. Hsieh, K.-W. Chang, C.-J. Lin, S. Sundararajan, and S. Sathiya Keerthi.
+ICML 2008
+
+
+SVMSVM作为一种十分有效的分类器，其instance、label组成这样的形式${x">
+<meta property="og:image" content="http://i1.piimg.com/567571/0c2d742e80577bfe.png">
+<meta property="og:image" content="http://i1.piimg.com/567571/d48b0b7bb704097b.png">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-3/63493088.jpg">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-3/89066272.jpg">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-3/85412031.jpg">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-3/36990146.jpg">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-3/81256480.jpg">
+<meta property="og:updated_time" content="2016-10-03T07:11:04.743Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一种基于Dual坐标下降法的SVM">
+<meta name="twitter:description" content="From
+
+A Dual Coordinate Descent Method for Large-scale Linear SVM
+C.-J. Hsieh, K.-W. Chang, C.-J. Lin, S. Sundararajan, and S. Sathiya Keerthi.
+ICML 2008
+
+
+SVMSVM作为一种十分有效的分类器，其instance、label组成这样的形式${x">
+<meta name="twitter:image" content="http://i1.piimg.com/567571/0c2d742e80577bfe.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://lvvan.top/2016/10/03/一种基于Dual坐标下降法的SVM/"/>
+
+  <title> 一种基于Dual坐标下降法的SVM | Lvvan的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lvvan的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">夜合花开香满庭，夜深微雨醉初醒</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                一种基于Dual坐标下降法的SVM
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-03T14:43:22+08:00" content="2016-10-03">
+              2016-10-03
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/03/一种基于Dual坐标下降法的SVM/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/03/一种基于Dual坐标下降法的SVM/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv"><i class="fa fa-file-o"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>From</p>
+<ul>
+<li><em><a href="http://www.csie.ntu.edu.tw/~cjlin/papers/cddual.pdf" target="_blank" rel="external">A Dual Coordinate Descent Method for Large-scale Linear SVM</a></em></li>
+<li>C.-J. Hsieh, K.-W. Chang, C.-J. Lin, S. Sundararajan, and S. Sathiya Keerthi.</li>
+<li><strong>ICML</strong> 2008</li>
+</ul>
+<hr>
+<h1 id="SVM"><a href="#SVM" class="headerlink" title="SVM"></a>SVM</h1><p>SVM作为一种十分有效的分类器，其instance、label组成这样的形式${x_i,y_i}$的形式，其中$x_i\in R^n,y_i\in{-1.+1}$。最终需要解决的就是这样一个问题<br>$$<br>\min_w\frac{1}{2}w^\top w+C\sum^l_{i=1}\xi(w;x_i,y_i)<br>$$</p>
+<p>其中$C&gt;0$称为惩罚因子（penalty parameter）,$\xi(w;x_i,y_i)$是损失函数（loss function）。</p>
+<p>一般常用的损失函数有两个分别是</p>
+<p>$$<br>\begin{array}{l}<br>\displaystyle L1:\max{(1-y_iw^\top x_i,0)} \<br>\displaystyle L2:\max{(1-y_iw^\top x_i,0)^2}<br>\end{array}<br>$$</p>
+<p>所以带这两个损失函数的SVM分别叫做L1-SVM，L2-SVM。</p>
+<p>SVM问题可能会有偏置b，一般都是通过增加一个维度来实现</p>
+<p>$$<br>x_i^\top\leftarrow[x_i^\top,1]\ \ \ \ w^\top\leftarrow[w^\top,b]<br>$$<br>以上SVM问题被称为原问题（primal problem）</p>
+<p>相对应，我们还有对偶问题（dual problem）的形式。</p>
+<p>$$<br>\begin{array}{l}<br>\displaystyle \min_\alpha f(\alpha)=\frac{1}{2}\alpha^\top\bar{Q}\alpha-e^\top\alpha \<br>\displaystyle s.t.\ \ 0\le\alpha_i\le U,\forall i<br>\end{array}<br>$$</p>
+<p>$\bar{Q}=Q+D$，D是对角矩阵，$Q_{ij}=y_iy_jx_i\top x_j$。</p>
+<p>对于L1-SVM，$U=C$，$D_{ii}=0$。</p>
+<p>对于L2-SVM，$U=\infty$，$D_{ii}=\frac{1}{2C}$。</p>
+<h1 id="坐标下降法"><a href="#坐标下降法" class="headerlink" title="坐标下降法"></a>坐标下降法</h1><p>坐标下降法是一种优化手段，该方法通过最小化单变量子问题来更新参数达到优化的目的。</p>
+<p>首先，考虑我们的SVM-dual形式，我们过去的计算方法是通过不断迭代$\alpha$来更新参数，迭代的过程将会由初始化的$\alpha^0\in R^l$一直到达到stop condition为止。这一过程将生成这样一个序列<br>$$<br>{\alpha^0,\alpha^1,\alpha^2,…,\alpha^\infty}<br>$$<br>当然实际过程中不会到$\alpha^\infty$，但是我们可以将这个不断迭代的过程抽象为从$\alpha^K$到$\alpha^{K+1}$的过程。</p>
+<p>然而，由于$\alpha^K$是向量，所以在计算的过程中，又可以将这个向量拆解，将其组成中的一个个标量元素按顺序迭代。也就是说，假如$\alpha^K$展开可以写成$[\alpha^k_1,\alpha^k_2,\alpha^k_3,…,\alpha^k_l]$，在迭代过程中，我们不是直接迭代$\alpha^K$这个向量，而是一个一个更新其元素，先是$\alpha^k_1$，然后是$\alpha^k_2$，依次类推。更新后的元素就变成了$\alpha^{K+1}_1$，$\alpha^{K+1}_2$。把这个更新写成一般表达式就是</p>
+<p>$$<br>\alpha^{k,i}=[\alpha^{k+1}_1,\alpha^{k+1}_2,\alpha^{k+1}_3,…,\alpha^{k+1}_{i-1},\alpha^k_i,…,\alpha^k_i],\ \forall{i=2,…l}<br>$$</p>
+<p>$\alpha^{k,i}$就是更新到第i个元素的$\alpha^k$。所以，我们很容易就能知道，$\alpha^{k,1}=\alpha^k$，$\alpha^{k,1+l}=\alpha^{k+1}$，一个向量全部元素都更新完了，他也就要+1了。</p>
+<p>于是我们把原来的问题转化为更新其子元素的问题，这个问题就叫子问题。</p>
+<p>因为组成元素只是标量，所以对于其更新，只考虑做加法，也就是原来的值加上什么“d”变成了新的值，这个加上的“d”就是我们子问题的变量，也是唯一变量。</p>
+<p>所以从$\alpha^{k,i}$到$\alpha^{k,i+1}$，实际上就是</p>
+<p>$$<br>\begin{array}{l}<br>\displaystyle [\alpha^{k+1}_1,\alpha^{k+1}_2,\alpha^{k+1}_3,…,\alpha^{k+1}_{i-1},\alpha^{k+1}_i+d,…,\alpha^k_i] \<br>\displaystyle =\alpha^{k,i}+de_i<br>\end{array}<br>$$<br>这里的$e_i=[0,…,0,1,0,…,0]^\top$，1的前面由i-1个0。</p>
+<p>所以对于SVM-dual问题，我们可以直接将这里的$\alpha^{k,i}+de_i$带入计算。问题就转化为</p>
+<p>$$<br>\min_d{f(\alpha^{k,i}+de_i)},\ \ \ s.t.\ \ 0\le\alpha_i^k+d\le U<br>$$</p>
+<p>将式子展开，问题就变成了一个关于d的简单的二次函数。</p>
+<p>$$<br>f(\alpha^{k,i}+de_i)=\frac{1}{2}\bar{Q}_{ii}d^2+\nabla_if(\alpha^{k,i})d+constant<br>$$</p>
+<p>他的最小值很简单，初中的知识，二元一次方程的极值在$\frac{-b}{2a}$处，也就是$-\frac{\nabla_if(\alpha^{k,i})}{\bar{Q}_{ii}}$处。</p>
+<p>不过要取这个极值，要有条件，我们之前限制了$0\le\alpha_i^k+d\le U$，所以我们得到$-\frac{\nabla_if(\alpha^{k,i})}{\bar{Q}_{ii}}$的梯度需要考虑边缘条件。</p>
+<p>我们用$\nabla^Pf(\alpha)$来表示投射梯度</p>
+<p>$$<br>\nabla^P_if(\alpha)=<br>\begin{cases}<br>\nabla_if(\alpha)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \text{if}\ 0&lt;\alpha_i&lt;U,\\<br>\min{(0,\nabla_if(\alpha))}\ \ \ \ \text{if}\ \alpha_i=0,\\<br>\max{(0,\nabla_if(\alpha))}\ \ \ \ \text{if}\ \alpha_i=U<br>\end{cases}<br>$$</p>
+<p>更新元素的最终目的是什么，就是让元素不更新了，每次都是一样的，意即d=0，这样找到的$\alpha$才是最优的。</p>
+<p>$$<br>d=0\Rightarrow-\frac{\nabla_if(\alpha^{k,i})}{\bar{Q}_{ii}}=0\Rightarrow\nabla_if(\alpha^{k,i})=0\ \ \ \ \ \ \ 0&lt;\alpha_i&lt;U<br>$$<br>当$\alpha_i=0$或者$\alpha_i=U$该怎么办呢？</p>
+<p>对于边缘上的梯度，我们只要保证等于下限时梯度不大于0，等于上限时梯度不小于0即可。</p>
+<p>所以对于d=0，只要保证$\nabla^P_if(\alpha)=0$。</p>
+<p>当d=0时，元素是不用更新的。</p>
+<p>这样，如果$\nabla^P_if(\alpha)\ne0$，我们更新后的元素<br>$$<br>\alpha^{k,i+1}_i=\min{(\max{(\alpha^{k,i}_i-\frac{\nabla_if(\alpha^{k,i})}{\bar{Q}_{ii}},0)},U)}<br>$$</p>
+<p>所以不更新元素最好，一旦要更新只需要计算$\frac{\nabla_if(\alpha^{k,i})}{\bar{Q}_{ii}}$即可，又$\bar{Q}_{ii}$是已知的（$\bar{Q}=Q+D$，$Q_{ij}=y_iy_jx_i\top x_j$，$y=\pm1$），所以只要计算$\nabla_if(\alpha^{k,i})$即可，所以</p>
+<p>$$<br>\begin{array}{l}<br>\displaystyle \ \ \ \ \nabla_if(\alpha)\\<br>\displaystyle =(\bar{Q}\alpha)_i-1\\<br>\displaystyle =\sum_{j=1}^l\bar{Q}_{ij}\alpha_j-1\\<br>\displaystyle =\sum_{j=1}^l(y_iy_jx_i^\top x_j+D_{ij})\alpha_j-1\\<br>\displaystyle =\sum_{j=1}^l(y_iy_j\alpha_jx_i^\top x_j)+D_{ii}\alpha_i-1<br>\end{array}<br>$$<br>在线性SVM中，我们知道通过超平面来分类，一般形式是</p>
+<p>$$<br>f(x)=w^\top x+b<br>$$</p>
+<p>根据<em>Functional margin</em>的定义，<br>$$<br>\hat{\gamma} = y(w^{\top}x + b) = yf(x)<br>$$</p>
+<p>这个形式是不是和我们上面的$\nabla_if(\alpha)$相似，没错，如果SVM是线性的，我们就可以把$\nabla_if(\alpha)$当作超平面来计算。我们定义<br>$$<br>w=\sum_{j=1}^l{y_j\alpha_jx_j}<br>$$</p>
+<p>于是，$\nabla_if(\alpha)$就变成了</p>
+<p>$$<br>\nabla_if(\alpha)=y_jw^{\top}x_j+D_{ii}\alpha_i-1<br>$$</p>
+<p>所以最终计算的就是这个w值。要更新的变量就变成了w。</p>
+<p>根据w的定义我们可以得出w的更新公式</p>
+<p>$$<br>w\leftarrow w+(\alpha_i-\bar{\alpha}_iy_ix_i<br>$$</p>
+<p>总结下来，这个基于dual下降法的SVM算法流程如下</p>
+<p><img src="http://i1.piimg.com/567571/0c2d742e80577bfe.png" alt="image"></p>
+<p>算法里，用$PG$代表$\nabla^P_if(\alpha)$，用$G$代表$\nabla_if(\alpha)$。</p>
+<h1 id="随机序列和Shrinking"><a href="#随机序列和Shrinking" class="headerlink" title="随机序列和Shrinking"></a>随机序列和Shrinking</h1><p>在坐标下降法中，采用顺序更新是不如random更新速度快的。证明过程不列举在此。</p>
+<p>现在我们考虑如何缩小问题，在我们之前的计算中</p>
+<p>$$<br>\nabla^P_if(\alpha)=<br>\begin{cases}<br>\nabla_if(\alpha)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \text{if}\ 0&lt;\alpha_i&lt;U,\\<br>\min{(0,\nabla_if(\alpha))}\ \ \ \ \text{if}\ \alpha_i=0,\\<br>\max{(0,\nabla_if(\alpha))}\ \ \ \ \text{if}\ \alpha_i=U,<br>\end{cases}<br>$$</p>
+<p>当$\alpha_i=0$或者$\alpha_i=U$的时候，我们有很多几率取到$\nabla^P_if(\alpha)=0$。如果$\nabla^P_if(\alpha)=0$，由前面的推导可知，这时候$d=0$，取得了最优，$\alpha_i$不必更新。所以，这时候我们可以把这些达到边界条件的这些$\alpha_i$不考虑，这样在计算速度上，将会提升。</p>
+<p>假设我们有一个$A$是${1,2,3,…,l}$的子集，代表了移除了一些元素后的集合，$\bar{A}$代表了已被移除的元素index。</p>
+<p>我们新的问题就变成了</p>
+<p>$$<br>\begin{array}{}<br>\displaystyle \min_{\alpha_A}{\frac{1}{2}\alpha^{\top}_A\bar{Q}_{AA}\alpha_A+(\bar{Q}_{A\bar{A}}\alpha_{\bar{A}}-e_A)^\top\alpha_A}\<br>\displaystyle s.t.\ \ 0\le\alpha_i\le U,i\in A<br>\end{array}<br>$$</p>
+<p>这里，我们用$\bar{Q}_{AA}$和$\bar{Q}_{A\bar{A}}$来分别表示其index标志属于和不属于A的$\bar{Q}$集合，因为如果$i\in\bar{A}$，那么表示这个$\alpha$不用更新，所以可以认为这里的$\alpha_{\bar{A}}$是常向量。</p>
+<p>原问题的l长度缩减为A长度，这样对效率由很大的提升。</p>
+<p>那我们的梯度变为了</p>
+<p>$$<br>\nabla_if(\alpha)=\bar{Q}_{i,A}\alpha_A+\bar{Q}_{i,\bar{A}}\alpha_{\bar{A}}-1<br>$$</p>
+<p>显然，对于$\bar{Q}_{i,\bar{A}}\alpha_{\bar{A}}-1$仍然是常量，要计算的只是$\bar{Q}_{i,A}\alpha_A$。</p>
+<p>不过，考虑到如果要计算$\bar{Q}_{i,\bar{A}}$，需要重构梯度，这也是一个非常耗时的操作。</p>
+<p>但是我们线性SVM中，可以定义</p>
+<p>$$<br>w=\sum_{i\in A}{y_i\alpha_ix_i}+\sum_{i\in\bar{A}}{y_i\alpha_ix_i}<br>$$</p>
+<p>如前面一样，我们的w只需要更新前半部分，这样，我们的$\nabla_if(\alpha)$就很好得出了。</p>
+<h1 id="Stop-Condition"><a href="#Stop-Condition" class="headerlink" title="Stop Condition"></a>Stop Condition</h1><p>到这里，我们需要考虑一下什么情况下元素会被shrnking？</p>
+<p>首先我们shrinking是因为，这个元素不需要更新了，也就是有$\nabla^Pf(\alpha)=0$。</p>
+<p>对于$\nabla^Pf(\alpha)$，我们可以把其看为需要更新元素的程度。可以分为两种情况，就是大于零和小于零的情况。</p>
+<p>$\min_j{\nabla^P_jf(\alpha_{k,j})}$&lt;———————————————(0)————————————————&gt;$\max_j{\nabla^P_jf(\alpha_{k,j})}$</p>
+<p>我们很容易得知$\min_j{\nabla^P_jf(\alpha_{k,j})}<0$，$\max\_j{\nabla^p\_jf(\alpha\_{k,j})}>0$。</0$，$\max\_j{\nabla^p\_jf(\alpha\_{k,j})}></p>
+<p>我们不能保证每一个边界都考虑，但是，只要我们当前的$\nabla_jf(\alpha_{k,j})$比$\bar{M}_{k-1}=\max_j{\nabla^P_jf(\alpha_{k-1,j})}$还大（注意边界条件$\alpha_i^{k,i}=0$），那么他一定为0。同样的，只要我们当前的$\nabla_jf(\alpha_{k,j})$比$\bar{m}_{k-1}=\min_j{\nabla^P_jf(\alpha_{k,j})}$还小（边界条件$\alpha_i^{k,i}=U$），那么他一定也为0。</p>
+<p>这样的问题就是前面几个没办法保证满足边界啊。那么我们在计算过程中，假如$\bar{M}_{k-1}&lt;0$了，我们将其设为$\infty$。同样，，假如$\bar{m}_{k-1}&lt;0$了，我们将其设为$-\infty$。这样我们就能保证将所有边界条件满足的元素shrinking。</p>
+<p>在这里，我们$\bar{M}_k$和$\bar{m}_k$的间距一定是越来越小，因为</p>
+<p>$$<br>\lim_{k\rightarrow\infty}{\max_j{\nabla^P_jf(\alpha_{k,j})}}=\lim_{k\rightarrow\infty}{\min_j{\nabla^P_jf(\alpha_{k,j})}}=0<br>$$</p>
+<p>所以我们可以将stop condition设定为</p>
+<p>$$<br>M^k-m^k&lt;\epsilon<br>$$</p>
+<p>其中$\epsilon$是设定的一个stop condition。</p>
+<p>加入shrinking之后的算法流程如下</p>
+<p><img src="http://i1.piimg.com/567571/d48b0b7bb704097b.png" alt="DCDL1"></p>
+<h1 id="liblinaer-源码分析"><a href="#liblinaer-源码分析" class="headerlink" title="liblinaer 源码分析"></a>liblinaer 源码分析</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">solve_l2r_l1l2_svc</span><span class="params">(</span></span></div><div class="line">	<span class="keyword">const</span> problem *prob, <span class="keyword">double</span> *w, <span class="keyword">double</span> eps,</div><div class="line">	<span class="keyword">double</span> Cp, <span class="keyword">double</span> Cn, <span class="keyword">int</span> solver_type)</div><div class="line">&#123;</div><div class="line">	<span class="keyword">int</span> l = prob-&gt;l;</div><div class="line">	<span class="keyword">int</span> w_size = prob-&gt;n;</div><div class="line">	<span class="keyword">int</span> i, s, iter = <span class="number">0</span>;</div><div class="line">	<span class="keyword">double</span> C, d, G;</div><div class="line">	<span class="keyword">double</span> *QD = <span class="keyword">new</span> <span class="keyword">double</span>[l];</div><div class="line">	<span class="keyword">int</span> max_iter = <span class="number">1000</span>;</div><div class="line">	<span class="keyword">int</span> *index = <span class="keyword">new</span> <span class="keyword">int</span>[l];</div><div class="line">	<span class="keyword">double</span> *alpha = <span class="keyword">new</span> <span class="keyword">double</span>[l];</div><div class="line">	schar *y = <span class="keyword">new</span> schar[l];</div><div class="line">	<span class="keyword">int</span> active_size = l;</div><div class="line"></div><div class="line">	<span class="comment">// PG: projected gradient, for shrinking and stopping</span></div><div class="line">	<span class="keyword">double</span> PG;<span class="comment">//Projected Gradient</span></div><div class="line">	<span class="keyword">double</span> PGmax_old = INF;</div><div class="line">	<span class="keyword">double</span> PGmin_old = -INF;</div><div class="line">	<span class="keyword">double</span> PGmax_new, PGmin_new;</div><div class="line"></div><div class="line">	<span class="comment">// default solver_type: L2R_L2LOSS_SVC_DUAL</span></div><div class="line">	<span class="keyword">double</span> diag[<span class="number">3</span>] = &#123;<span class="number">0.5</span>/Cn, <span class="number">0</span>, <span class="number">0.5</span>/Cp&#125;;<span class="comment">//D_&#123;ii&#125;</span></div><div class="line">	<span class="keyword">double</span> upper_bound[<span class="number">3</span>] = &#123;INF, <span class="number">0</span>, INF&#125;;</div><div class="line">	<span class="keyword">if</span>(solver_type == L2R_L1LOSS_SVC_DUAL)<span class="comment">//judge if L1-SVM or L2-SVM</span></div><div class="line">	&#123;</div><div class="line">		diag[<span class="number">0</span>] = <span class="number">0</span>;</div><div class="line">		diag[<span class="number">2</span>] = <span class="number">0</span>;</div><div class="line">		upper_bound[<span class="number">0</span>] = Cn;</div><div class="line">		upper_bound[<span class="number">2</span>] = Cp;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;l; i++)<span class="comment">//set all y in &#123;-1,+1&#125;</span></div><div class="line">	&#123;</div><div class="line">		<span class="keyword">if</span>(prob-&gt;y[i] &gt; <span class="number">0</span>)</div><div class="line">		&#123;</div><div class="line">			y[i] = +<span class="number">1</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span></div><div class="line">		&#123;</div><div class="line">			y[i] = <span class="number">-1</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// Initial alpha can be set here. Note that</span></div><div class="line">	<span class="comment">// 0 &lt;= alpha[i] &lt;= upper_bound[GETI(i)]</span></div><div class="line">	<span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;l; i++)</div><div class="line">		alpha[i] = <span class="number">0</span>;</div><div class="line"></div><div class="line">	<span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;w_size; i++)</div><div class="line">		w[i] = <span class="number">0</span>;</div><div class="line">	<span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;l; i++)<span class="comment">//init QD</span></div><div class="line">	&#123;</div><div class="line">		QD[i] = diag[GETI(i)];</div><div class="line"></div><div class="line">		feature_node * <span class="keyword">const</span> xi = prob-&gt;x[i];</div><div class="line">		QD[i] += sparse_operator::nrm2_sq(xi);<span class="comment">//like \sum&#123;xi^2&#125;</span></div><div class="line">		sparse_operator::axpy(y[i]*alpha[i], xi, w);<span class="comment">//calcute w,where w=\sum&#123;yi*\alpha_i*xi&#125;</span></div><div class="line"></div><div class="line">		index[i] = i;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">while</span> (iter &lt; max_iter)</div><div class="line">	&#123;</div><div class="line">		PGmax_new = -INF;</div><div class="line">		PGmin_new = INF;</div><div class="line"></div><div class="line">		<span class="keyword">for</span> (i=<span class="number">0</span>; i&lt;active_size; i++)<span class="comment">//with active_size,we create a subset A</span></div><div class="line">		&#123;</div><div class="line">			<span class="keyword">int</span> j = i+rand()%(active_size-i);<span class="comment">//firstly, we set index value randomly</span></div><div class="line">			swap(index[i], index[j]);</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="keyword">for</span> (s=<span class="number">0</span>; s&lt;active_size; s++)</div><div class="line">		&#123;</div><div class="line">			i = index[s];</div><div class="line">			<span class="keyword">const</span> schar yi = y[i];</div><div class="line">			feature_node * <span class="keyword">const</span> xi = prob-&gt;x[i];</div><div class="line"></div><div class="line">			G = yi*sparse_operator::dot(w, xi)<span class="number">-1</span>;<span class="comment">//gradient of f  </span></div><div class="line"></div><div class="line">			C = upper_bound[GETI(i)];<span class="comment">//the upper boundary of \alpha_i</span></div><div class="line">			G += alpha[i]*diag[GETI(i)];</div><div class="line"></div><div class="line">			PG = <span class="number">0</span>;</div><div class="line">			<span class="keyword">if</span> (alpha[i] == <span class="number">0</span>)</div><div class="line">			&#123;</div><div class="line">				<span class="keyword">if</span> (G &gt; PGmax_old)</div><div class="line">				&#123;</div><div class="line">					active_size--;<span class="comment">//with shrinking, we reduce the size of problem without considering bouded variables</span></div><div class="line">					swap(index[s], index[active_size]);<span class="comment">//remove the bounded variable from subset A</span></div><div class="line">					s--;</div><div class="line">					<span class="keyword">continue</span>;</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">else</span> <span class="keyword">if</span> (G &lt; <span class="number">0</span>)</div><div class="line">					PG = G;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">else</span> <span class="keyword">if</span> (alpha[i] == C)</div><div class="line">			&#123;</div><div class="line">				<span class="keyword">if</span> (G &lt; PGmin_old)</div><div class="line">				&#123;</div><div class="line">					active_size--;</div><div class="line">					swap(index[s], index[active_size]);</div><div class="line">					s--;</div><div class="line">					<span class="keyword">continue</span>;</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">else</span> <span class="keyword">if</span> (G &gt; <span class="number">0</span>)</div><div class="line">					PG = G;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">else</span></div><div class="line">				PG = G;</div><div class="line"></div><div class="line">			PGmax_new = max(PGmax_new, PG);</div><div class="line">			PGmin_new = min(PGmin_new, PG);</div><div class="line"></div><div class="line">			<span class="keyword">if</span>(<span class="built_in">fabs</span>(PG) &gt; <span class="number">1.0e-12</span>)</div><div class="line">			&#123;</div><div class="line">				<span class="keyword">double</span> alpha_old = alpha[i];</div><div class="line">				alpha[i] = min(max(alpha[i] - G/QD[i], <span class="number">0.0</span>), C);</div><div class="line">				d = (alpha[i] - alpha_old)*yi;</div><div class="line">				sparse_operator::axpy(d, xi, w);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		iter++;</div><div class="line">		<span class="keyword">if</span>(iter % <span class="number">10</span> == <span class="number">0</span>)</div><div class="line">			info(<span class="string">"."</span>);</div><div class="line"></div><div class="line">		<span class="keyword">if</span>(PGmax_new - PGmin_new &lt;= eps)<span class="comment">//stop condition</span></div><div class="line">		&#123;</div><div class="line">			<span class="keyword">if</span>(active_size == l)</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			<span class="keyword">else</span></div><div class="line">			&#123;</div><div class="line">				active_size = l;</div><div class="line">				info(<span class="string">"*"</span>);</div><div class="line">				PGmax_old = INF;</div><div class="line">				PGmin_old = -INF;</div><div class="line">				<span class="keyword">continue</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		PGmax_old = PGmax_new;</div><div class="line">		PGmin_old = PGmin_new;</div><div class="line">		<span class="keyword">if</span> (PGmax_old &lt;= <span class="number">0</span>)</div><div class="line">			PGmax_old = INF;</div><div class="line">		<span class="keyword">if</span> (PGmin_old &gt;= <span class="number">0</span>)</div><div class="line">			PGmin_old = -INF;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	info(<span class="string">"\noptimization finished, #iter = %d\n"</span>,iter);</div><div class="line">	<span class="keyword">if</span> (iter &gt;= max_iter)</div><div class="line">		info(<span class="string">"\nWARNING: reaching max number of iterations\nUsing -s 2 may be faster (also see FAQ)\n\n"</span>);</div><div class="line"></div><div class="line">	<span class="comment">// calculate objective value</span></div><div class="line"></div><div class="line">	<span class="keyword">double</span> v = <span class="number">0</span>;</div><div class="line">	<span class="keyword">int</span> nSV = <span class="number">0</span>;</div><div class="line">	<span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;w_size; i++)</div><div class="line">		v += w[i]*w[i];</div><div class="line">	<span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;l; i++)</div><div class="line">	&#123;</div><div class="line">		v += alpha[i]*(alpha[i]*diag[GETI(i)] - <span class="number">2</span>);</div><div class="line">		<span class="keyword">if</span>(alpha[i] &gt; <span class="number">0</span>)</div><div class="line">			++nSV;</div><div class="line">	&#125;</div><div class="line">	info(<span class="string">"Objective value = %lf\n"</span>,v/<span class="number">2</span>);</div><div class="line">	info(<span class="string">"nSV = %d\n"</span>,nSV);</div><div class="line"></div><div class="line">	<span class="keyword">delete</span> [] QD;</div><div class="line">	<span class="keyword">delete</span> [] alpha;</div><div class="line">	<span class="keyword">delete</span> [] y;</div><div class="line">	<span class="keyword">delete</span> [] index;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h1><p>通过改变参数C分别等于1，5，10，获得如下实验结果</p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-3/63493088.jpg" alt="image"></p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-3/89066272.jpg" alt=""></p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-3/85412031.jpg" alt=""></p>
+<p>改变stop condition 得到如下结果</p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-3/36990146.jpg" alt="image"></p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-3/81256480.jpg" alt=""></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/pay.JPG" alt="百色梵 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>觉得作者写的不错，就给点赏钱吧！_(:з」∠)_</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+            <a href="/tags/论文研读/" rel="tag">#论文研读</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/27/快速了解Logistic-Regression/" rel="next" title="快速了解Logistic Regression">
+                <i class="fa fa-chevron-left"></i> 快速了解Logistic Regression
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/10/03/一种基于Dual坐标下降法的SVM/"
+           data-title="一种基于Dual坐标下降法的SVM" data-url="http://lvvan.top/2016/10/03/一种基于Dual坐标下降法的SVM/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://img1.doubanio.com/icon/ul61277596-19.jpg"
+               alt="百色梵" />
+          <p class="site-author-name" itemprop="name">百色梵</p>
+          <p class="site-description motion-element" itemprop="description">是翩翩公子，也是浊世烟枪
+是三分剑侠，又是三分骚客
+爱自由又言慎独
+明是非却性激愤
+轻装上阵，不忘万里山河
+欲登云天，谁人去我阡陌
+将错就错无人之过
+似醒非醒本是寂寞
+</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SVM"><span class="nav-number">1.</span> <span class="nav-text">SVM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#坐标下降法"><span class="nav-number">2.</span> <span class="nav-text">坐标下降法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#随机序列和Shrinking"><span class="nav-number">3.</span> <span class="nav-text">随机序列和Shrinking</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Stop-Condition"><span class="nav-number">4.</span> <span class="nav-text">Stop Condition</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#liblinaer-源码分析"><span class="nav-number">5.</span> <span class="nav-text">liblinaer 源码分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#运行结果"><span class="nav-number">6.</span> <span class="nav-text">运行结果</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">百色梵</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"lvvan"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
