@@ -84,28 +84,28 @@
 
 
 
-<meta name="description" content="本科时候，已经学过了线性代数，考研的时候也是重点之一，但是时间过去略久，以我的没记性的脑子还是再来复习一下吧！主要是概念上的。
-
-Scalars, Vectors, Matrices and Tensors【标量、向量、矩阵、张量】标量、向量的概念就不多说了关于矩阵的公式在这里列几个吧：
-
-$\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
+<meta name="description" content="多层感知机MLPs（多层感知机，Deep feedforward networks），也叫前向神经网络（feedforward neural networks）或者深度前向网络（Deep feedforward networks）。不过大家一般还是习惯将其称为MLPs。
+对于MLPs，解决的还是一个输入输出问题。假如有输入向量$x$，那么定义输出向量
+$$y=f(x,\theta)$$
+之所以称之">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【机器学习】1-从线性代数开始">
-<meta property="og:url" content="http://lvvan.top/2016/08/21/【机器学习】1-从线性代数开始/index.html">
+<meta property="og:title" content="深入MLPs">
+<meta property="og:url" content="http://lvvan.top/2016/10/03/深入MLPs/index.html">
 <meta property="og:site_name" content="Lvvan的博客">
-<meta property="og:description" content="本科时候，已经学过了线性代数，考研的时候也是重点之一，但是时间过去略久，以我的没记性的脑子还是再来复习一下吧！主要是概念上的。
-
-Scalars, Vectors, Matrices and Tensors【标量、向量、矩阵、张量】标量、向量的概念就不多说了关于矩阵的公式在这里列几个吧：
-
-$\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
-<meta property="og:updated_time" content="2016-08-22T02:29:08.178Z">
+<meta property="og:description" content="多层感知机MLPs（多层感知机，Deep feedforward networks），也叫前向神经网络（feedforward neural networks）或者深度前向网络（Deep feedforward networks）。不过大家一般还是习惯将其称为MLPs。
+对于MLPs，解决的还是一个输入输出问题。假如有输入向量$x$，那么定义输出向量
+$$y=f(x,\theta)$$
+之所以称之">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-3/77959357.jpg">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-3/30705907.jpg">
+<meta property="og:updated_time" content="2016-10-03T12:23:26.760Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="【机器学习】1-从线性代数开始">
-<meta name="twitter:description" content="本科时候，已经学过了线性代数，考研的时候也是重点之一，但是时间过去略久，以我的没记性的脑子还是再来复习一下吧！主要是概念上的。
-
-Scalars, Vectors, Matrices and Tensors【标量、向量、矩阵、张量】标量、向量的概念就不多说了关于矩阵的公式在这里列几个吧：
-
-$\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
+<meta name="twitter:title" content="深入MLPs">
+<meta name="twitter:description" content="多层感知机MLPs（多层感知机，Deep feedforward networks），也叫前向神经网络（feedforward neural networks）或者深度前向网络（Deep feedforward networks）。不过大家一般还是习惯将其称为MLPs。
+对于MLPs，解决的还是一个输入输出问题。假如有输入向量$x$，那么定义输出向量
+$$y=f(x,\theta)$$
+之所以称之">
+<meta name="twitter:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-3/77959357.jpg">
 
 
 
@@ -126,9 +126,9 @@ $\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
 
 
 
-  <link rel="canonical" href="http://lvvan.top/2016/08/21/【机器学习】1-从线性代数开始/"/>
+  <link rel="canonical" href="http://lvvan.top/2016/10/03/深入MLPs/"/>
 
-  <title> 【机器学习】1-从线性代数开始 | Lvvan的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title> 深入MLPs | Lvvan的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -268,7 +268,7 @@ $\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
             
             
               
-                【机器学习】1-从线性代数开始
+                深入MLPs
               
             
           </h1>
@@ -280,8 +280,8 @@ $\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-21T16:26:22+08:00" content="2016-08-21">
-              2016-08-21
+            <time itemprop="dateCreated" datetime="2016-10-03T20:17:06+08:00" content="2016-10-03">
+              2016-10-03
             </time>
           </span>
 
@@ -291,8 +291,8 @@ $\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/08/21/【机器学习】1-从线性代数开始/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/21/【机器学习】1-从线性代数开始/" itemprop="commentsCount"></span>
+                <a href="/2016/10/03/深入MLPs/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/03/深入MLPs/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -320,54 +320,80 @@ $\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
       
 
       
-        <p>本科时候，已经学过了线性代数，考研的时候也是重点之一，但是时间过去略久，以我的没记性的脑子还是再来复习一下吧！主要是概念上的。</p>
-<hr>
-<h3 id="Scalars-Vectors-Matrices-and-Tensors"><a href="#Scalars-Vectors-Matrices-and-Tensors" class="headerlink" title="Scalars, Vectors, Matrices and Tensors"></a>Scalars, Vectors, Matrices and Tensors</h3><p>【标量、向量、矩阵、张量】<br>标量、向量的概念就不多说了<br>关于矩阵的公式在这里列几个吧：</p>
-<ol>
-<li>$\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i,j}= A_{i,j}+B_{i,j}$\ ddd $a^{3}_{ij}$\</li>
-<li>$\mathbf{D}=a \bullet \mathbf{B} + c$ where $ D _{i,j}= a \bullet B _{i,j}+c $</li>
-<li>$\mathbf{C}=\mathbf{A}+\mathbf{b}$ where  $ C _{i,j}=a \bullet B _{i,j}+b _j $</li>
-<li>$\mathbf{C}=\mathbf{AB}$ where  $ C _{i,j}=\sum _kA _{i,k}B _{j,k} $</li>
-</ol>
-<p>$$<br>C=AB=\begin{pmatrix} 1 &amp; 2 &amp; 3 \\4 &amp; 5 &amp; 6 \end{pmatrix} \begin{pmatrix}1 &amp; 4\\ 2&amp;5\\ 3&amp;6 \end{pmatrix}=\begin{pmatrix} 1\times1+2\times2+3\times3 &amp; 1\times4+2\times5+3\times6  \\4\times1+5\times2+6\times3&amp; 4\times4+5\times5+6\times6 \end{pmatrix}=\begin{pmatrix} 14 &amp; 32 \\32 &amp; 77 \end{pmatrix}<br>$$</p>
-<ol>
-<li><strong>Hadamard product:</strong> $\mathbf{A}\bigodot\mathbf{B}$  where  ${A\bigodot B}_{i,j}=a_{i,j}b_{i,j}$ </li>
-</ol>
-<p>$$<br>\begin{pmatrix} 1 &amp; 3 &amp; 2 \\1 &amp; 0 &amp; 0\\1&amp;2&amp;2 \end{pmatrix}\bigodot \begin{pmatrix}0&amp;0 &amp;2\\ 7&amp;5&amp;0\\ 2&amp;1&amp;1 \end{pmatrix}=\begin{pmatrix} 1\times0&amp;3\times0&amp;2\times2\\ 1\times7&amp;0\times5&amp;0\times0 \\1\times3&amp;2\times1&amp;2\times1\end{pmatrix}=\begin{pmatrix} 0 &amp; 0&amp;4 \\7 &amp; 0&amp;0\\2&amp;2&amp;2 \end{pmatrix}<br>$$</p>
-<ol>
-<li>部分乘法公式：</li>
-</ol>
-<ul>
-<li><strong><em>A</em></strong>(<strong><em>B</em></strong> + <strong><em>C</em></strong>) = <strong><em>AB</em></strong> + <strong><em>AC</em></strong>. </li>
-<li><strong><em>A</em></strong>(<strong><em>BC</em></strong>) = (<strong><em>AB</em></strong>)<strong><em>C</em></strong>.</li>
-<li>一般不满足交换律</li>
-<li>向量可以满足交换律$\mathbf{x}^{\top}\mathbf{y}=\mathbf{y}^{\top}\mathbf{x}$</li>
-<li>$(\mathbf{AB})^{\top}=\mathbf{B}^{\top}\mathbf{A}^{\top}$</li>
-</ul>
-<ol>
-<li>逆矩阵：$\mathbf{A^{-1}}\mathbf{A}=\mathbf{I_n}$</li>
-</ol>
-<h3 id="Linear-Dependence-and-Span"><a href="#Linear-Dependence-and-Span" class="headerlink" title="Linear Dependence and Span"></a>Linear Dependence and Span</h3><p>根据逆矩阵的定义，我们可以用这个来解<strong><em>Ax=b</em></strong>的解，因为$\mathbf{x}=\mathbf{A^{-1}b}$,但这有一个前提那就是$A^{-a}$必须存在。</p>
-<h3 id="Norms-范数"><a href="#Norms-范数" class="headerlink" title="Norms 范数"></a>Norms 范数</h3><p>关于范数的作用，书里面给出这样的解释：</p>
+        <h1 id="多层感知机"><a href="#多层感知机" class="headerlink" title="多层感知机"></a>多层感知机</h1><p>MLPs（多层感知机，<em>Deep feedforward networks</em>），也叫前向神经网络（<em>feedforward neural networks</em>）或者深度前向网络（<em>Deep feedforward networks</em>）。不过大家一般还是习惯将其称为MLPs。</p>
+<p>对于MLPs，解决的还是一个输入输出问题。假如有输入向量$x$，那么定义输出向量</p>
+<p>$$<br>y=f(x,\theta)<br>$$</p>
+<p>之所以称之为前向神经网络，是因为这个NN（Neural Network）完全是没有回头啊。如果考虑Feedback，这就变成了一个RNN模型。</p>
+<p>下面说说网络的概念吧。其实对于什么是网络，很简单。就是把许多函数串起来使用。比如说</p>
+<p>$$<br>f(x)=f_3(f_2(f_1(x)))<br>$$</p>
+<p>这就是网络的概念，是一种链式结构，链式网络。在这里，$f_1$就是第一层，$f_2$是第二层，$f_3$是第三层。层数代表网络的【深度】，这也是深度学习的深度由来。</p>
+<p>我们最终的目的是训练出一系列参数，使得input输入output输出。至于中间你做了些什么，我们一概不关心。所以对于MLPs或者其他的DL模型来说，中间的层都是Black Box。所以我们对于中间的这些层，有一个专有名称——隐层（hidden layer）。</p>
+<p>那么我们的MLPs和LR模型还有些什么差呢？难道仅仅是一个层数多，一个层数少吗？</p>
+<p>引用<a href="http://scikit-learn.org/dev/modules/neural\_networks\_supervised.html" target="_blank" rel="external">scikit-learn</a>上的一句话</p>
 <blockquote>
-<p>Sometimes we need to measure the size of a vector. In machine learning, we usually measure the size of vectors using a function called a norm. Formally, the $L^p$ norm is given by</p>
+<p>It is different from logistic regression, in that between the input and the output layer, there can be one or more non-linear layers, called hidden layers.</p>
 </blockquote>
-<p>$$<br>\begin{aligned}<br>\vert\vert{x}\vert\vert _p=(\sum_i \vert{x}\vert ^p)^{\frac{1}{p}}<br>\end{aligned}<br>$$<br>for $p\in\mathbb{R},p \ge1$</p>
-<p>对于范数，可以认为是描述向量长度的一个方式，可以看作是一个函数<em>f</em>，那么只要满足下面三个条件，那么都是范数：</p>
+<p>没错，我们发现组成隐层的在这里都是非线性层。</p>
+<p>如何理解，假如有这样一个模型</p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-3/77959357.jpg" alt="MLPs\_1"></p>
+<p>原图可能有点大，模型从左往右流向。所以input进来之后，如果到达中间一层，如果这个过程是线性的。那么我们有</p>
+<p>$$<br>A=W_1X+b_1<br>$$<br>如果从中间层到达输出仍然是线性的</p>
+<p>$$<br>Y=W_2A+b_2<br>$$<br>那么我们发现</p>
+<p>$$<br>\begin{array}{}<br>Y=W_2(W_1X+b1)+b2\<br>=W_2W_1X+W_2b1+b2<br>\end{array}<br>$$</p>
+<p>还是线性的，这不相当于问题没变嘛，所以如果我们把这些层仍然当作是线性的显然是不可取的，没什么意义。我们知道，线性本身对于问题的描述是比较苍白的，手段很弱，没办法描绘很多复杂情况。所以我们借助非线性函数来描绘更加复杂的情况，所以这才是隐层存在的意义。</p>
+<p>对于我们的输入函数，通过激活函数将输入特征映射到隐层上面去。</p>
+<p>那么，激活函数又是什么？</p>
+<p>引用<a href="http://blog.csdn.net/u014088052/article/details/50923924" target="_blank" rel="external">激活函数的作用</a>的说法</p>
+<blockquote>
+<p>激活函数，并不是去激活什么，而是指如何把“激活的神经元的特征”通过函数把特征保留并映射出来（保留特征，去除一些数据中是的冗余），这是神经网络能解决非线性问题关键。</p>
+</blockquote>
+<p>这句话说的非常透析。从这里我们可以将隐层看作是两层：</p>
 <ol>
-<li>正定性：$f(\mathbf{x})=0\Rightarrow \mathbf{x=0}$，可以理解为若是长度为0，则一定为0向量</li>
-<li>三角不等式：$f(\mathbf{x+y})\le f(\mathbf{x})+f(\mathbf{y})$</li>
-<li>齐次性：$\forall\alpha\in\mathbb{R},f(\alpha x)=\vert\alpha\vert f(x)$,对于标量的乘法应该满足齐次性</li>
+<li>线性层</li>
+<li>激活层</li>
 </ol>
-<p><strong>下面说下几个特殊的范数：</strong></p>
-<p>$L^2$范数,p是2的时候，就是$\vert\vert{\mathbf{x}}\vert\vert$（2的时候可以把2略掉），称为欧几里得范数（<em>Euclidean norm</em>）,它的计算方式很简单就是$\sqrt{\mathbf{x^{\top}x}}$,一般来说，用到2范数的平方更多一些。</p>
-<p>$L^1$范数，一般从$L^2$开始的范数，其变化都是越开始越慢，而只有$L^1$范数可以做到恒定变化。这在做一些初始变化的机器学习中很有帮助。</p>
-<p>在这里要说一下$L^0$范数，有人把<strong>向量中非0元素的个数</strong>称为$L^0$范数。但这是<strong>不规范</strong>的，实际上一般的书上都没有$L^0$范数的说法。因为其不满足上述的第三个条件——齐次性，向量的变化，不会改变非0的数目。所以最好用$L^1$范数来替代。</p>
-<p>$L^\infty$范数，向量中元素绝对值的最大值，即</p>
-<p>$$<br>\begin{aligned}<br>\vert\vert{\mathbf{x}}\vert\vert_\infty=max_{i}\vert{x_i}\vert<br>\end{aligned}<br>$$</p>
-<p>Frobenius norm:前面的范数都是丈量向量的，而Frobenius norm是丈量矩阵的，而且这里尤类似上述的$L^2$范数，</p>
-<p>$$<br>\begin{aligned}<br>\vert\vert{A}\vert\vert_F=\sqrt{\sum_{i,j}A^2_{i,j}}<br>\end{aligned}<br>$$</p>
-<p>向量的点乘可表示为范数的乘机$\mathbf{x}^\top\mathbf{y}=\vert\vert{\mathbf{x}}\vert\vert_2\vert\vert{\mathbf{y}}\vert\vert_2cos\theta$</p>
+<p>还就我们上面的图，首先到达线性层和之前的一样</p>
+<p>$$<br>A=W_1X+b_1<br>$$<br>接着，我们需要借助激活函数将其特征激活到非线性上去。我们使用函数$h()$函数作为激活函数，所以激活后</p>
+<p>$$<br>h(A)=h(W_1X+b_1)<br>$$<br>这就是我们站立在隐层上面的东西。也是下一层的输出，对于上面这个模型，我们下一层就是输出了。</p>
+<p>输出层一般使用softmax函数，对于这个问题，可以参考<a href="http://www.caffecn.cn/?/question/124" target="_blank" rel="external">这里</a>，假设$G(x)=softmax(x)$</p>
+<p>所以我们最终的输出就是</p>
+<p>$$<br>Y=G(W_2h(A)+b_2)=G(W_2h(W_1X+b_1)+b_2)<br>$$<br>到这里，是不是有点感觉了。</p>
+<p>画个流程图</p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-3/30705907.jpg" alt="流程图"></p>
+<h1 id="BP算法"><a href="#BP算法" class="headerlink" title="BP算法"></a>BP算法</h1><p>我们的目的就是在不断训练的过程中，计算出$W_1,W_2,b_1,b_2$的最优值。这样，对于一个未知output的input，可以很好的预测其output。</p>
+<p>那么怎么训练。损失函数！</p>
+<p>没错，和我们之前的LR一样，我们需要一个可以丈量预测值（训练出来的值）和真实值之间的差异，我们就要减小这个差异。</p>
+<p>那么，这个损失函数是针对哪一步的损失函数呢？很明显，我们只需要求取Y的损失函数即可，至于其中有多少复杂的计算，计算机会帮我们搞定。</p>
+<p>接着，计算了损失函数，我们需要通过梯度下降法来更新出$W_1,W_2,b_1,b_2$的值。</p>
+<p>到目前为止，你可能发现了，这样的训练是反向的，只有得到了输出，和真实label比较得出差异，才能更新。这就是BP（反向传播）算法。</p>
+<blockquote>
+<p>BP（Back Propagation）网络是1986年由Rumelhart和McCelland为首的科学家小组提出，是一种按误差逆传播算法训练的多层前馈网络，是目前应用最广泛的神经网络模型之一。</p>
+</blockquote>
+<p>BP实际上就是在原来的基础上加上了一个反馈，通过梯度下降法在一次input输入获得output之后，逆向传播，通过计算各层的负梯度来调整每一层的参数值，达到更新参数的下效果。</p>
+<p>引用<a href="https://zh.wikipedia.org/wiki/%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E7%AE%97%E6%B3%95" target="_blank" rel="external">wikipedia</a>上的说法：</p>
+<p>反向传播算法（BP算法）主要由两个阶段:激励传播、和权重更新。</p>
+<h2 id="第1阶段：激励传播"><a href="#第1阶段：激励传播" class="headerlink" title="第1阶段：激励传播"></a>第1阶段：激励传播</h2><p>每次迭代中的传播环节包含两步：</p>
+<ol>
+<li>（前向传播阶段）将训练输入送入网络以获得激励响应；</li>
+<li>（反向传播阶段）将激励响应同训练输入对应的目标输出求差，从而获得隐层和输出层的响应误差。</li>
+</ol>
+<h2 id="第2阶段：权重更新"><a href="#第2阶段：权重更新" class="headerlink" title="第2阶段：权重更新"></a>第2阶段：权重更新</h2><p>对于每个突触上的权重，按照以下步骤进行更新：</p>
+<ol>
+<li>将输入激励和响应误差相乘，从而获得权重的梯度；</li>
+<li>将这个梯度乘上一个比例并取反后加到权重上。</li>
+</ol>
+<p>这个比例（百分比）将会影响到训练过程的速度和效果，因此称为“训练因子”。梯度的方向指明了误差扩大的方向，因此在更新权重的时候需要对其取反，从而减小权重引起的误差。<br>第1和第2阶段可以反复循环迭代，直到网络的对输入的响应达到满意的预定的目标范围为止。</p>
+<p>推导过程可以参考维基百科。</p>
+<p>最终，通过BP算法，对于每一个连线上的权值进行调整，最终趋向于一个最优值。也就是说训练的越来越好。</p>
+<hr>
+<p>References</p>
+<ol>
+<li><a href="http://blog.csdn.net/stan1989/article/details/8565499/" target="_blank" rel="external">Machine Learning—感知器学习算法</a></li>
+<li><a href="http://blog.csdn.net/u014088052/article/details/50923924" target="_blank" rel="external">激活函数的作用</a></li>
+<li><a href="http://www.cnblogs.com/wentingtu/archive/2012/06/05/2536425.html" target="_blank" rel="external">BP神经网络模型与学习算法</a></li>
+<li><a href="http://www.cnblogs.com/biaoyu/archive/2015/06/20/4591304.html" target="_blank" rel="external">BP神经网络推导过程详解</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Backpropagation" target="_blank" rel="external">Backpropagation维基百科</a></li>
+</ol>
 
       
     </div>
@@ -404,13 +430,13 @@ $\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2016/10/03/一种基于Dual坐标下降法的SVM/" rel="next" title="一种基于Dual坐标下降法的SVM">
+                <i class="fa fa-chevron-left"></i> 一种基于Dual坐标下降法的SVM
+              </a>
+            
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/08/21/【机器学习】2-矩阵和向量的一些计算/" rel="prev" title="【机器学习】2-矩阵和向量的一些计算">
-                【机器学习】2-矩阵和向量的一些计算 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -474,8 +500,8 @@ $\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/08/21/【机器学习】1-从线性代数开始/"
-           data-title="【机器学习】1-从线性代数开始" data-url="http://lvvan.top/2016/08/21/【机器学习】1-从线性代数开始/">
+      <div class="ds-thread" data-thread-key="2016/10/03/深入MLPs/"
+           data-title="深入MLPs" data-url="http://lvvan.top/2016/10/03/深入MLPs/">
       </div>
     
   </div>
@@ -574,7 +600,7 @@ $\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Scalars-Vectors-Matrices-and-Tensors"><span class="nav-number">1.</span> <span class="nav-text">Scalars, Vectors, Matrices and Tensors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linear-Dependence-and-Span"><span class="nav-number">2.</span> <span class="nav-text">Linear Dependence and Span</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Norms-范数"><span class="nav-number">3.</span> <span class="nav-text">Norms 范数</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#多层感知机"><span class="nav-number">1.</span> <span class="nav-text">多层感知机</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BP算法"><span class="nav-number">2.</span> <span class="nav-text">BP算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第1阶段：激励传播"><span class="nav-number">2.1.</span> <span class="nav-text">第1阶段：激励传播</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第2阶段：权重更新"><span class="nav-number">2.2.</span> <span class="nav-text">第2阶段：权重更新</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
