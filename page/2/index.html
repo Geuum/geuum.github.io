@@ -94,7 +94,7 @@
 似醒非醒本是寂寞">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Lvvan的博客">
-<meta property="og:url" content="http://lvvan.top/archives/2016/08/index.html">
+<meta property="og:url" content="http://lvvan.top/page/2/index.html">
 <meta property="og:site_name" content="Lvvan的博客">
 <meta property="og:description" content="是翩翩公子，也是浊世烟枪
 是三分剑侠，又是三分骚客
@@ -134,9 +134,9 @@
 
 
 
-  <link rel="canonical" href="http://lvvan.top/archives/2016/08/"/>
+  <link rel="canonical" href="http://lvvan.top/page/2/"/>
 
-  <title> 归档 | Lvvan的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title> Lvvan的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -157,7 +157,9 @@
     
   
 
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left  page-archive  ">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left 
+   page-home 
+ ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -254,103 +256,162 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
+  <section id="posts" class="posts-expand">
+    
+      
 
-  <section id="posts" class="posts-collapse">
-    <span class="archive-move-on"></span>
+  
+  
 
-    <span class="archive-page-counter">
-      
-      
-      
-        
-      
-      嗯..! 目前共计 11 篇日志。 继续努力。
-    </span>
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
 
     
+      <header class="post-header">
 
-      
-      
-      
-
-      
         
-        <div class="collection-title">
-          <h2 class="archive-year motion-element" id="archive-year-2016">2016</h2>
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/21/【机器学习】1-从线性代数开始/" itemprop="url">
+                  【机器学习】1-从线性代数开始
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-21T16:26:22+08:00" content="2016-08-21">
+              2016-08-21
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/21/【机器学习】1-从线性代数开始/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/21/【机器学习】1-从线性代数开始/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
         </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
       
 
       
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
         
-            <a class="post-title-link" href="/2016/08/21/【机器学习】2-矩阵和向量的一些计算/" itemprop="url">
-              
-                <span itemprop="name">【机器学习】2-矩阵和向量的一些计算</span>
-              
-            </a>
+          
+            <p>本科时候，已经学过了线性代数，考研的时候也是重点之一，但是时间过去略久，以我的没记性的脑子还是再来复习一下吧！主要是概念上的。</p>
+<hr>
+<h3 id="Scalars-Vectors-Matrices-and-Tensors"><a href="#Scalars-Vectors-Matrices-and-Tensors" class="headerlink" title="Scalars, Vectors, Matrices and Tensors"></a>Scalars, Vectors, Matrices and Tensors</h3><p>【标量、向量、矩阵、张量】<br>标量、向量的概念就不多说了<br>关于矩阵的公式在这里列几个吧：</p>
+<ol>
+<li>$\mathbf{C} = \mathbf{A} + \mathbf{B} $   where  $C_{i,j}= A_{i,j}+B_{i,j}$\ ddd $a^{3}_{ij}$\</li>
+<li>$\mathbf{D}=a \bullet \mathbf{B} + c$ where $ D _{i,j}= a \bullet B _{i,j}+c $</li>
+<li>$\mathbf{C}=\mathbf{A}+\mathbf{b}$ where  $ C _{i,j}=a \bullet B _{i,j}+b _j $</li>
+<li>$\mathbf{C}=\mathbf{AB}$ where  $ C _{i,j}=\sum _kA _{i,k}B _{j,k} $</li>
+</ol>
+<p>$$<br>C=AB=\begin{pmatrix} 1 &amp; 2 &amp; 3 \\4 &amp; 5 &amp; 6 \end{pmatrix} \begin{pmatrix}1 &amp; 4\\ 2&amp;5\\ 3&amp;6 \end{pmatrix}=\begin{pmatrix} 1\times1+2\times2+3\times3 &amp; 1\times4+2\times5+3\times6  \\4\times1+5\times2+6\times3&amp; 4\times4+5\times5+6\times6 \end{pmatrix}=\begin{pmatrix} 14 &amp; 32 \\32 &amp; 77 \end{pmatrix}<br>$$</p>
+<ol>
+<li><strong>Hadamard product:</strong> $\mathbf{A}\bigodot\mathbf{B}$  where  ${A\bigodot B}_{i,j}=a_{i,j}b_{i,j}$ </li>
+</ol>
+<p>$$<br>\begin{pmatrix} 1 &amp; 3 &amp; 2 \\1 &amp; 0 &amp; 0\\1&amp;2&amp;2 \end{pmatrix}\bigodot \begin{pmatrix}0&amp;0 &amp;2\\ 7&amp;5&amp;0\\ 2&amp;1&amp;1 \end{pmatrix}=\begin{pmatrix} 1\times0&amp;3\times0&amp;2\times2\\ 1\times7&amp;0\times5&amp;0\times0 \\1\times3&amp;2\times1&amp;2\times1\end{pmatrix}=\begin{pmatrix} 0 &amp; 0&amp;4 \\7 &amp; 0&amp;0\\2&amp;2&amp;2 \end{pmatrix}<br>$$</p>
+<ol>
+<li>部分乘法公式：</li>
+</ol>
+<ul>
+<li><strong><em>A</em></strong>(<strong><em>B</em></strong> + <strong><em>C</em></strong>) = <strong><em>AB</em></strong> + <strong><em>AC</em></strong>. </li>
+<li><strong><em>A</em></strong>(<strong><em>BC</em></strong>) = (<strong><em>AB</em></strong>)<strong><em>C</em></strong>.</li>
+<li>一般不满足交换律</li>
+<li>向量可以满足交换律$\mathbf{x}^{\top}\mathbf{y}=\mathbf{y}^{\top}\mathbf{x}$</li>
+<li>$(\mathbf{AB})^{\top}=\mathbf{B}^{\top}\mathbf{A}^{\top}$</li>
+</ul>
+<ol>
+<li>逆矩阵：$\mathbf{A^{-1}}\mathbf{A}=\mathbf{I_n}$</li>
+</ol>
+<h3 id="Linear-Dependence-and-Span"><a href="#Linear-Dependence-and-Span" class="headerlink" title="Linear Dependence and Span"></a>Linear Dependence and Span</h3><p>根据逆矩阵的定义，我们可以用这个来解<strong><em>Ax=b</em></strong>的解，因为$\mathbf{x}=\mathbf{A^{-1}b}$,但这有一个前提那就是$A^{-a}$必须存在。</p>
+<h3 id="Norms-范数"><a href="#Norms-范数" class="headerlink" title="Norms 范数"></a>Norms 范数</h3><p>关于范数的作用，书里面给出这样的解释：</p>
+<blockquote>
+<p>Sometimes we need to measure the size of a vector. In machine learning, we usually measure the size of vectors using a function called a norm. Formally, the $L^p$ norm is given by</p>
+</blockquote>
+<p>$$<br>\begin{aligned}<br>\vert\vert{x}\vert\vert _p=(\sum_i \vert{x}\vert ^p)^{\frac{1}{p}}<br>\end{aligned}<br>$$<br>for $p\in\mathbb{R},p \ge1$</p>
+<p>对于范数，可以认为是描述向量长度的一个方式，可以看作是一个函数<em>f</em>，那么只要满足下面三个条件，那么都是范数：</p>
+<ol>
+<li>正定性：$f(\mathbf{x})=0\Rightarrow \mathbf{x=0}$，可以理解为若是长度为0，则一定为0向量</li>
+<li>三角不等式：$f(\mathbf{x+y})\le f(\mathbf{x})+f(\mathbf{y})$</li>
+<li>齐次性：$\forall\alpha\in\mathbb{R},f(\alpha x)=\vert\alpha\vert f(x)$,对于标量的乘法应该满足齐次性</li>
+</ol>
+<p><strong>下面说下几个特殊的范数：</strong></p>
+<p>$L^2$范数,p是2的时候，就是$\vert\vert{\mathbf{x}}\vert\vert$（2的时候可以把2略掉），称为欧几里得范数（<em>Euclidean norm</em>）,它的计算方式很简单就是$\sqrt{\mathbf{x^{\top}x}}$,一般来说，用到2范数的平方更多一些。</p>
+<p>$L^1$范数，一般从$L^2$开始的范数，其变化都是越开始越慢，而只有$L^1$范数可以做到恒定变化。这在做一些初始变化的机器学习中很有帮助。</p>
+<p>在这里要说一下$L^0$范数，有人把<strong>向量中非0元素的个数</strong>称为$L^0$范数。但这是<strong>不规范</strong>的，实际上一般的书上都没有$L^0$范数的说法。因为其不满足上述的第三个条件——齐次性，向量的变化，不会改变非0的数目。所以最好用$L^1$范数来替代。</p>
+<p>$L^\infty$范数，向量中元素绝对值的最大值，即</p>
+<p>$$<br>\begin{aligned}<br>\vert\vert{\mathbf{x}}\vert\vert_\infty=max_{i}\vert{x_i}\vert<br>\end{aligned}<br>$$</p>
+<p>Frobenius norm:前面的范数都是丈量向量的，而Frobenius norm是丈量矩阵的，而且这里尤类似上述的$L^2$范数，</p>
+<p>$$<br>\begin{aligned}<br>\vert\vert{A}\vert\vert_F=\sqrt{\sum_{i,j}A^2_{i,j}}<br>\end{aligned}<br>$$</p>
+<p>向量的点乘可表示为范数的乘机$\mathbf{x}^\top\mathbf{y}=\vert\vert{\mathbf{x}}\vert\vert_2\vert\vert{\mathbf{y}}\vert\vert_2cos\theta$</p>
+
+          
         
-      </h1>
+      
+    </div>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-08-21T20:57:26+08:00"
-              content="2016-08-21" >
-          08-21
-        </time>
-      </div>
+    <div>
+      
+    </div>
 
-    </header>
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
   </article>
 
 
-
     
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/08/21/【机器学习】1-从线性代数开始/" itemprop="url">
-              
-                <span itemprop="name">【机器学习】1-从线性代数开始</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-08-21T16:26:22+08:00"
-              content="2016-08-21" >
-          08-21
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
   </section>
 
   
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
 
 
 
@@ -549,12 +610,6 @@
   
 
   
-  
-    <script type="text/javascript" id="motion.page.archive">
-      $('.archive-year').velocity('transition.slideLeftIn');
-    </script>
-  
-
 
   
 
@@ -585,7 +640,24 @@
   
     
     <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
-    <script src="/js/src/hook-duoshuo.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    <script src="/js/src/hook-duoshuo.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
   
 
 

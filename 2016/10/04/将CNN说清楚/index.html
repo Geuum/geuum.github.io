@@ -1,0 +1,805 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="每天都在用CNN，DNN，那么究竟CNN该怎么理解，怎么入门？
+首先在阅读本文之前，确保你已经了解什么是
+
+Logistic Regression，如果不了解，可以参考我的快速了解Logistic Regression
+MLPs（多层感知机），如果不了解，可以参考我的深入MLPs
+
+如果你了解了什么是Logistic Regression，那么你对于多个神经元x输入，到一个输出y这样简单结构的连接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="将CNN说清楚">
+<meta property="og:url" content="http://lvvan.top/2016/10/04/将CNN说清楚/index.html">
+<meta property="og:site_name" content="Lvvan的博客">
+<meta property="og:description" content="每天都在用CNN，DNN，那么究竟CNN该怎么理解，怎么入门？
+首先在阅读本文之前，确保你已经了解什么是
+
+Logistic Regression，如果不了解，可以参考我的快速了解Logistic Regression
+MLPs（多层感知机），如果不了解，可以参考我的深入MLPs
+
+如果你了解了什么是Logistic Regression，那么你对于多个神经元x输入，到一个输出y这样简单结构的连接">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-4/52717341.jpg">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-4/49723760.jpg">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-4/92596899.jpg">
+<meta property="og:image" content="http://www.36dsj.com/wp-content/uploads/2015/03/511-600x224.jpg">
+<meta property="og:image" content="http://deeplearning.net/tutorial/_images/conv_1D_nn.png">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-4/65590218.jpg">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-4/81375205.jpg">
+<meta property="og:updated_time" content="2016-10-04T08:19:14.879Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="将CNN说清楚">
+<meta name="twitter:description" content="每天都在用CNN，DNN，那么究竟CNN该怎么理解，怎么入门？
+首先在阅读本文之前，确保你已经了解什么是
+
+Logistic Regression，如果不了解，可以参考我的快速了解Logistic Regression
+MLPs（多层感知机），如果不了解，可以参考我的深入MLPs
+
+如果你了解了什么是Logistic Regression，那么你对于多个神经元x输入，到一个输出y这样简单结构的连接">
+<meta name="twitter:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-4/52717341.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://lvvan.top/2016/10/04/将CNN说清楚/"/>
+
+  <title> 将CNN说清楚 | Lvvan的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lvvan的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">夜合花开香满庭，夜深微雨醉初醒</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                将CNN说清楚
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-04T16:10:12+08:00" content="2016-10-04">
+              2016-10-04
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/04/将CNN说清楚/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/04/将CNN说清楚/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv"><i class="fa fa-file-o"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>每天都在用CNN，DNN，那么究竟CNN该怎么理解，怎么入门？</p>
+<p>首先在阅读本文之前，确保你已经了解什么是</p>
+<ul>
+<li>Logistic Regression，如果不了解，可以参考我的<a href="http://lvvan.top/2016/09/27/%E5%BF%AB%E9%80%9F%E4%BA%86%E8%A7%A3Logistic-Regression/">快速了解Logistic Regression</a></li>
+<li>MLPs（多层感知机），如果不了解，可以参考我的<a href="http://lvvan.top/2016/10/03/%E6%B7%B1%E5%85%A5MLPs/">深入MLPs</a></li>
+</ul>
+<p>如果你了解了什么是Logistic Regression，那么你对于多个神经元x输入，到一个输出y这样简单结构的连接是这样的</p>
+<p>$$<br>y=\beta_0+\beta_1x_1+\beta_2x_2+…+\beta_kx_k+\epsilon<br>$$<br>为了让其更加丰满的表现出输入输出的函数关系，我们使用非线性激活函数，将其投射到一个非线性的层上，接着通过最小化损失函数来更新参数，最终获得分类器。</p>
+<p>MLPs在LR中间插入了hidden layer，可能是一层，可能是多层，输入进去进行线性连接后通过激活函数提取其非线性特征，再将这个非线性特征作为下一层的input，再重复操作。</p>
+<p>通过BP算法，最小化损失函数来更新每一个线性连接的参数。最终获得所需要的分类器。</p>
+<p>然而对于MLPs，有一个很大的问题，那就是参数过多，梯度下降法计算代价十分巨大。解决这个问题就许多方法，CNN就是非常经典的一种。</p>
+<p>对于CNN（卷积神经网络），我们将会就其细节进行说明。</p>
+<h1 id="卷积"><a href="#卷积" class="headerlink" title="卷积"></a>卷积</h1><p>本科时应该都学过卷积的公式</p>
+<p>$$<br>s(t)=\int{x(a)w(t-a)da}<br>$$<br>简写成</p>
+<p>$$<br>s(t)=x*w<br>$$<br>一般认为x是输入，w是卷积核。卷积结果叫做feature map，注意这里的feature map定义，之后会用到。</p>
+<p>在机器学习中，输入和输出都是多维数组，我们把他们都称为张量。</p>
+<p>为什么要用卷积？</p>
+<p>卷积运算一个重要的特点就是，通过卷积运算，可以使原信号特征增强，并且降低噪音</p>
+<h1 id="稀疏连接"><a href="#稀疏连接" class="headerlink" title="稀疏连接"></a>稀疏连接</h1><p>在MLPs中，每一个输入和输出的神经元都是相互连接的，这意味着每一个连接上面都有一个参数，所以参数的数目是输入神经元数目乘以输出神经元的数目。这个连接的方式叫做全连接。</p>
+<p>如下图，所有层与层之间的连接都是全连接。</p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-4/52717341.jpg" alt="MLPs"></p>
+<p>在CNN中，考虑到这种全连接的冗余参数的特性，科学家尝试用稀疏连接的方式来连接两层之间。</p>
+<p>稀疏连接</p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-4/49723760.jpg" alt="Sparse connectivity"></p>
+<p>从上图中，我们可以看出，一个宽为3的卷积核卷积输入之后可以连接到3个输出，同样，每个输出可以接受来自3个不同的输入的特征，这样的参数就大大减少了。</p>
+<p>有的同学可能会问，这样是否无法获取到全面的特征？</p>
+<p>实际上，如果层数少的话，可能会有这个问题，但是对于CNN来说，其本身是MLPs的衍化，最少也是有3层的，那么至少也可以看到下面这种结构。</p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-4/92596899.jpg" alt="多层连接"></p>
+<p>相邻两层之间的连接可能要稀疏一点，但是隔了一层以后，反而可以获得所有的输入，考虑到我们的神经网络是一个黑盒操作，其中连接多少并无所谓，我们只要能够使得输入和输出尽可能关联即可。</p>
+<p>这也叫局部感知。它的道理就是，我们看东西都是从局部到整体的，你一下子看一整个图显然比较吃力，但是我们一部分一部分看，就容易多了。而只考虑部分也使得对局部的掌握更加准确。</p>
+<p>局部感知最大的好处就是减少了参数，像是我们之前的全连接图中，假如每一条都是一个参数的话，从input layer到hidden layer需要25个参数，而如果是全连通的方式的话，需要13个参数。</p>
+<p>而网络上有一个更明显的说明图</p>
+<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/511-600x224.jpg" alt="image"></p>
+<p>假设有一张1000*1000的图像作为input layer，假设有1000000个隐层神经元。左边是全连通的方式，需要多少参数呢？答案很简单：$1000\times1000\times1000000=10^{12}$个参数。而假如把这1000000个神经元平铺开来，每人管一块$10\times10$区域，那么只需要$100\times1000000=10^{8}$个参数。这个道理就像是我有许多人才，全放在中央没那么多岗位，让每个人都管全国，严重资源浪费，效率还不高。不如把这些人都派到各个县市，做个地方官，然后各自治理，然后把结果汇报中央就好了，省了不少事情。</p>
+<h1 id="权值共享"><a href="#权值共享" class="headerlink" title="权值共享"></a>权值共享</h1><p>通过稀疏连接，我们减少了许多参数，但是对于input很大，隐层元又很多的情况下，参数还是很多。比如上面，虽然从$10^{12}$到$10^{8}$降低了几个数量级，但是这个值仍然很大。</p>
+<p>有一个办法，那就让同一层里的卷积核相同。那么1000000个神经元也还是只要$10\times10=100$个参数。</p>
+<p>但是这样也是有弊端的，只能监测某一个特性。</p>
+<p>那么怎么办呢？那就多给你几个参数组呗，你们每个神经元对每个参数组都来一遍。这样就全面了吧！实际上，就相当于那么多人都到地方去任职了，中央要求所有地方管理要全部按照一定规矩，然后计生要全部按计生的规矩，民政要按民政的规矩等等，反正全国统一，又面面俱到。</p>
+<p><img src="http://deeplearning.net/tutorial/_images/conv_1D_nn.png" alt="image"></p>
+<p>如图所示，同一个颜色的线代表这同一个参数，这里计算参数梯度只要求各个梯度然后求取平均值即可。</p>
+<p>一个卷积核提取出一个input的特征组合成的一个矩阵就是feature map。</p>
+<p><strong>问题1</strong>：卷积核共享了，不同卷积核提取不同的feature map，那么该怎么确定卷积核的数目？</p>
+<p><strong>答</strong>：一般来说卷积核的数目是设定好的。</p>
+<p><strong>问题2</strong>：如何保证卷积核不会趋同？</p>
+<p><strong>答</strong>：训练结果无法保证，卷积核的数目如果取了过多，而你的input无法提取这么多feature map，那么必然有卷积核趋同的可能，但是如果你取数量很少的卷积核，那么训练的结果无法保证。可以这么说，卷积核的数目是试出来的，和数据集也有很大关系。</p>
+<p><strong>问题3</strong>：如果层数过多，会不会有feature map提取过多的可能性？</p>
+<p><strong>答</strong>：这和具体算法有关，如果单纯就是input卷积池化的操作重复，那么整个过程就是一个不断把每一层的提取feature map层增多的操作。就是类似这样一个操作。</p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-4/65590218.jpg" alt="堆叠"></p>
+<p>简单的说，假如你input提取特征有6个卷积核，之后每一层的卷积核都是6个，（忽略池化，因为其不改变特征数目），那么如果input足够大，那么第一次卷积是6个feature map，第二次是36，第三次是216，以此类推，实际上我们不需要也不会提取这么多feature map，所以在高层数的时候，我们会尽可能限制feature map的数目。怎么限制？对于卷积核提取的feature map，可以进行组合，比如有6个feature map，通过6个卷积核再次组合成6个feature map。可能有人觉得这个操作是无意义的，但其实这样可以更好的提取特征，因为不是全连接，所以必然有些特征是没有提取到所有的，所以用组合的方式互相匀一下。</p>
+<h1 id="pooling池化"><a href="#pooling池化" class="headerlink" title="pooling池化"></a>pooling池化</h1><p>pooling之前，我们先把CNN的流程图贴一下。</p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-4/81375205.jpg" alt="CNN流程"></p>
+<p>从输入，然后卷积提取feature map，然后需要进行激活。</p>
+<p>那么激活函数体现在什么地方呢？实际上，对于每个提取出的特征，进行激活，给予其非线性特征，其实这个和其他的也是类似的。</p>
+<p>池化，什么是池化？</p>
+<p>池化，也叫下采样。形象地说，你先随便看向远方，然后闭上眼睛，你仍记得看到了些什么，但是你能完全回忆起你刚刚看到的每一个细节吗？同样，在卷积神经网络中，没有必要一定就要对原图像做处理，而是可以使用某种“压缩”方法，这就是池化，也就是每次将原图像卷积后，都通过一个下采样的过程，来减小图像的规模。以最大池化（Max-Pooling）为例，1000×1000的图像经过10×10的卷积核卷积后，得到的是991×991的特征图，然后使用2×2的池化规模，即每4个点组成的小方块中，取最大的一个作为输出，最终得到的是496×496大小的特征图。</p>
+<p>一般的池化操作有</p>
+<ul>
+<li>最大池化（Max Pooling）。取4个点的最大值。这是最常用的池化方法。 </li>
+<li>均值池化（Mean Pooling）。取4个点的均值。 </li>
+<li>高斯池化。借鉴高斯模糊的方法。不常用。</li>
+<li>可训练池化。训练函数f ，接受4个点为输入，出入1个点。不常用。</li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>一般来说，CNN的操作最主要体现在</p>
+<ul>
+<li>权值共享</li>
+<li>稀疏连接</li>
+</ul>
+<p>按照上面CNN的流程图，如果想要加深网络，那么就把中间的卷积层多重复几次，最终，将特征展开为一维全连接后输出，这样一个CNN的模型结构就结束了。</p>
+<p>训练方法仍然是BP算法，如果不明白，可以参考我的<a href="http://lvvan.top/2016/10/03/%E6%B7%B1%E5%85%A5MLPs/">深入MLPs</a></p>
+<p>理解可能欠佳，如有错误，请不吝指正。</p>
+<hr>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ol>
+<li><a href="http://blog.csdn.net/shenxiaoming77/article/details/51614601" target="_blank" rel="external">机器学习中的损失函数</a></li>
+<li><a href="http://blog.csdn.net/zouxy09/article/details/8781543/" target="_blank" rel="external">Deep Learning（深度学习）学习笔记整理系列之（七）</a></li>
+<li><a href="http://blog.csdn.net/nan355655600/article/details/17690029" target="_blank" rel="external">深度学习（卷积神经网络）一些问题总结</a></li>
+<li><a href="http://www.deeplearningbook.org/" target="_blank" rel="external">Deeplearning</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/pay.JPG" alt="百色梵 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>觉得作者写的不错，就给点赏钱吧！_(:з」∠)_</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/03/深入MLPs/" rel="next" title="深入MLPs">
+                <i class="fa fa-chevron-left"></i> 深入MLPs
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/10/04/将CNN说清楚/"
+           data-title="将CNN说清楚" data-url="http://lvvan.top/2016/10/04/将CNN说清楚/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://img1.doubanio.com/icon/ul61277596-19.jpg"
+               alt="百色梵" />
+          <p class="site-author-name" itemprop="name">百色梵</p>
+          <p class="site-description motion-element" itemprop="description">是翩翩公子，也是浊世烟枪
+是三分剑侠，又是三分骚客
+爱自由又言慎独
+明是非却性激愤
+轻装上阵，不忘万里山河
+欲登云天，谁人去我阡陌
+将错就错无人之过
+似醒非醒本是寂寞
+</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#卷积"><span class="nav-number">1.</span> <span class="nav-text">卷积</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#稀疏连接"><span class="nav-number">2.</span> <span class="nav-text">稀疏连接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#权值共享"><span class="nav-number">3.</span> <span class="nav-text">权值共享</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pooling池化"><span class="nav-number">4.</span> <span class="nav-text">pooling池化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">6.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">百色梵</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"lvvan"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
