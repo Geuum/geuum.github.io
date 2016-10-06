@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="机器学习,论文研读," />
 
 
 
@@ -84,37 +84,36 @@
 
 
 
-<meta name="description" content="是翩翩公子，也是浊世烟枪
-是三分剑侠，又是三分骚客
-爱自由又言慎独
-明是非却性激愤
-轻装上阵，不忘万里山河
-欲登云天，谁人去我阡陌
-将错就错无人之过
-似醒非醒本是寂寞">
+<meta name="description" content="From
+
+Very Deep Convolutional Networks For Large-Scale Image Recognition
+Karen Simonyan &amp;amp; Andrew Zisserman
+Visual Geometry Group, Department of Engineering Science, University of Oxford
+ICLR 2015">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NetWorks">
+<meta property="og:title" content="【论文研读】VGG网络模型——Very Deep Convolutional NetWorks">
 <meta property="og:url" content="http://lvvan.top/2016/10/06/【论文研读】VGG网络模型——Very Deep Convolutional NetWorks/index.html">
 <meta property="og:site_name" content="Lvvan的博客">
-<meta property="og:description" content="是翩翩公子，也是浊世烟枪
-是三分剑侠，又是三分骚客
-爱自由又言慎独
-明是非却性激愤
-轻装上阵，不忘万里山河
-欲登云天，谁人去我阡陌
-将错就错无人之过
-似醒非醒本是寂寞">
-<meta property="og:updated_time" content="2016-10-06T06:57:59.656Z">
+<meta property="og:description" content="From
+
+Very Deep Convolutional Networks For Large-Scale Image Recognition
+Karen Simonyan &amp;amp; Andrew Zisserman
+Visual Geometry Group, Department of Engineering Science, University of Oxford
+ICLR 2015">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-5/38914356.jpg">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-6/88874671.jpg">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-6/73217940.jpg">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-6/21533577.jpg">
+<meta property="og:updated_time" content="2016-10-06T07:02:36.424Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="NetWorks">
-<meta name="twitter:description" content="是翩翩公子，也是浊世烟枪
-是三分剑侠，又是三分骚客
-爱自由又言慎独
-明是非却性激愤
-轻装上阵，不忘万里山河
-欲登云天，谁人去我阡陌
-将错就错无人之过
-似醒非醒本是寂寞">
+<meta name="twitter:title" content="【论文研读】VGG网络模型——Very Deep Convolutional NetWorks">
+<meta name="twitter:description" content="From
+
+Very Deep Convolutional Networks For Large-Scale Image Recognition
+Karen Simonyan &amp;amp; Andrew Zisserman
+Visual Geometry Group, Department of Engineering Science, University of Oxford
+ICLR 2015">
+<meta name="twitter:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-5/38914356.jpg">
 
 
 
@@ -137,7 +136,7 @@
 
   <link rel="canonical" href="http://lvvan.top/2016/10/06/【论文研读】VGG网络模型——Very Deep Convolutional NetWorks/"/>
 
-  <title> NetWorks | Lvvan的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title> 【论文研读】VGG网络模型——Very Deep Convolutional NetWorks | Lvvan的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -277,7 +276,7 @@
             
             
               
-                NetWorks
+                【论文研读】VGG网络模型——Very Deep Convolutional NetWorks
               
             
           </h1>
@@ -329,7 +328,76 @@
       
 
       
-        
+        <p>From</p>
+<ul>
+<li><em><a href="https://arxiv.org/pdf/1409.1556.pdf" target="_blank" rel="external">Very Deep Convolutional Networks For Large-Scale Image Recognition</a></em></li>
+<li>Karen Simonyan &amp; Andrew Zisserman</li>
+<li>Visual Geometry Group, Department of Engineering Science, University of Oxford</li>
+<li><strong>ICLR</strong> 2015</li>
+</ul>
+<hr>
+<p>VGG是2014年十分火的一个深度学习模型，它和GoogleNet并称2014年的ImageNet Challenge双雄。VGG全名<em>Very Deep Convolutional Networks For Large-Scale Image Recognition</em>，其特点就是非常深，用苹果的广告语就是比更深还深，岂止于深。</p>
+<p>实际上这些年，随着计算机的计算能力增加，GPU的制作水平提升，计算一个深网络已经比以前要容易得多。作者也提到，ImageNet的比赛已经从high-dimensional shallow feature encoding的方向渐渐转变为研究更深的卷积网络了。</p>
+<h1 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h1><p>先看下系统结构</p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-5/38914356.jpg" alt="结构"></p>
+<p>整个系统，作者试验了11层，11层带LRN的，13层，16层带1*1卷积核的，16层全3*3卷积核的和19层全3*3卷积核的。</p>
+<p>实验证明还是后面两种效果要更好一点。</p>
+<p>下面就结构拆解</p>
+<h2 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h2><p>输入需要有预处理，输入要求是固定的224*224的RGB图像，预处理就是减去平均RGB值。</p>
+<p>首先需要介绍一下crop，crop英文裁剪，所有给定图像都需要crop成224*224的大小来保证输入，所以，假设$S$是原图宽的大小，那么</p>
+<ol>
+<li>如果$S=224$，很好，crop的结果还是自己</li>
+<li>如果$S&gt;224$，crop的结果只能反应原图的部分信息</li>
+</ol>
+<p>所以原图要求至少要比224大，作者提出两种方案，一是固定S大小，那么大家的偏差都一样，二是S取一个范围，这样不至于太离谱（有的获得了图片的全部信息，有的只能获得千分之一的信息，训练出来的结果肯定后者没有前者好）。</p>
+<p>注意，这里的crop是随机crop，无法预测crop图片的哪一部分。实际上在此之后的许多算法都用上了crop来保证输入固定进行训练。</p>
+<h2 id="卷积层"><a href="#卷积层" class="headerlink" title="卷积层"></a>卷积层</h2><p>获得224*224的输入之后，CNN的第一步是过卷积，这里也一样，特别之处在于这里使用了3*3的小卷积核，stride为1。</p>
+<p>为什么这里要用一个这么小的卷积核呢？实际上，在此之前，大多数的卷积核都是选取5*5或者7*7的大核。</p>
+<p>我们可以推一下，假如我们有一个50*50的输入，</p>
+<ol>
+<li>那么用3*3卷积核(stride 1)卷积获得的feature map大小是48*48，考虑到CNN权值共享，参数也就是3*3=9个</li>
+<li>再加一层卷积，重复上述步骤，获得feature map大小46*46，参数也是3*3=9个</li>
+<li>再加一层卷积，重复上述步骤，获得feature map大小44*44，参数还是3*3=9个</li>
+</ol>
+<p>算下来，参数共为27个</p>
+<p>再假设我们用7*7（stride 1）的卷积核，那么</p>
+<ol>
+<li>和输入卷积，获得feature map大小44*44，参数是7*7=49个</li>
+</ol>
+<p>这样一比，就可以发现，用小卷积核堆叠卷积层卷积的结果是一样的（不考虑zero-padding），但是参数却少了很多。</p>
+<p>观察上图的C情况，发现其使用了1*1的卷积核，1*1的卷积核实际上只是做了一个线性变换，之后通过激活来具有非线性特征。</p>
+<p>我们发现，通过卷积，feature map的大小是不变的，只有通过池化使得feature map大小变为一半。实际上我们在卷积的过程中，feature map一直是缩小的，如何保持其不变呢？我们上面已经提到了，使用zero-padding，意思就是在你原来的feature map周围加上1 pixel的0元素，包围一圈，这样再去卷积，就可以保证feature map大小不变了。</p>
+<h2 id="激活层"><a href="#激活层" class="headerlink" title="激活层"></a>激活层</h2><p>激活函数使用ReLU，每一个hidden layer后面都挂了一个，这个不细说。</p>
+<h2 id="池化层"><a href="#池化层" class="headerlink" title="池化层"></a>池化层</h2><p>每过几个卷积层，都会包含一个池化层，这里使用的是max-pooling。池化之后的，feature map的size减半，为了保证spatial resolution或者time complexity不变，我们要把卷积核的数目（channel）double。</p>
+<h2 id="全连接层FC"><a href="#全连接层FC" class="headerlink" title="全连接层FC"></a>全连接层FC</h2><p>包含三个 FC ，分别包含4096，4096，1000个channel。1000个channel是为了迎合ImageNet分类竞赛的专用数据集，该数据集有1000分类。</p>
+<h2 id="dropout"><a href="#dropout" class="headerlink" title="dropout"></a>dropout</h2><p>前两个全连接层之后跟随0.5的dropout来抑制过拟合，减少训练时间。</p>
+<p>什么是dropout？</p>
+<p>dropout是一种随机抽掉一些神经元来抑制过拟合的方法。有一个概率或者ratio来抽取，一般设置为0.5。</p>
+<h2 id="softmax"><a href="#softmax" class="headerlink" title="softmax"></a>softmax</h2><p>最后连接一个softmax来进行多分类。</p>
+<p>至此，这个网络的结构就算是完成了。</p>
+<h1 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h1><p>训练过程，原文中仿照2012年Krizhevsky的参数设置，包括</p>
+<ul>
+<li>mini-bath 256，momentum 0.9的SGD</li>
+<li>weight decay$5\times10^{-4}$</li>
+<li>dropuot ratio 0.5</li>
+<li>learning rate $10^{-2}$，每次验证accuracy不再增加的时候，除以10</li>
+</ul>
+<p>这里有一个weight decay要注意一下，我们标准的带冲量的随机梯度下降法是这样的</p>
+<p>$$<br>\begin{cases}{}<br>v = \gamma v+ \alpha \nabla_{w} J(w; x^{(i)},y^{(i)}) \<br>w = w - v<br>\end{cases}<br>$$</p>
+<p>我们加入weight decay就变成了</p>
+<p>$$<br>\begin{cases}{}<br>v = \gamma v+ d\alpha w + \alpha \nabla_{w} J(w; x^{(i)},y^{(i)}) \<br>w = w - v<br>\end{cases}<br>$$<br>这里主要的目的就是让v更好的学习w的特性。</p>
+<h1 id="训练结果"><a href="#训练结果" class="headerlink" title="训练结果"></a>训练结果</h1><p>原文使用了caffe来搭建框架，对于同样大小的输入数据测试，VGG-16可以达到top-1只有25.6%，top-5只有8.7%的Error，而VGG-19更是可以达到25.5%和8.0%的Error。</p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-6/88874671.jpg" alt=""></p>
+<p>对于多中大小的输入输入数据，VGG不但不弱，反而还要强一点</p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-6/73217940.jpg" alt=""></p>
+<p>和之前的比较，简直把2年前的结果轰成渣了</p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-6/21533577.jpg" alt=""></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>VGG探索了一条将CNN go deeper的路，这也是当年的主题，但是VGG有什么弊端呢？</p>
+<ol>
+<li>慢，训练的非常慢，原文在2个Nvidia Titan Black上训练了2周多，看了网上的别人复现实验，训练一两个月的大有人在</li>
+<li>层数多了以后容易产生degradation，反而不如层数少的，这并非是过拟合的问题。</li>
+</ol>
+
       
     </div>
 
@@ -353,6 +421,14 @@
     </div>
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+            <a href="/tags/论文研读/" rel="tag">#论文研读</a>
+          
+        </div>
       
 
       
@@ -430,7 +506,7 @@
   <div class="comments" id="comments">
     
       <div class="ds-thread" data-thread-key="2016/10/06/【论文研读】VGG网络模型——Very Deep Convolutional NetWorks/"
-           data-title="NetWorks" data-url="http://lvvan.top/2016/10/06/【论文研读】VGG网络模型——Very Deep Convolutional NetWorks/">
+           data-title="【论文研读】VGG网络模型——Very Deep Convolutional NetWorks" data-url="http://lvvan.top/2016/10/06/【论文研读】VGG网络模型——Very Deep Convolutional NetWorks/">
       </div>
     
   </div>
@@ -529,7 +605,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#网络结构"><span class="nav-number">1.</span> <span class="nav-text">网络结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#输入"><span class="nav-number">1.1.</span> <span class="nav-text">输入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#卷积层"><span class="nav-number">1.2.</span> <span class="nav-text">卷积层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#激活层"><span class="nav-number">1.3.</span> <span class="nav-text">激活层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#池化层"><span class="nav-number">1.4.</span> <span class="nav-text">池化层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#全连接层FC"><span class="nav-number">1.5.</span> <span class="nav-text">全连接层FC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dropout"><span class="nav-number">1.6.</span> <span class="nav-text">dropout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#softmax"><span class="nav-number">1.7.</span> <span class="nav-text">softmax</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Training"><span class="nav-number">2.</span> <span class="nav-text">Training</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#训练结果"><span class="nav-number">3.</span> <span class="nav-text">训练结果</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
           </div>
         </section>
@@ -679,7 +755,24 @@
   
     
     <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
-    <script src="/js/src/hook-duoshuo.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    <script src="/js/src/hook-duoshuo.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
   
 
 
