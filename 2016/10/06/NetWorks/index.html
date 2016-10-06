@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="机器学习," />
+  <meta name="keywords" content="机器学习,论文研读," />
 
 
 
@@ -84,28 +84,36 @@
 
 
 
-<meta name="description" content="多层感知机MLPs（多层感知机，Deep feedforward networks），也叫前向神经网络（feedforward neural networks）或者深度前向网络（Deep feedforward networks）。不过大家一般还是习惯将其称为MLPs。
-对于MLPs，解决的还是一个输入输出问题。假如有输入向量$x$，那么定义输出向量
-$$y=f(x,\theta)$$
-之所以称之">
+<meta name="description" content="From
+
+Very Deep Convolutional Networks For Large-Scale Image Recognition
+Karen Simonyan &amp;amp; Andrew Zisserman
+Visual Geometry Group, Department of Engineering Science, University of Oxford
+ICLR 2015">
 <meta property="og:type" content="article">
-<meta property="og:title" content="深入MLPs">
-<meta property="og:url" content="http://lvvan.top/2016/10/03/深入MLPs/index.html">
+<meta property="og:title" content="【论文研读】VGG网络模型——Very Deep Convolutional NetWorks">
+<meta property="og:url" content="http://lvvan.top/2016/10/06/NetWorks/index.html">
 <meta property="og:site_name" content="Lvvan的博客">
-<meta property="og:description" content="多层感知机MLPs（多层感知机，Deep feedforward networks），也叫前向神经网络（feedforward neural networks）或者深度前向网络（Deep feedforward networks）。不过大家一般还是习惯将其称为MLPs。
-对于MLPs，解决的还是一个输入输出问题。假如有输入向量$x$，那么定义输出向量
-$$y=f(x,\theta)$$
-之所以称之">
-<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-3/77959357.jpg">
-<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-3/30705907.jpg">
-<meta property="og:updated_time" content="2016-10-03T12:29:43.353Z">
+<meta property="og:description" content="From
+
+Very Deep Convolutional Networks For Large-Scale Image Recognition
+Karen Simonyan &amp;amp; Andrew Zisserman
+Visual Geometry Group, Department of Engineering Science, University of Oxford
+ICLR 2015">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-5/38914356.jpg">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-6/88874671.jpg">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-6/73217940.jpg">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-6/21533577.jpg">
+<meta property="og:updated_time" content="2016-10-06T07:02:36.424Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="深入MLPs">
-<meta name="twitter:description" content="多层感知机MLPs（多层感知机，Deep feedforward networks），也叫前向神经网络（feedforward neural networks）或者深度前向网络（Deep feedforward networks）。不过大家一般还是习惯将其称为MLPs。
-对于MLPs，解决的还是一个输入输出问题。假如有输入向量$x$，那么定义输出向量
-$$y=f(x,\theta)$$
-之所以称之">
-<meta name="twitter:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-3/77959357.jpg">
+<meta name="twitter:title" content="【论文研读】VGG网络模型——Very Deep Convolutional NetWorks">
+<meta name="twitter:description" content="From
+
+Very Deep Convolutional Networks For Large-Scale Image Recognition
+Karen Simonyan &amp;amp; Andrew Zisserman
+Visual Geometry Group, Department of Engineering Science, University of Oxford
+ICLR 2015">
+<meta name="twitter:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-5/38914356.jpg">
 
 
 
@@ -126,9 +134,9 @@ $$y=f(x,\theta)$$
 
 
 
-  <link rel="canonical" href="http://lvvan.top/2016/10/03/深入MLPs/"/>
+  <link rel="canonical" href="http://lvvan.top/2016/10/06/NetWorks/"/>
 
-  <title> 深入MLPs | Lvvan的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title> 【论文研读】VGG网络模型——Very Deep Convolutional NetWorks | Lvvan的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -268,7 +276,7 @@ $$y=f(x,\theta)$$
             
             
               
-                深入MLPs
+                【论文研读】VGG网络模型——Very Deep Convolutional NetWorks
               
             
           </h1>
@@ -280,8 +288,8 @@ $$y=f(x,\theta)$$
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-03T20:17:06+08:00" content="2016-10-03">
-              2016-10-03
+            <time itemprop="dateCreated" datetime="2016-10-06T14:57:59+08:00" content="2016-10-06">
+              2016-10-06
             </time>
           </span>
 
@@ -291,8 +299,8 @@ $$y=f(x,\theta)$$
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/10/03/深入MLPs/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/03/深入MLPs/" itemprop="commentsCount"></span>
+                <a href="/2016/10/06/NetWorks/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/06/NetWorks/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -320,79 +328,74 @@ $$y=f(x,\theta)$$
       
 
       
-        <h1 id="多层感知机"><a href="#多层感知机" class="headerlink" title="多层感知机"></a>多层感知机</h1><p>MLPs（多层感知机，<em>Deep feedforward networks</em>），也叫前向神经网络（<em>feedforward neural networks</em>）或者深度前向网络（<em>Deep feedforward networks</em>）。不过大家一般还是习惯将其称为MLPs。</p>
-<p>对于MLPs，解决的还是一个输入输出问题。假如有输入向量$x$，那么定义输出向量</p>
-<p>$$<br>y=f(x,\theta)<br>$$</p>
-<p>之所以称之为前向神经网络，是因为这个NN（Neural Network）完全是没有回头啊。如果考虑Feedback，这就变成了一个RNN模型。</p>
-<p>下面说说网络的概念吧。其实对于什么是网络，很简单。就是把许多函数串起来使用。比如说</p>
-<p>$$<br>f(x)=f_3(f_2(f_1(x)))<br>$$</p>
-<p>这就是网络的概念，是一种链式结构，链式网络。在这里，$f_1$就是第一层，$f_2$是第二层，$f_3$是第三层。层数代表网络的【深度】，这也是深度学习的深度由来。</p>
-<p>我们最终的目的是训练出一系列参数，使得input输入output输出。至于中间你做了些什么，我们一概不关心。所以对于MLPs或者其他的DL模型来说，中间的层都是Black Box。所以我们对于中间的这些层，有一个专有名称——隐层（hidden layer）。</p>
-<p>那么我们的MLPs和LR模型还有些什么差呢？难道仅仅是一个层数多，一个层数少吗？</p>
-<p>引用<a href="http://scikit-learn.org/dev/modules/neural\_networks\_supervised.html" target="_blank" rel="external">scikit-learn</a>上的一句话</p>
-<blockquote>
-<p>It is different from logistic regression, in that between the input and the output layer, there can be one or more non-linear layers, called hidden layers.</p>
-</blockquote>
-<p>没错，我们发现组成隐层的在这里都是非线性层。</p>
-<p>如何理解，假如有这样一个模型</p>
-<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-3/77959357.jpg" alt="MLPs\_1"></p>
-<p>原图可能有点大，模型从左往右流向。所以input进来之后，如果到达中间一层，如果这个过程是线性的。那么我们有</p>
-<p>$$<br>A=W_1X+b_1<br>$$<br>如果从中间层到达输出仍然是线性的</p>
-<p>$$<br>Y=W_2A+b_2<br>$$<br>那么我们发现</p>
-<p>$$<br>\begin{array}{}<br>Y=W_2(W_1X+b1)+b2\<br>=W_2W_1X+W_2b1+b2<br>\end{array}<br>$$</p>
-<p>还是线性的，这不相当于问题没变嘛，所以如果我们把这些层仍然当作是线性的显然是不可取的，没什么意义。我们知道，线性本身对于问题的描述是比较苍白的，手段很弱，没办法描绘很多复杂情况。所以我们借助非线性函数来描绘更加复杂的情况，所以这才是隐层存在的意义。</p>
-<p>对于我们的输入函数，通过激活函数将输入特征映射到隐层上面去。</p>
-<p>那么，激活函数又是什么？</p>
-<p>引用<a href="http://blog.csdn.net/u014088052/article/details/50923924" target="_blank" rel="external">激活函数的作用</a>的说法</p>
-<blockquote>
-<p>激活函数，并不是去激活什么，而是指如何把“激活的神经元的特征”通过函数把特征保留并映射出来（保留特征，去除一些数据中是的冗余），这是神经网络能解决非线性问题关键。</p>
-</blockquote>
-<p>这句话说的非常透析。从这里我们可以将隐层看作是两层：</p>
-<ol>
-<li>线性层</li>
-<li>激活层</li>
-</ol>
-<p>还就我们上面的图，首先到达线性层和之前的一样</p>
-<p>$$<br>A=W_1X+b_1<br>$$<br>接着，我们需要借助激活函数将其特征激活到非线性上去。我们使用函数$h()$函数作为激活函数，所以激活后</p>
-<p>$$<br>h(A)=h(W_1X+b_1)<br>$$<br>这就是我们站立在隐层上面的东西。也是下一层的输出，对于上面这个模型，我们下一层就是输出了。</p>
-<p>输出层一般使用softmax函数，对于这个问题，可以参考<a href="http://www.caffecn.cn/?/question/124" target="_blank" rel="external">这里</a>，假设$G(x)=softmax(x)$</p>
-<p>所以我们最终的输出就是</p>
-<p>$$<br>Y=G(W_2h(A)+b_2)=G(W_2h(W_1X+b_1)+b_2)<br>$$<br>到这里，是不是有点感觉了。</p>
-<p>画个流程图</p>
-<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-3/30705907.jpg" alt="流程图"></p>
-<h1 id="BP算法"><a href="#BP算法" class="headerlink" title="BP算法"></a>BP算法</h1><p>我们的目的就是在不断训练的过程中，计算出$W_1,W_2,b_1,b_2$的最优值。这样，对于一个未知output的input，可以很好的预测其output。</p>
-<p>那么怎么训练。损失函数！</p>
-<p>没错，和我们之前的LR一样，我们需要一个可以丈量预测值（训练出来的值）和真实值之间的差异，我们就要减小这个差异。</p>
-<p>那么，这个损失函数是针对哪一步的损失函数呢？很明显，我们只需要求取Y的损失函数即可，至于其中有多少复杂的计算，计算机会帮我们搞定。</p>
-<p>接着，计算了损失函数，我们需要通过梯度下降法来更新出$W_1,W_2,b_1,b_2$的值。</p>
-<p>到目前为止，你可能发现了，这样的训练是反向的，只有得到了输出，和真实label比较得出差异，才能更新。这就是BP（反向传播）算法。</p>
-<blockquote>
-<p>BP（Back Propagation）网络是1986年由Rumelhart和McCelland为首的科学家小组提出，是一种按误差逆传播算法训练的多层前馈网络，是目前应用最广泛的神经网络模型之一。</p>
-</blockquote>
-<p>BP实际上就是在原来的基础上加上了一个反馈，通过梯度下降法在一次input输入获得output之后，逆向传播，通过计算各层的负梯度来调整每一层的参数值，达到更新参数的下效果。</p>
-<p>引用<a href="https://zh.wikipedia.org/wiki/%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E7%AE%97%E6%B3%95" target="_blank" rel="external">wikipedia</a>上的说法：</p>
-<p>反向传播算法（BP算法）主要由两个阶段:激励传播、和权重更新。</p>
-<h2 id="第1阶段：激励传播"><a href="#第1阶段：激励传播" class="headerlink" title="第1阶段：激励传播"></a>第1阶段：激励传播</h2><p>每次迭代中的传播环节包含两步：</p>
-<ol>
-<li>（前向传播阶段）将训练输入送入网络以获得激励响应；</li>
-<li>（反向传播阶段）将激励响应同训练输入对应的目标输出求差，从而获得隐层和输出层的响应误差。</li>
-</ol>
-<h2 id="第2阶段：权重更新"><a href="#第2阶段：权重更新" class="headerlink" title="第2阶段：权重更新"></a>第2阶段：权重更新</h2><p>对于每个突触上的权重，按照以下步骤进行更新：</p>
-<ol>
-<li>将输入激励和响应误差相乘，从而获得权重的梯度；</li>
-<li>将这个梯度乘上一个比例并取反后加到权重上。</li>
-</ol>
-<p>这个比例（百分比）将会影响到训练过程的速度和效果，因此称为“训练因子”。梯度的方向指明了误差扩大的方向，因此在更新权重的时候需要对其取反，从而减小权重引起的误差。<br>第1和第2阶段可以反复循环迭代，直到网络的对输入的响应达到满意的预定的目标范围为止。</p>
-<p>推导过程可以参考维基百科。</p>
-<p>最终，通过BP算法，对于每一个连线上的权值进行调整，最终趋向于一个最优值。也就是说训练的越来越好。</p>
+        <p>From</p>
+<ul>
+<li><em><a href="https://arxiv.org/pdf/1409.1556.pdf" target="_blank" rel="external">Very Deep Convolutional Networks For Large-Scale Image Recognition</a></em></li>
+<li>Karen Simonyan &amp; Andrew Zisserman</li>
+<li>Visual Geometry Group, Department of Engineering Science, University of Oxford</li>
+<li><strong>ICLR</strong> 2015</li>
+</ul>
 <hr>
-<p>References</p>
+<p>VGG是2014年十分火的一个深度学习模型，它和GoogleNet并称2014年的ImageNet Challenge双雄。VGG全名<em>Very Deep Convolutional Networks For Large-Scale Image Recognition</em>，其特点就是非常深，用苹果的广告语就是比更深还深，岂止于深。</p>
+<p>实际上这些年，随着计算机的计算能力增加，GPU的制作水平提升，计算一个深网络已经比以前要容易得多。作者也提到，ImageNet的比赛已经从high-dimensional shallow feature encoding的方向渐渐转变为研究更深的卷积网络了。</p>
+<h1 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h1><p>先看下系统结构</p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-5/38914356.jpg" alt="结构"></p>
+<p>整个系统，作者试验了11层，11层带LRN的，13层，16层带1*1卷积核的，16层全3*3卷积核的和19层全3*3卷积核的。</p>
+<p>实验证明还是后面两种效果要更好一点。</p>
+<p>下面就结构拆解</p>
+<h2 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h2><p>输入需要有预处理，输入要求是固定的224*224的RGB图像，预处理就是减去平均RGB值。</p>
+<p>首先需要介绍一下crop，crop英文裁剪，所有给定图像都需要crop成224*224的大小来保证输入，所以，假设$S$是原图宽的大小，那么</p>
 <ol>
-<li><a href="http://blog.csdn.net/stan1989/article/details/8565499/" target="_blank" rel="external">Machine Learning—感知器学习算法</a></li>
-<li><a href="http://blog.csdn.net/u014088052/article/details/50923924" target="_blank" rel="external">激活函数的作用</a></li>
-<li><a href="http://www.cnblogs.com/wentingtu/archive/2012/06/05/2536425.html" target="_blank" rel="external">BP神经网络模型与学习算法</a></li>
-<li><a href="http://www.cnblogs.com/biaoyu/archive/2015/06/20/4591304.html" target="_blank" rel="external">BP神经网络推导过程详解</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Backpropagation" target="_blank" rel="external">Backpropagation维基百科</a></li>
+<li>如果$S=224$，很好，crop的结果还是自己</li>
+<li>如果$S&gt;224$，crop的结果只能反应原图的部分信息</li>
+</ol>
+<p>所以原图要求至少要比224大，作者提出两种方案，一是固定S大小，那么大家的偏差都一样，二是S取一个范围，这样不至于太离谱（有的获得了图片的全部信息，有的只能获得千分之一的信息，训练出来的结果肯定后者没有前者好）。</p>
+<p>注意，这里的crop是随机crop，无法预测crop图片的哪一部分。实际上在此之后的许多算法都用上了crop来保证输入固定进行训练。</p>
+<h2 id="卷积层"><a href="#卷积层" class="headerlink" title="卷积层"></a>卷积层</h2><p>获得224*224的输入之后，CNN的第一步是过卷积，这里也一样，特别之处在于这里使用了3*3的小卷积核，stride为1。</p>
+<p>为什么这里要用一个这么小的卷积核呢？实际上，在此之前，大多数的卷积核都是选取5*5或者7*7的大核。</p>
+<p>我们可以推一下，假如我们有一个50*50的输入，</p>
+<ol>
+<li>那么用3*3卷积核(stride 1)卷积获得的feature map大小是48*48，考虑到CNN权值共享，参数也就是3*3=9个</li>
+<li>再加一层卷积，重复上述步骤，获得feature map大小46*46，参数也是3*3=9个</li>
+<li>再加一层卷积，重复上述步骤，获得feature map大小44*44，参数还是3*3=9个</li>
+</ol>
+<p>算下来，参数共为27个</p>
+<p>再假设我们用7*7（stride 1）的卷积核，那么</p>
+<ol>
+<li>和输入卷积，获得feature map大小44*44，参数是7*7=49个</li>
+</ol>
+<p>这样一比，就可以发现，用小卷积核堆叠卷积层卷积的结果是一样的（不考虑zero-padding），但是参数却少了很多。</p>
+<p>观察上图的C情况，发现其使用了1*1的卷积核，1*1的卷积核实际上只是做了一个线性变换，之后通过激活来具有非线性特征。</p>
+<p>我们发现，通过卷积，feature map的大小是不变的，只有通过池化使得feature map大小变为一半。实际上我们在卷积的过程中，feature map一直是缩小的，如何保持其不变呢？我们上面已经提到了，使用zero-padding，意思就是在你原来的feature map周围加上1 pixel的0元素，包围一圈，这样再去卷积，就可以保证feature map大小不变了。</p>
+<h2 id="激活层"><a href="#激活层" class="headerlink" title="激活层"></a>激活层</h2><p>激活函数使用ReLU，每一个hidden layer后面都挂了一个，这个不细说。</p>
+<h2 id="池化层"><a href="#池化层" class="headerlink" title="池化层"></a>池化层</h2><p>每过几个卷积层，都会包含一个池化层，这里使用的是max-pooling。池化之后的，feature map的size减半，为了保证spatial resolution或者time complexity不变，我们要把卷积核的数目（channel）double。</p>
+<h2 id="全连接层FC"><a href="#全连接层FC" class="headerlink" title="全连接层FC"></a>全连接层FC</h2><p>包含三个 FC ，分别包含4096，4096，1000个channel。1000个channel是为了迎合ImageNet分类竞赛的专用数据集，该数据集有1000分类。</p>
+<h2 id="dropout"><a href="#dropout" class="headerlink" title="dropout"></a>dropout</h2><p>前两个全连接层之后跟随0.5的dropout来抑制过拟合，减少训练时间。</p>
+<p>什么是dropout？</p>
+<p>dropout是一种随机抽掉一些神经元来抑制过拟合的方法。有一个概率或者ratio来抽取，一般设置为0.5。</p>
+<h2 id="softmax"><a href="#softmax" class="headerlink" title="softmax"></a>softmax</h2><p>最后连接一个softmax来进行多分类。</p>
+<p>至此，这个网络的结构就算是完成了。</p>
+<h1 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h1><p>训练过程，原文中仿照2012年Krizhevsky的参数设置，包括</p>
+<ul>
+<li>mini-bath 256，momentum 0.9的SGD</li>
+<li>weight decay$5\times10^{-4}$</li>
+<li>dropuot ratio 0.5</li>
+<li>learning rate $10^{-2}$，每次验证accuracy不再增加的时候，除以10</li>
+</ul>
+<p>这里有一个weight decay要注意一下，我们标准的带冲量的随机梯度下降法是这样的</p>
+<p>$$<br>\begin{cases}{}<br>v = \gamma v+ \alpha \nabla_{w} J(w; x^{(i)},y^{(i)}) \<br>w = w - v<br>\end{cases}<br>$$</p>
+<p>我们加入weight decay就变成了</p>
+<p>$$<br>\begin{cases}{}<br>v = \gamma v+ d\alpha w + \alpha \nabla_{w} J(w; x^{(i)},y^{(i)}) \<br>w = w - v<br>\end{cases}<br>$$<br>这里主要的目的就是让v更好的学习w的特性。</p>
+<h1 id="训练结果"><a href="#训练结果" class="headerlink" title="训练结果"></a>训练结果</h1><p>原文使用了caffe来搭建框架，对于同样大小的输入数据测试，VGG-16可以达到top-1只有25.6%，top-5只有8.7%的Error，而VGG-19更是可以达到25.5%和8.0%的Error。</p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-6/88874671.jpg" alt=""></p>
+<p>对于多中大小的输入输入数据，VGG不但不弱，反而还要强一点</p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-6/73217940.jpg" alt=""></p>
+<p>和之前的比较，简直把2年前的结果轰成渣了</p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-6/21533577.jpg" alt=""></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>VGG探索了一条将CNN go deeper的路，这也是当年的主题，但是VGG有什么弊端呢？</p>
+<ol>
+<li>慢，训练的非常慢，原文在2个Nvidia Titan Black上训练了2周多，看了网上的别人复现实验，训练一两个月的大有人在</li>
+<li>层数多了以后容易产生degradation，反而不如层数少的，这并非是过拟合的问题。</li>
 </ol>
 
       
@@ -423,6 +426,8 @@ $$y=f(x,\theta)$$
           
             <a href="/tags/机器学习/" rel="tag">#机器学习</a>
           
+            <a href="/tags/论文研读/" rel="tag">#论文研读</a>
+          
         </div>
       
 
@@ -430,17 +435,13 @@ $$y=f(x,\theta)$$
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/10/03/一种基于Dual坐标下降法的SVM/" rel="next" title="一种基于Dual坐标下降法的SVM">
-                <i class="fa fa-chevron-left"></i> 一种基于Dual坐标下降法的SVM
+              <a href="/2016/10/06/【论文研读】VGG网络模型——Very Deep Convolutional NetWorks/" rel="next" title="NetWorks">
+                <i class="fa fa-chevron-left"></i> NetWorks
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/10/04/将CNN说清楚/" rel="prev" title="将CNN说清楚">
-                将CNN说清楚 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -504,8 +505,8 @@ $$y=f(x,\theta)$$
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/10/03/深入MLPs/"
-           data-title="深入MLPs" data-url="http://lvvan.top/2016/10/03/深入MLPs/">
+      <div class="ds-thread" data-thread-key="2016/10/06/NetWorks/"
+           data-title="【论文研读】VGG网络模型——Very Deep Convolutional NetWorks" data-url="http://lvvan.top/2016/10/06/NetWorks/">
       </div>
     
   </div>
@@ -604,7 +605,7 @@ $$y=f(x,\theta)$$
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#多层感知机"><span class="nav-number">1.</span> <span class="nav-text">多层感知机</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BP算法"><span class="nav-number">2.</span> <span class="nav-text">BP算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第1阶段：激励传播"><span class="nav-number">2.1.</span> <span class="nav-text">第1阶段：激励传播</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第2阶段：权重更新"><span class="nav-number">2.2.</span> <span class="nav-text">第2阶段：权重更新</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#网络结构"><span class="nav-number">1.</span> <span class="nav-text">网络结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#输入"><span class="nav-number">1.1.</span> <span class="nav-text">输入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#卷积层"><span class="nav-number">1.2.</span> <span class="nav-text">卷积层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#激活层"><span class="nav-number">1.3.</span> <span class="nav-text">激活层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#池化层"><span class="nav-number">1.4.</span> <span class="nav-text">池化层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#全连接层FC"><span class="nav-number">1.5.</span> <span class="nav-text">全连接层FC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dropout"><span class="nav-number">1.6.</span> <span class="nav-text">dropout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#softmax"><span class="nav-number">1.7.</span> <span class="nav-text">softmax</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Training"><span class="nav-number">2.</span> <span class="nav-text">Training</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#训练结果"><span class="nav-number">3.</span> <span class="nav-text">训练结果</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
           </div>
         </section>

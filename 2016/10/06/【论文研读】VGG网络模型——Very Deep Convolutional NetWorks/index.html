@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="机器学习," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -84,28 +84,37 @@
 
 
 
-<meta name="description" content="多层感知机MLPs（多层感知机，Deep feedforward networks），也叫前向神经网络（feedforward neural networks）或者深度前向网络（Deep feedforward networks）。不过大家一般还是习惯将其称为MLPs。
-对于MLPs，解决的还是一个输入输出问题。假如有输入向量$x$，那么定义输出向量
-$$y=f(x,\theta)$$
-之所以称之">
+<meta name="description" content="是翩翩公子，也是浊世烟枪
+是三分剑侠，又是三分骚客
+爱自由又言慎独
+明是非却性激愤
+轻装上阵，不忘万里山河
+欲登云天，谁人去我阡陌
+将错就错无人之过
+似醒非醒本是寂寞">
 <meta property="og:type" content="article">
-<meta property="og:title" content="深入MLPs">
-<meta property="og:url" content="http://lvvan.top/2016/10/03/深入MLPs/index.html">
+<meta property="og:title" content="NetWorks">
+<meta property="og:url" content="http://lvvan.top/2016/10/06/【论文研读】VGG网络模型——Very Deep Convolutional NetWorks/index.html">
 <meta property="og:site_name" content="Lvvan的博客">
-<meta property="og:description" content="多层感知机MLPs（多层感知机，Deep feedforward networks），也叫前向神经网络（feedforward neural networks）或者深度前向网络（Deep feedforward networks）。不过大家一般还是习惯将其称为MLPs。
-对于MLPs，解决的还是一个输入输出问题。假如有输入向量$x$，那么定义输出向量
-$$y=f(x,\theta)$$
-之所以称之">
-<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-3/77959357.jpg">
-<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-3/30705907.jpg">
-<meta property="og:updated_time" content="2016-10-03T12:29:43.353Z">
+<meta property="og:description" content="是翩翩公子，也是浊世烟枪
+是三分剑侠，又是三分骚客
+爱自由又言慎独
+明是非却性激愤
+轻装上阵，不忘万里山河
+欲登云天，谁人去我阡陌
+将错就错无人之过
+似醒非醒本是寂寞">
+<meta property="og:updated_time" content="2016-10-06T06:57:59.656Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="深入MLPs">
-<meta name="twitter:description" content="多层感知机MLPs（多层感知机，Deep feedforward networks），也叫前向神经网络（feedforward neural networks）或者深度前向网络（Deep feedforward networks）。不过大家一般还是习惯将其称为MLPs。
-对于MLPs，解决的还是一个输入输出问题。假如有输入向量$x$，那么定义输出向量
-$$y=f(x,\theta)$$
-之所以称之">
-<meta name="twitter:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-3/77959357.jpg">
+<meta name="twitter:title" content="NetWorks">
+<meta name="twitter:description" content="是翩翩公子，也是浊世烟枪
+是三分剑侠，又是三分骚客
+爱自由又言慎独
+明是非却性激愤
+轻装上阵，不忘万里山河
+欲登云天，谁人去我阡陌
+将错就错无人之过
+似醒非醒本是寂寞">
 
 
 
@@ -126,9 +135,9 @@ $$y=f(x,\theta)$$
 
 
 
-  <link rel="canonical" href="http://lvvan.top/2016/10/03/深入MLPs/"/>
+  <link rel="canonical" href="http://lvvan.top/2016/10/06/【论文研读】VGG网络模型——Very Deep Convolutional NetWorks/"/>
 
-  <title> 深入MLPs | Lvvan的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title> NetWorks | Lvvan的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -268,7 +277,7 @@ $$y=f(x,\theta)$$
             
             
               
-                深入MLPs
+                NetWorks
               
             
           </h1>
@@ -280,8 +289,8 @@ $$y=f(x,\theta)$$
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-03T20:17:06+08:00" content="2016-10-03">
-              2016-10-03
+            <time itemprop="dateCreated" datetime="2016-10-06T14:57:59+08:00" content="2016-10-06">
+              2016-10-06
             </time>
           </span>
 
@@ -291,8 +300,8 @@ $$y=f(x,\theta)$$
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/10/03/深入MLPs/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/03/深入MLPs/" itemprop="commentsCount"></span>
+                <a href="/2016/10/06/【论文研读】VGG网络模型——Very Deep Convolutional NetWorks/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/06/【论文研读】VGG网络模型——Very Deep Convolutional NetWorks/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -320,81 +329,7 @@ $$y=f(x,\theta)$$
       
 
       
-        <h1 id="多层感知机"><a href="#多层感知机" class="headerlink" title="多层感知机"></a>多层感知机</h1><p>MLPs（多层感知机，<em>Deep feedforward networks</em>），也叫前向神经网络（<em>feedforward neural networks</em>）或者深度前向网络（<em>Deep feedforward networks</em>）。不过大家一般还是习惯将其称为MLPs。</p>
-<p>对于MLPs，解决的还是一个输入输出问题。假如有输入向量$x$，那么定义输出向量</p>
-<p>$$<br>y=f(x,\theta)<br>$$</p>
-<p>之所以称之为前向神经网络，是因为这个NN（Neural Network）完全是没有回头啊。如果考虑Feedback，这就变成了一个RNN模型。</p>
-<p>下面说说网络的概念吧。其实对于什么是网络，很简单。就是把许多函数串起来使用。比如说</p>
-<p>$$<br>f(x)=f_3(f_2(f_1(x)))<br>$$</p>
-<p>这就是网络的概念，是一种链式结构，链式网络。在这里，$f_1$就是第一层，$f_2$是第二层，$f_3$是第三层。层数代表网络的【深度】，这也是深度学习的深度由来。</p>
-<p>我们最终的目的是训练出一系列参数，使得input输入output输出。至于中间你做了些什么，我们一概不关心。所以对于MLPs或者其他的DL模型来说，中间的层都是Black Box。所以我们对于中间的这些层，有一个专有名称——隐层（hidden layer）。</p>
-<p>那么我们的MLPs和LR模型还有些什么差呢？难道仅仅是一个层数多，一个层数少吗？</p>
-<p>引用<a href="http://scikit-learn.org/dev/modules/neural\_networks\_supervised.html" target="_blank" rel="external">scikit-learn</a>上的一句话</p>
-<blockquote>
-<p>It is different from logistic regression, in that between the input and the output layer, there can be one or more non-linear layers, called hidden layers.</p>
-</blockquote>
-<p>没错，我们发现组成隐层的在这里都是非线性层。</p>
-<p>如何理解，假如有这样一个模型</p>
-<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-3/77959357.jpg" alt="MLPs\_1"></p>
-<p>原图可能有点大，模型从左往右流向。所以input进来之后，如果到达中间一层，如果这个过程是线性的。那么我们有</p>
-<p>$$<br>A=W_1X+b_1<br>$$<br>如果从中间层到达输出仍然是线性的</p>
-<p>$$<br>Y=W_2A+b_2<br>$$<br>那么我们发现</p>
-<p>$$<br>\begin{array}{}<br>Y=W_2(W_1X+b1)+b2\<br>=W_2W_1X+W_2b1+b2<br>\end{array}<br>$$</p>
-<p>还是线性的，这不相当于问题没变嘛，所以如果我们把这些层仍然当作是线性的显然是不可取的，没什么意义。我们知道，线性本身对于问题的描述是比较苍白的，手段很弱，没办法描绘很多复杂情况。所以我们借助非线性函数来描绘更加复杂的情况，所以这才是隐层存在的意义。</p>
-<p>对于我们的输入函数，通过激活函数将输入特征映射到隐层上面去。</p>
-<p>那么，激活函数又是什么？</p>
-<p>引用<a href="http://blog.csdn.net/u014088052/article/details/50923924" target="_blank" rel="external">激活函数的作用</a>的说法</p>
-<blockquote>
-<p>激活函数，并不是去激活什么，而是指如何把“激活的神经元的特征”通过函数把特征保留并映射出来（保留特征，去除一些数据中是的冗余），这是神经网络能解决非线性问题关键。</p>
-</blockquote>
-<p>这句话说的非常透析。从这里我们可以将隐层看作是两层：</p>
-<ol>
-<li>线性层</li>
-<li>激活层</li>
-</ol>
-<p>还就我们上面的图，首先到达线性层和之前的一样</p>
-<p>$$<br>A=W_1X+b_1<br>$$<br>接着，我们需要借助激活函数将其特征激活到非线性上去。我们使用函数$h()$函数作为激活函数，所以激活后</p>
-<p>$$<br>h(A)=h(W_1X+b_1)<br>$$<br>这就是我们站立在隐层上面的东西。也是下一层的输出，对于上面这个模型，我们下一层就是输出了。</p>
-<p>输出层一般使用softmax函数，对于这个问题，可以参考<a href="http://www.caffecn.cn/?/question/124" target="_blank" rel="external">这里</a>，假设$G(x)=softmax(x)$</p>
-<p>所以我们最终的输出就是</p>
-<p>$$<br>Y=G(W_2h(A)+b_2)=G(W_2h(W_1X+b_1)+b_2)<br>$$<br>到这里，是不是有点感觉了。</p>
-<p>画个流程图</p>
-<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-3/30705907.jpg" alt="流程图"></p>
-<h1 id="BP算法"><a href="#BP算法" class="headerlink" title="BP算法"></a>BP算法</h1><p>我们的目的就是在不断训练的过程中，计算出$W_1,W_2,b_1,b_2$的最优值。这样，对于一个未知output的input，可以很好的预测其output。</p>
-<p>那么怎么训练。损失函数！</p>
-<p>没错，和我们之前的LR一样，我们需要一个可以丈量预测值（训练出来的值）和真实值之间的差异，我们就要减小这个差异。</p>
-<p>那么，这个损失函数是针对哪一步的损失函数呢？很明显，我们只需要求取Y的损失函数即可，至于其中有多少复杂的计算，计算机会帮我们搞定。</p>
-<p>接着，计算了损失函数，我们需要通过梯度下降法来更新出$W_1,W_2,b_1,b_2$的值。</p>
-<p>到目前为止，你可能发现了，这样的训练是反向的，只有得到了输出，和真实label比较得出差异，才能更新。这就是BP（反向传播）算法。</p>
-<blockquote>
-<p>BP（Back Propagation）网络是1986年由Rumelhart和McCelland为首的科学家小组提出，是一种按误差逆传播算法训练的多层前馈网络，是目前应用最广泛的神经网络模型之一。</p>
-</blockquote>
-<p>BP实际上就是在原来的基础上加上了一个反馈，通过梯度下降法在一次input输入获得output之后，逆向传播，通过计算各层的负梯度来调整每一层的参数值，达到更新参数的下效果。</p>
-<p>引用<a href="https://zh.wikipedia.org/wiki/%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E7%AE%97%E6%B3%95" target="_blank" rel="external">wikipedia</a>上的说法：</p>
-<p>反向传播算法（BP算法）主要由两个阶段:激励传播、和权重更新。</p>
-<h2 id="第1阶段：激励传播"><a href="#第1阶段：激励传播" class="headerlink" title="第1阶段：激励传播"></a>第1阶段：激励传播</h2><p>每次迭代中的传播环节包含两步：</p>
-<ol>
-<li>（前向传播阶段）将训练输入送入网络以获得激励响应；</li>
-<li>（反向传播阶段）将激励响应同训练输入对应的目标输出求差，从而获得隐层和输出层的响应误差。</li>
-</ol>
-<h2 id="第2阶段：权重更新"><a href="#第2阶段：权重更新" class="headerlink" title="第2阶段：权重更新"></a>第2阶段：权重更新</h2><p>对于每个突触上的权重，按照以下步骤进行更新：</p>
-<ol>
-<li>将输入激励和响应误差相乘，从而获得权重的梯度；</li>
-<li>将这个梯度乘上一个比例并取反后加到权重上。</li>
-</ol>
-<p>这个比例（百分比）将会影响到训练过程的速度和效果，因此称为“训练因子”。梯度的方向指明了误差扩大的方向，因此在更新权重的时候需要对其取反，从而减小权重引起的误差。<br>第1和第2阶段可以反复循环迭代，直到网络的对输入的响应达到满意的预定的目标范围为止。</p>
-<p>推导过程可以参考维基百科。</p>
-<p>最终，通过BP算法，对于每一个连线上的权值进行调整，最终趋向于一个最优值。也就是说训练的越来越好。</p>
-<hr>
-<p>References</p>
-<ol>
-<li><a href="http://blog.csdn.net/stan1989/article/details/8565499/" target="_blank" rel="external">Machine Learning—感知器学习算法</a></li>
-<li><a href="http://blog.csdn.net/u014088052/article/details/50923924" target="_blank" rel="external">激活函数的作用</a></li>
-<li><a href="http://www.cnblogs.com/wentingtu/archive/2012/06/05/2536425.html" target="_blank" rel="external">BP神经网络模型与学习算法</a></li>
-<li><a href="http://www.cnblogs.com/biaoyu/archive/2015/06/20/4591304.html" target="_blank" rel="external">BP神经网络推导过程详解</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Backpropagation" target="_blank" rel="external">Backpropagation维基百科</a></li>
-</ol>
-
+        
       
     </div>
 
@@ -419,27 +354,21 @@ $$y=f(x,\theta)$$
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
-          
-        </div>
-      
 
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/10/03/一种基于Dual坐标下降法的SVM/" rel="next" title="一种基于Dual坐标下降法的SVM">
-                <i class="fa fa-chevron-left"></i> 一种基于Dual坐标下降法的SVM
+              <a href="/2016/10/04/将CNN说清楚/" rel="next" title="将CNN说清楚">
+                <i class="fa fa-chevron-left"></i> 将CNN说清楚
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/10/04/将CNN说清楚/" rel="prev" title="将CNN说清楚">
-                将CNN说清楚 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/10/06/NetWorks/" rel="prev" title="【论文研读】VGG网络模型——Very Deep Convolutional NetWorks">
+                【论文研读】VGG网络模型——Very Deep Convolutional NetWorks <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -504,8 +433,8 @@ $$y=f(x,\theta)$$
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/10/03/深入MLPs/"
-           data-title="深入MLPs" data-url="http://lvvan.top/2016/10/03/深入MLPs/">
+      <div class="ds-thread" data-thread-key="2016/10/06/【论文研读】VGG网络模型——Very Deep Convolutional NetWorks/"
+           data-title="NetWorks" data-url="http://lvvan.top/2016/10/06/【论文研读】VGG网络模型——Very Deep Convolutional NetWorks/">
       </div>
     
   </div>
@@ -604,7 +533,7 @@ $$y=f(x,\theta)$$
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#多层感知机"><span class="nav-number">1.</span> <span class="nav-text">多层感知机</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BP算法"><span class="nav-number">2.</span> <span class="nav-text">BP算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第1阶段：激励传播"><span class="nav-number">2.1.</span> <span class="nav-text">第1阶段：激励传播</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第2阶段：权重更新"><span class="nav-number">2.2.</span> <span class="nav-text">第2阶段：权重更新</span></a></li></ol></li></ol></div>
+              <p class="post-toc-empty">此文章未包含目录</p>
             
           </div>
         </section>
@@ -754,24 +683,7 @@ $$y=f(x,\theta)$$
   
     
     <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
-    <script src="/js/src/hook-duoshuo.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
+    <script src="/js/src/hook-duoshuo.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 

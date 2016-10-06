@@ -279,6 +279,301 @@
             
               
                 
+                <a class="post-title-link" href="/2016/09/05/【机器学习】3-线性代数初窥ML——PCA算法/" itemprop="url">
+                  【机器学习】3-线性代数初窥ML——PCA算法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-05T16:39:37+08:00" content="2016-09-05">
+              2016-09-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/05/【机器学习】3-线性代数初窥ML——PCA算法/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/05/【机器学习】3-线性代数初窥ML——PCA算法/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>今天来看看一个简单的机器学习算法，主成分分析（<em>Principal Component Analysis</em>，<strong>PCA</strong>）。这个只要用线性代数的知识就可以理解了，是不是有点兴奋？当然前提是所有条件最简的情况。</p>
+<p>首先来看看百度的定义，<strong>主成分分析（<em>Principal Component Analysis，PCA</em>）</strong>， 是一种统计方法。通过正交变换将一组可能存在相关性的变量转换为一组线性不相关的变量，转换后的这组变量叫主成分。这说的太抽象了。借用①的说法，PCA（Principal Components Analysis）即主成分分析，是图像处理中经常用到的降维方法。</p>
+<h1 id="假设"><a href="#假设" class="headerlink" title="假设"></a>假设</h1><ol>
+<li>我们有一个包含m个元素的点集${x^{(1)},…,x^{(m)}}$在$\mathbb{R}^n$空间内。</li>
+<li>我们能够接受对存储的点进行压缩，即使这会使得丢失一些精度。</li>
+</ol>
+<p>为什么我们要这么做呢？在图像或是其他的大数据存储的时候，一般以高维的形式存储，这个存储量是相当大的，索引起来也相当的麻烦，于是我们就有降维方式来对每个向量降维，这样对于整个系统的索引存储都将有显著性能提升。</p>
+<p>对于刚才我们假设的点集，对于每一个点向量$x^{(i)}\in\mathbb{R}^n$,在l维（l&lt; x）都有一个对应的向量$c^{(i)}\in\mathbb{R}^l$，这样就是压缩。我们的目标是<strong>找到这样的一个方法能够使得$f(x)=c$,以及其逆函数$x=g[f(c)]$</strong>。</p>
+<p>上述的逆函数就是PCA的方法。</p>
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>这里我们选择用矩阵乘法来作为这样一个将l维映射到n维的方法，我们使用$g(c)=Dc$，这里的$D\in\mathbb{R}^{n\times l}$是一个矩阵。</p>
+<p>如何找到这样的一个最佳D是较为困难的事情，为了追求简单方便计算，我们假设D的每一列都是正交的。实际上我们知道，如果D是一个方阵，D就是一个正交矩阵。</p>
+<blockquote>
+<p>With the problem as described so far, many solutions are possible, because we can increase the scale of $D_{:,i}$if we decrease $c_i$ proportionally for all points. To give the problem a unique solution, we constrain all of the columns of D to have unit norm.</p>
+</blockquote>
+<p>对于这样的一个问题，我们的目的是越简单越好，于是我们更进一步，把D的每一个列向量都看成是单位向量。</p>
+<p>OK，到此我们开始考虑这个问题的解决方法了。我们知道c是x的encode，所以寻找最优$c^*$就是我们的第一步。</p>
+<h2 id="第一步-寻找最优-c"><a href="#第一步-寻找最优-c" class="headerlink" title="第一步 寻找最优$c^*$"></a>第一步 寻找最优$c^*$</h2><p>如何找到最优的$c^*$ ，我们知道c是x的encode，在encode中，因为是降维，所以无法做到对c decode可以还原x，所以最优的 $c^*$就是能保证$g(c^*)$和x的距离最短，最接近，即是最优。</p>
+<p>这里是不是想到我们之前的范数？没错，这里正好就可以用得上，描述x和$g(c^*)$之间的距离，即x到$g(c^*)$的向量长度。我们这里用$L^2$范数。</p>
+<p>$$<br>c^*=argmin_c||x-g(c)||_2<br>$$</p>
+<p>为了方便，我们取$L^2$范数的平方。</p>
+<p>$$<br>c^*=argmin_c||x-g(c)||_2^2<br>$$</p>
+<p>根据$L^2$范数的计算方式，这个计算可以变为</p>
+<p>$$<br>||x-g(c)||_2^2\\<br>=(x-g(c))^\top(x-g(c))\\<br>=x^\top x-g(c)^\top x-x^\top g(c)+g(c)^\top g(c)\\<br>=x^\top x-2x^\top g(c)+g(c)^\top g(c)<br>$$</p>
+<p>即</p>
+<p>$$<br>c^*=argmin_c[x^\top x-2x^\top g(c)+g(c)^\top g(c)]<br>$$</p>
+<p>由上文，$g(c)=Dc$，并且向量内积必为正数，这个式子可以变为,<br>$$<br>c^*=argmin_c[x^\top x-2x^\top Dc+(Dc)^\top Dc]\\<br>=argmin_c[x^\top x-2x^\top Dc+c^\top D^\top Dc]\\<br>=argmin_c[-2x^\top Dc+c^\top D^\top Dc]<br>$$</p>
+<p>因为D是正交矩阵<br>$$<br>=argmin_c[-2x^\top Dc+c^\top c]<br>$$</p>
+<p>使用<strong>梯度下降法</strong>（后面再学），</p>
+<p>$$<br>\nabla_c(-2x^\top Dc+c^\top c)=0<br>-2D^\top x+2c=0<br>c=D^\top x<br>$$</p>
+<p>到这里，我们发现，原来只要<br>$$<br>f(x)=D^\top x<br>$$<br>就可以对x进行encode，其decode的结果$r(x)$如下，<br>$$<br>r(x)=g(f(x))=DD^\top x<br>$$</p>
+<h2 id="第二步-求最优矩阵D"><a href="#第二步-求最优矩阵D" class="headerlink" title="第二步 求最优矩阵D"></a>第二步 求最优矩阵D</h2><p>和之前寻找最优c的方法一样，我们仍然要找最接近x的$r(x)$,由于$r(x)$中用了矩阵D,这里我们使用Frobenius范数来衡量</p>
+<p>$$<br>D^*=arg\ min_D\sqrt{\sum_{i,j}(x_j^{(i)}-r(x^{(i)})_j)^2}\\<br>subject\  to\ D^\top D=I_l<br>$$</p>
+<p>考虑最极端的情况，若l=1，这时候D矩阵变成了d向量，上式又变成了一个求$L^2$范数的问题<br>$$<br>d^*=arg\ min_d\sum_i||x^{(i)}-dd^\top x^{(i)}||_2^2 \ \ \ subject\ to \ ||d||_2=1<br>$$<br>因为$d^\top x^{(i)}$是个标量，所以上式可以变为<br>$$<br>d^*=arg\ min_d\sum_i||x^{(i)}- x^{(i)\top} dd||_2^2 \ \ \ subject\ to \ ||d||_2=1<br>$$<br>考虑到计算sum不易，我们用矩阵来整合向量，将所有的x向量组合成X矩阵，有$X_{i,:}=x^{(i)\top}$,于是</p>
+<p>$$<br>d^*=arg\ min_d||X- X dd^\top||_F^2 \ \ \ subject\ to \ d^\top d=1<br>$$<br>根据<br>$$<br>||A||_F=\sqrt{Tr(AA^\top)}<br>$$<br>上式可变为</p>
+<p>$$<br>d^*=arg\ min_d||X- X dd^\top||_F^2\\<br>=arg\ min_dTr[(X-Xdd^\top)^\top(X-Xdd^\top)]\\<br>=arg\ min_dTr(X^\top X-X^\top Xdd^\top-dd^\top X^\top X+dd^\top X^\top Xdd^\top)\\<br>=arg\ min_dTr(X^\top X)-Tr(X^\top Xdd^\top)-Tr(dd^\top X^\top X)+Tr(dd^\top X^\top Xdd^\top)<br>$$<br>因为不包含d的部分不影响计算，故<br>$$<br>=arg\ min_d[-Tr(X^\top Xdd^\top)-Tr(dd^\top X^\top X)+Tr(dd^\top X^\top Xdd^\top)]\\<br>=arg\ min_d[-2Tr(X^\top Xdd^\top)+Tr(dd^\top X^\top Xdd^\top)]\\<br>=arg\ min_d[-2Tr(X^\top Xdd^\top)+Tr(X^\top Xdd^\top dd^\top)]\\<br>=arg\ min_d[-2Tr(X^\top Xdd^\top)+Tr(X^\top Xdd^\top)]\\<br>=arg\ min_d-Tr(X^\top Xdd^\top)\ \ s.t.\ \ d^\top d=1\\<br>=arg\ max_dTr(X^\top Xdd^\top)\ \ s.t.\ \ d^\top d=1\\<br>=arg\ max_dTr(d^\top X^\top Xd)\ \ s.t.\ \ d^\top d=1<br>$$<br>根据特征值和特征向量的知识，我们知道这个问题可以转化为求特征值的问题，假设$X^\top X$特征分解为$X^\top Xd=\lambda d$，$\lambda$是$X^\top X$的特征值，$d$是$X^\top X$的特征向量,所以上式就可以变为<br>$$<br>=arg\ max_dTr(d^\top(X^\top Xd))\ \ s.t.\ \ d^\top d=1\\<br>=arg\ max_dTr(d^\top(\lambda d))\ \ s.t.\ \ d^\top d=1\\<br>=arg\ max_dTr(\lambda d^\top d)\ \ s.t.\ \ d^\top d=1\\<br>=arg\ max_dTr(\lambda)\ \ s.t.\ \ d^\top d=1\\<br>=arg\ max_d \lambda\ \ s.t.\ \ d^\top d=1<br>$$<br>所以最优d就是$X^\top X$的特征值最大的特征向量。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>最终获得这样的一个结果，在这样的一个算法里面只用了线性代数的知识，不过问题本身已经是一再简化，作为后面研究复杂的PCA算法也算是铺垫一下。</p>
+<p>算法的重点在于：</p>
+<p>①为什么优化问题中用到了梯度下降法</p>
+<p>②由向量向矩阵的变换</p>
+<hr>
+<p>本文借鉴：</p>
+<p>① <a href="http://my.oschina.net/gujianhan/blog/225241" target="_blank" rel="external">PCA （主成分分析）详解 （写给初学者） 结合matlab</a></p>
+<p>① <a href="http://www.deeplearningbook.org/" target="_blank" rel="external">Deep Learning</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/21/【机器学习】2-矩阵和向量的一些计算/" itemprop="url">
+                  【机器学习】2-矩阵和向量的一些计算
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-21T20:57:26+08:00" content="2016-08-21">
+              2016-08-21
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/21/【机器学习】2-矩阵和向量的一些计算/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/21/【机器学习】2-矩阵和向量的一些计算/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>之前复习了一些矩阵的概念，还学习了一些范数的概念，现在是不是信心满满呢？</p>
+<h3 id="特殊的矩阵和向量"><a href="#特殊的矩阵和向量" class="headerlink" title="特殊的矩阵和向量"></a>特殊的矩阵和向量</h3><p><strong>Diagonal Matrices</strong>:对角矩阵，即除了中间i=j的地方，都是0的矩阵。单位矩阵也是对角矩阵。我们用<br>$$<br>diag(\mathbf{v})<br>$$<br>来表示对角矩阵，这里的<strong>v</strong>是<strong>向量</strong>，不是矩阵，是将对角矩阵的对角上的值，做成一个向量。</p>
+<p>而一般来说计算和对角矩阵的乘积，只要算这个向量和要乘3的矩阵的点乘就好了<br>$$<br>diag(\mathbf{v}) \mathbf{x}=\mathbf{v}\odot\mathbf{x}<br>$$</p>
+<p><strong>对称矩阵</strong>：自己和自己的转置相等的矩阵。即<br>$$<br>\mathbf{A}=\mathbf{A}^\top<br>$$</p>
+<blockquote>
+<p>Symmetric matrices often arise when the entries are generated by some function of two arguments that does not depend on the order of the arguments.</p>
+</blockquote>
+<p>对称矩阵经常用在那种由两个参数构成却和参数顺序无关的函数构成中。</p>
+<p><strong>单位向量</strong>：$L^2$范数为1的向量。<br>$$<br>\vert\vert{\mathbf{x}}\vert\vert_2=1<br>$$<br><strong>正交</strong>：分为向量正交和矩阵正交，两向量正交，意味着<br>$$<br>\mathbf{x}^\top\mathbf{y}=0<br>$$<br>矩阵正交则<br>$$<br>\mathbf{A}^\top\mathbf{A}=\mathbf{A}\mathbf{A}^\top=I<br>$$</p>
+<p>所以有<br>$$<br>\mathbf{A}^{-1}=\mathbf{A}^\top<br>$$</p>
+<hr>
+<h3 id="矩阵的特征分解"><a href="#矩阵的特征分解" class="headerlink" title="矩阵的特征分解"></a>矩阵的特征分解</h3><p>OK，就像是一个非素数可以成多个素数的乘积一样，矩阵也可以分解，这里学习一种分解方法——特征分解（<em>Eigendecomposition</em>），矩阵就被分解为特征向量和特征值了。</p>
+<p>$$<br>\mathbf{Av}=\mathbf{\lambda v}<br>$$<br>由上面可以知道，最初的定义就是矩阵和其特征向量乘积等于特征值和特征向量的乘积。</p>
+<p>如果特征向量有很多，那么可以组成一个亲友团，不对，应该是亲友矩阵$\mathbf{V}=[\mathbf{v}^{(1)},……,\mathbf{v}^{(n)}]$，而特征值则可以组成亲友向量$\mathbf{\lambda}=[\lambda_1,……,\lambda_n]$,于是原矩阵<strong>A</strong>就能分解为<br>$$<br>A=Vdiag(\lambda)V^{-1}<br>$$</p>
+<p>当然并非所有矩阵都可以有特征向量和特征值啦。首先，对称矩阵一定有。</p>
+<p>还有一些矩阵的特征向量和特征值的特性，之后再补充吧！</p>
+<hr>
+<h3 id="奇异值分解"><a href="#奇异值分解" class="headerlink" title="奇异值分解"></a>奇异值分解</h3><p>我们以前就学过矩阵分解为特征值和特征向量，其实矩阵还可以分解为奇异值和奇异向量，这个分解就叫做奇异值分解SVD（<em>Singular Value Decomposition</em>）。<br>$$<br>A=UDV^\top<br>$$</p>
+<p>和特征分解不同，每一个实矩阵都有奇异值分解。假设$A_{m\times n}$是一个矩阵，于是U是一个m×m矩阵，V是一个n×n的矩阵，而D也是一个m×n的矩阵。U和V是正交矩阵，D是对角矩阵。当然D不必是方阵。但是D的对角上的元素都是A矩阵的奇异值。</p>
+<p>U的每一列称之为左奇异向量，V的每一列称之为右奇异向量。</p>
+<p>奇异向量和特征向量是有一定关系的，A的左奇异向量就是$AA^\top$的特征向量；A的右奇异向量就是$A^\top A$的特征向量。A的非零奇异值是$AA^\top$和$A^\top A$的特征值的开方。</p>
+<p>这个分解 主要是为了下面的广义逆矩阵的学习。</p>
+<hr>
+<h3 id="广义逆矩阵"><a href="#广义逆矩阵" class="headerlink" title="广义逆矩阵"></a>广义逆矩阵</h3><p>我们之前的逆矩阵一般都是方阵。<br>一个线性方程组<br>$$<br>Ax=y<br>$$<br>如果A可逆，那么可以变为<br>$$<br>x=A^{-1}y<br>$$<br>如果A是奇异矩阵或者不是方阵的时候，怎么办呢？</p>
+<p>广义逆矩阵的方法允许我们定义A的广义逆为<br>$$<br>A^+=\lim_{\alpha\to0}(A^\top A+\alpha I)^{-1}A^\top<br>$$<br>一般用下面的公式代替。</p>
+<p>$$<br>A^+=VD^+U^\top<br>$$<br>U,D,V是A的奇异值分解的结果。而对角矩阵D的广义逆$D^+$即<strong>把D的非零元素取倒数，然后转置就可得到。</strong></p>
+<p>当A的列数大于行数，对于上述的线性方程，可能有多个解。</p>
+<p>当A的行数大于列数，对于上述的线性方程，可能没有解。这时，只能求得近似解了。</p>
+<hr>
+<h3 id="矩阵的迹"><a href="#矩阵的迹" class="headerlink" title="矩阵的迹"></a>矩阵的迹</h3><p>一般来说，矩阵的迹就是矩阵的主对角线对角元素的和。<br>$$<br>Tr(A)=\sum_iA_{i,j}<br>$$<br>这个可以来解释许多不太好解释、计算的操作。例如，计算Frobenius范数，<br>$$<br>\vert\vert{A}\vert\vert_F=\sqrt{Tr(AA^T)}<br>$$<br>这比把所有元素的平方和计算一遍快得多了。</p>
+<p>迹有许多特性，例如，矩阵的迹等于矩阵的转置的迹<br>$$<br>Tr(A)=Tr(A^\top)<br>$$<br>多个矩阵乘积的迹也可以有一个伪交换律的性质——最后一个可以拿到前面来，不能随便交换<br>$$<br>Tr(ABC)=Tr(CAB)=Tr(BCA)<br>$$<br>Or<br>$$<br>Tr(\prod^n_{i=1}F^{(i)})=Tr(F^{(n)}\prod^{n-1}_{i=1}F^{(i)})<br>$$<br>方向不能变哦,这个伪交换律无需考虑是否方阵</p>
+<p>标量的迹就是其本身。</p>
+<hr>
+<h3 id="行列式"><a href="#行列式" class="headerlink" title="行列式"></a>行列式</h3><h2 id="待补充"><a href="#待补充" class="headerlink" title="待补充"></a>待补充</h2>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/08/21/【机器学习】1-从线性代数开始/" itemprop="url">
                   【机器学习】1-从线性代数开始
                 </a>
@@ -459,7 +754,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-count">13</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
