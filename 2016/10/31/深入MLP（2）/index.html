@@ -1,0 +1,803 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="之前在MLP的第一部分，对于MLP的一个大致框架已经跃然纸上了，那么，在这一部分，我们来深究其中原理，深入理解它。
+再了解MLP多层感知机（MLPs），也叫前向传播网络，第一次是在1974年由Paul J. Werbos在其博士论文《Beyond regression : new tools for prediction and analysis in the behavioral science">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入MLP（2）">
+<meta property="og:url" content="http://lvvan.top/2016/10/31/深入MLP（2）/index.html">
+<meta property="og:site_name" content="Lvvan的博客">
+<meta property="og:description" content="之前在MLP的第一部分，对于MLP的一个大致框架已经跃然纸上了，那么，在这一部分，我们来深究其中原理，深入理解它。
+再了解MLP多层感知机（MLPs），也叫前向传播网络，第一次是在1974年由Paul J. Werbos在其博士论文《Beyond regression : new tools for prediction and analysis in the behavioral science">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-19/75548939.jpg">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-19/94685341.jpg">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-19/52594866.jpg">
+<meta property="og:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-19/89611779.jpg">
+<meta property="og:updated_time" content="2016-10-31T03:10:03.750Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入MLP（2）">
+<meta name="twitter:description" content="之前在MLP的第一部分，对于MLP的一个大致框架已经跃然纸上了，那么，在这一部分，我们来深究其中原理，深入理解它。
+再了解MLP多层感知机（MLPs），也叫前向传播网络，第一次是在1974年由Paul J. Werbos在其博士论文《Beyond regression : new tools for prediction and analysis in the behavioral science">
+<meta name="twitter:image" content="http://oegkvp6e0.bkt.clouddn.com/16-10-19/75548939.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://lvvan.top/2016/10/31/深入MLP（2）/"/>
+
+  <title> 深入MLP（2） | Lvvan的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lvvan的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">夜合花开香满庭，夜深微雨醉初醒</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                深入MLP（2）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-31T11:03:27+08:00" content="2016-10-31">
+              2016-10-31
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/31/深入MLP（2）/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/31/深入MLP（2）/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv"><i class="fa fa-file-o"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>之前在MLP的第一部分，对于MLP的一个大致框架已经跃然纸上了，那么，在这一部分，我们来深究其中原理，深入理解它。</p>
+<h1 id="再了解MLP"><a href="#再了解MLP" class="headerlink" title="再了解MLP"></a>再了解MLP</h1><p>多层感知机（MLPs），也叫前向传播网络，第一次是在1974年由Paul J. Werbos在其博士论文《Beyond regression : new tools for prediction and analysis in the behavioral sciences》[1]中提出，但是当时反响并不强烈，直到1986年，David E. Rumelhart, Geoffrey E. Hinton 和 Ronald J. Williams等人又把这个冷饭拿出来炒了炒，结果一炒就炒出了人工神经网络的第二次热潮。包括后来Yann LeCun拿来做CNN也发迹于此。</p>
+<p>那么MLP可以用在哪些地方呢？</p>
+<p>Cortez在2002[2]年介绍了一些经典的应用，包括</p>
+<ul>
+<li>分类Classification（离散输出）：①皮马印第安人糖尿病鉴别；②声纳鉴别矿藏是岩石还是煤矿</li>
+<li>回归Regression（连续输出）：①乳腺癌概率预测；②Pumadyn机器臂训练</li>
+<li>加强学习Reinforcement（输出不确定）：①自动驾驶；②西洋棋训练（和阿法狗一样）</li>
+</ul>
+<p>实际上这也是AI的主要应用所在了（当然其前景还是十分广阔的，不会局限于此），MLP作为应用最广泛的深度学习算法，一直以来也扮演者较好的角色。</p>
+<h1 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h1><p>对于MLP的基础结构，看了深入MLP（1）大家也比较熟悉了，大概就类似于这样</p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-19/75548939.jpg" alt="MLP结构"></p>
+<p>实际上还有一种包含shortcut的结构</p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-19/94685341.jpg" alt="包含shortcut的MLP"></p>
+<p>看到这个，有的同学是不是很熟悉，有点像CVPR 2015 Best Paper的<strong>ResNet</strong>[3]的结构，有可能其想法就是发源于此。shortcut的定义是两层越过多层进行连接。不过大多数的神经网络的结构都是没有shortcut的。</p>
+<p>每个MLP都是一个【有限有向不循环的graph结构】，熟悉TensorFlow的同学可能会比较敏感，这就是TensorFlow的Graph设计理念。</p>
+<p>什么是Graph结构[4]呢？</p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-19/52594866.jpg" alt="Graph"></p>
+<p>Graph就是一些节点的集合，节点之间相互连接，这些连接被叫做边缘（edge），当edge有方向的话，这个edge就叫做有向edge，edge终点的node称为突触（vertex）。例如上图就是一个5突触，7 edge的graph。</p>
+<p>放到神经网络上就是从一个神经元到另一个神经元的计算过程。MLP一般会有三种神经元：输入神经元，输出神经元和隐元，因为MLP是一个不循环的graph，所以edge都是只有一个方向的。所以神经元可以聚集起来，形成【层】的概念，因此MLP一般由三部分组成，输入层，隐层和输出层。</p>
+<p>输入层比较简单，我们暂且不论，对于隐层和输出层的神经元，我们将它放大了看，大概是这样</p>
+<p><img src="http://oegkvp6e0.bkt.clouddn.com/16-10-19/89611779.jpg" alt="神经元结构"></p>
+<p>其输入为$net_i$，输出为$s_i$，所以我们就有了</p>
+<p>$$<br>net_i=\sum_{j\in{Pred(i)}}{(w_{ij}s_j)}+w_{i0}<br>$$</p>
+<p>$$<br>s_i=f(net_i)<br>$$</p>
+<p>$Pred(i)$代表的是和这个神经元直连的神经元的输出（不用$i-1$，是考虑到可能存在shortcut）。这里的函数$f$代表的就是激活函数。对于为什么要使用激活函数，可以参考我的上一篇深入MLP（1），里面已经详细讲解。</p>
+<p>不过关于激活函数，这里还要再补充一下，激活函数一般分为两种，线性和非线性，不只是非线性一种，线性激活函数即$f(x)=x$，非线性激活函数就比较多了，像是sigmoid,tanh,softmax,ReLU等等。</p>
+<p>那么如何选择激活函数呢？H. N. Mhaskar在其文章[5]中给出了一些经验上的介绍，由于那时候还没有ReLU等，补充一下就成了下面的（如果有误，请不吝指正）</p>
+<ul>
+<li>一般回归问题：隐层使用sigmoid，ReLU，tanh都可以，softmax一般不会使用，输出层一定使用线性</li>
+<li>2分类问题：隐层和输出层都使用sigmoid，ReLU，tanh，不会选择线性，输出层不适用softmax</li>
+<li>多分类问题：隐层使用sigmoid，ReLU，tanh，输出层使用softmax，ReLU</li>
+</ul>
+<p><strong>总结一下</strong>：①回归输出神经元使用线性激活；②分类问题输出使用非线性激活；③隐元全部使用非线性激活，最好使用sigmoid或者ReLU。</p>
+<p><strong>注意</strong>，激活函数永远只是针对一个神经元的操作。这个神经元一般是隐元或者是输出神经元，对输入激活的也有，这种情况不多，一般是对输入进行划分类别才会使用。</p>
+<p>对于如何选择损失函数，也有这样一个有些普适性的说法，适合大部分情况，可能有些情况不适用。</p>
+<ul>
+<li>回归问题：SSE(Sum of Squared Error)</li>
+<li>分类问题：CE(Cross Entropy)</li>
+</ul>
+<p>这样我们就形成了一个标准的前向神经网络，也就是MLP。对于只有上述结构的MLP，实际上是只有半截的，在没有BP算法之前，每个连接上的权重只能通过猜，一次次的调参才能得到较好的结果。</p>
+<h1 id="BP训练"><a href="#BP训练" class="headerlink" title="BP训练"></a>BP训练</h1><p>在有了一个网络结构以后，我们就要进行训练，MLP的层与层之间都是全连接，所以需要训练的参数是相当的多的。为了减少参数，后面才有了CNN等各种方法。</p>
+<p>我们现在开始训练网络，首先BP的原理，大家都知道，使用的是梯度下降法来最小化损失函数自动调整参数。对于梯度下降法，我们需要确定三个问题</p>
+<ul>
+<li>如何较好的初始化？</li>
+<li>如何选择学习率？</li>
+<li>真的能收敛吗？</li>
+</ul>
+<p>答：①一般初始化都是随机的数值；②太小的学习率收敛速度会很慢，太大又容易不收敛，后来就衍生出了Momentum的方法，就是用来解决学习率的问题；但是mumentum产生额外的参数，而且容易使得梯度下降走之字形（锯齿状）③必须选择正确的学习率，否则不容易收敛，甚至容易收敛到局部极值上</p>
+<p>假设采用SSE的损失函数，那么我们有</p>
+<p>$$<br>E(w,\mathcal{D})=\frac{1}{2}\sum^p_{i=1}{||f(x^{(i)};w)-d^{(i)}||^2}<br>$$</p>
+<p>对于CNN，W是矩阵，是卷积核，对于MLP，w是向量。<code>$d^{(i)}$</code>代表真实的标签，我们这里的输出以向量表示，对于10分类的问题，输出是一个长度为10的向量，每一位代表了输入该类，那么，某一类就可以表示为该位为1，其余为0的向量。</p>
+<p>那么，为了使得我们训练的效果越好，就要使得训练值和目标值的 差别越小，意即</p>
+<p>$$<br>\min_{w}E(w;\mathcal{D})<br>$$</p>
+<p>所以需要求其偏导数，这里采用链式法则求偏导，具体过程如果参考维基百科，发现其是针对一个输入输出对$(x^{(i)}, y^{(i)})$而言，上标仅仅代表其是第几个输入输出对。而我们上面的表示方式是针对整个数据集的。实际上计算是类似的。</p>
+<p>一定要注意，所有BP的计算都是针对一个连接参数而言的，因此有多少连接就有多少次BP的计算。但是在编写程序的时候，一般可以将过程表示为矩阵计算。其原理[7]是这样的，也可以参考[8]。意即按层来推进计算，每一层都有一个weight矩阵（向量），和偏置向量，每次计算一层的变化量来更新一层的参数。最终将每一层的变化量组合成一个矩阵，和原来的矩阵做操作，这样就一次性更新了全部。</p>
+<p>简言之，步骤如下（n层网络）：</p>
+<ol>
+<li>初始化权值矩阵的数组，每两层之间都是一个矩阵，大概是这样<br>$$<br>W=\begin{bmatrix} \begin{bmatrix}Matrix_1 \end{bmatrix}&amp; , &amp;\begin{bmatrix}Matrix_2 \end{bmatrix}&amp;, … , &amp; \begin{bmatrix}Matrix_n \end{bmatrix} \end{bmatrix}<br>$$</li>
+<li>初始化偏置向量的数组（每一层都由神经元个数个标量构成偏置向量），大概是这样<br>$$<br>B=\begin{bmatrix} \begin{bmatrix}Vector_1 \end{bmatrix}&amp; , &amp;\begin{bmatrix}Vector_2 \end{bmatrix}&amp;, … , &amp; \begin{bmatrix}Vector_n \end{bmatrix} \end{bmatrix}<br>$$</li>
+<li>跑一次前向网络获得输出（含激活）</li>
+<li>初始化（全零）$\nabla w$和$\nabla b$</li>
+<li>计算每一层的未激活输出，并将输出组合为数组 </li>
+<li>计算每一层的激活后输出，并将输出组合为数组</li>
+<li>计算最后一层误差（总误差，和真实输出比较）</li>
+<li>从后往前推进，计算每一层的偏置和权值变化，然后改变$\nabla w$和$\nabla b$里相应的值，计算完全部层后返回$\nabla w$和$\nabla b$的值</li>
+<li>通过$\nabla w$和$\nabla b$更新W和B，从而使得所有参数一次性更新</li>
+<li>按照batch大小，等不停迭代</li>
+</ol>
+<p>可以参考[8]的代码，将其注释一下贴在下面</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Network</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">     <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, sizes)</span>:</span></div><div class="line">        <span class="string">"""The list ``sizes`` contains the number of neurons in the</span></div><div class="line">        respective layers of the network.  For example, if the list</div><div class="line">        was [2, 3, 1] then it would be a three-layer network, with the</div><div class="line">        first layer containing 2 neurons, the second layer 3 neurons,</div><div class="line">        and the third layer 1 neuron.  The biases and weights for the</div><div class="line">        network are initialized randomly, using a Gaussian</div><div class="line">        distribution with mean 0, and variance 1.  Note that the first</div><div class="line">        layer is assumed to be an input layer, and by convention we</div><div class="line">        won't set any biases for those neurons, since biases are only</div><div class="line">        ever used in computing the outputs from later layers."""</div><div class="line">        self.num_layers = len(sizes)</div><div class="line">        self.sizes = sizes</div><div class="line">        self.biases = [np.random.randn(y, <span class="number">1</span>) <span class="keyword">for</span> y <span class="keyword">in</span> sizes[<span class="number">1</span>:]]<span class="comment">#对于每一层生成偏置的随机向量（矩阵）</span></div><div class="line">        self.weights = [np.random.randn(y, x)</div><div class="line">                        <span class="keyword">for</span> x, y <span class="keyword">in</span> zip(sizes[:<span class="number">-1</span>], sizes[<span class="number">1</span>:])]<span class="comment">#对于每一层生成前一层和本层神经元个数长宽的矩阵</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">feedforward</span><span class="params">(self, a)</span>:</span></div><div class="line">        <span class="string">"""Return the output of the network if ``a`` is input."""</span></div><div class="line">        <span class="keyword">for</span> b, w <span class="keyword">in</span> zip(self.biases, self.weights):</div><div class="line">            a = sigmoid(np.dot(w, a)+b)</div><div class="line">        <span class="keyword">return</span> a</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">SGD</span><span class="params">(self, training_data, epochs, mini_batch_size, eta,</span></span></div><div class="line">            test_data=None):</div><div class="line">        <span class="string">"""Train the neural network using mini-batch stochastic</span></div><div class="line">        gradient descent.  The ``training_data`` is a list of tuples</div><div class="line">        ``(x, y)`` representing the training inputs and the desired</div><div class="line">        outputs.  The other non-optional parameters are</div><div class="line">        self-explanatory.  If ``test_data`` is provided then the</div><div class="line">        network will be evaluated against the test data after each</div><div class="line">        epoch, and partial progress printed out.  This is useful for</div><div class="line">        tracking progress, but slows things down substantially."""</div><div class="line">        <span class="keyword">if</span> test_data: n_test = len(test_data)</div><div class="line">        n = len(training_data)</div><div class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> xrange(epochs):</div><div class="line">            random.shuffle(training_data)</div><div class="line">            mini_batches = [</div><div class="line">                training_data[k:k+mini_batch_size]</div><div class="line">                <span class="keyword">for</span> k <span class="keyword">in</span> xrange(<span class="number">0</span>, n, mini_batch_size)]</div><div class="line">            <span class="keyword">for</span> mini_batch <span class="keyword">in</span> mini_batches:</div><div class="line">                self.update_mini_batch(mini_batch, eta)</div><div class="line">            <span class="keyword">if</span> test_data:</div><div class="line">                <span class="keyword">print</span> <span class="string">"Epoch &#123;0&#125;: &#123;1&#125; / &#123;2&#125;"</span>.format(</div><div class="line">                    j, self.evaluate(test_data), n_test)</div><div class="line">            <span class="keyword">else</span>:</div><div class="line">                <span class="keyword">print</span> <span class="string">"Epoch &#123;0&#125; complete"</span>.format(j)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">update_mini_batch</span><span class="params">(self, mini_batch, eta)</span>:</span></div><div class="line">        <span class="string">"""Update the network's weights and biases by applying</span></div><div class="line">        gradient descent using backpropagation to a single mini batch.</div><div class="line">        The "mini_batch" is a list of tuples "(x, y)", and "eta"</div><div class="line">        is the learning rate."""</div><div class="line">        nabla_b = [np.zeros(b.shape) <span class="keyword">for</span> b <span class="keyword">in</span> self.biases]</div><div class="line">        nabla_w = [np.zeros(w.shape) <span class="keyword">for</span> w <span class="keyword">in</span> self.weights]</div><div class="line">        <span class="keyword">for</span> x, y <span class="keyword">in</span> mini_batch:</div><div class="line">            delta_nabla_b, delta_nabla_w = self.backprop(x, y)</div><div class="line">            nabla_b = [nb+dnb <span class="keyword">for</span> nb, dnb <span class="keyword">in</span> zip(nabla_b, delta_nabla_b)]</div><div class="line">            nabla_w = [nw+dnw <span class="keyword">for</span> nw, dnw <span class="keyword">in</span> zip(nabla_w, delta_nabla_w)]</div><div class="line">        self.weights = [w-(eta/len(mini_batch))*nw <span class="comment">#更新后的权重，初始的权重是随机生成的</span></div><div class="line">                        <span class="keyword">for</span> w, nw <span class="keyword">in</span> zip(self.weights, nabla_w)]</div><div class="line">        self.biases = [b-(eta/len(mini_batch))*nb <span class="comment">#更新后的偏置，初始的偏置也是随机生成的</span></div><div class="line">                       <span class="keyword">for</span> b, nb <span class="keyword">in</span> zip(self.biases, nabla_b)]</div><div class="line"></div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backprop</span><span class="params">(self, x, y)</span>:</span></div><div class="line">        <span class="string">"""Return a tuple "(nabla_b, nabla_w)" representing the</span></div><div class="line">        gradient for the cost function C_x.  "nabla_b" and</div><div class="line">        "nabla_w" are layer-by-layer lists of numpy arrays, similar</div><div class="line">        to "self.biases" and "self.weights"."""</div><div class="line">        nabla_b = [np.zeros(b.shape) <span class="keyword">for</span> b <span class="keyword">in</span> self.biases]<span class="comment">#初始化</span></div><div class="line">        nabla_w = [np.zeros(w.shape) <span class="keyword">for</span> w <span class="keyword">in</span> self.weights]<span class="comment">#初始化</span></div><div class="line">        <span class="comment"># feedforward</span></div><div class="line">        activation = x</div><div class="line">        activations = [x] <span class="comment"># list to store all the activations, layer by layer</span></div><div class="line">        zs = [] <span class="comment"># list to store all the z vectors, layer by layer</span></div><div class="line">        <span class="keyword">for</span> b, w <span class="keyword">in</span> zip(self.biases, self.weights):<span class="comment">#对于每一层来说</span></div><div class="line">            z = np.dot(w, activation)+b<span class="comment">#计算无激活输出</span></div><div class="line">            zs.append(z)<span class="comment">#所以最后zs获得的是所有层的输出的一个矩阵</span></div><div class="line">            activation = sigmoid(z)</div><div class="line">            activations.append(activation)<span class="comment">#激活后的所有层的 输出的一个矩阵</span></div><div class="line">        <span class="comment"># backward pass</span></div><div class="line">        delta = self.cost_derivative(activations[<span class="number">-1</span>], y) * \</div><div class="line">            sigmoid_prime(zs[<span class="number">-1</span>])<span class="comment">#最后一层的层误差，后向肯定要从最后一层开始的</span></div><div class="line">        nabla_b[<span class="number">-1</span>] = delta</div><div class="line">        nabla_w[<span class="number">-1</span>] = np.dot(delta, activations[<span class="number">-2</span>].transpose())</div><div class="line">        <span class="comment"># Note that the variable l in the loop below is used a little</span></div><div class="line">        <span class="comment"># differently to the notation in Chapter 2 of the book.  Here,</span></div><div class="line">        <span class="comment"># l = 1 means the last layer of neurons, l = 2 is the</span></div><div class="line">        <span class="comment"># second-last layer, and so on.  It's a renumbering of the</span></div><div class="line">        <span class="comment"># scheme in the book, used here to take advantage of the fact</span></div><div class="line">        <span class="comment"># that Python can use negative indices in lists.</span></div><div class="line">        <span class="keyword">for</span> l <span class="keyword">in</span> xrange(<span class="number">2</span>, self.num_layers):</div><div class="line">            z = zs[-l]<span class="comment">#从后往前推进</span></div><div class="line">            sp = sigmoid_prime(z)</div><div class="line">            delta = np.dot(self.weights[-l+<span class="number">1</span>].transpose(), delta) * sp</div><div class="line">            nabla_b[-l] = delta<span class="comment">#计算这一层的偏置变化</span></div><div class="line">            nabla_w[-l] = np.dot(delta, activations[-l<span class="number">-1</span>].transpose())<span class="comment">#计算这一层的权值变化</span></div><div class="line">        <span class="keyword">return</span> (nabla_b, nabla_w)<span class="comment">#返回</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">cost_derivative</span><span class="params">(self, output_activations, y)</span>:</span></div><div class="line">        <span class="string">"""Return the vector of partial derivatives \partial C_x /</span></div><div class="line">        \partial a for the output activations."""</div><div class="line">        <span class="keyword">return</span> (output_activations-y) </div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span><span class="params">(z)</span>:</span></div><div class="line">        <span class="string">"""The sigmoid function."""</span></div><div class="line">        <span class="keyword">return</span> <span class="number">1.0</span>/(<span class="number">1.0</span>+np.exp(-z))</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sigmoid_prime</span><span class="params">(z)</span>:</span></div><div class="line">        <span class="string">"""Derivative of the sigmoid function."""</span></div><div class="line">        <span class="keyword">return</span> sigmoid(z)*(<span class="number">1</span>-sigmoid(z))</div></pre></td></tr></table></figure>
+<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>Cybenko在1989[6]证明了，任何一个2分类问题都可以使用一个隐层的MLP来<strong>实现</strong>，任何存在上下限的连续的回归函数（任意精度）都可以通过一个隐层的MLP逼近。</p>
+<p>更新完之后就算是完成了更新了，那么，仍然有几个问题需要关注下。</p>
+<ol>
+<li>我们应该什么时候更新参数？</li>
+</ol>
+<p>答：实际上，我们很少每一个输入输出对就更新一次，这样收敛很慢。一般选择将一个batch里面的Error累积起来，最小化这个累积的Cost函数，这样收敛会更快。如果嫌一个batch效果不够，还有mini-batch方法，还有多个epoch来计算。</p>
+<ol>
+<li>需要多少隐层和隐元？</li>
+</ol>
+<p>答：一般靠猜。太小训练偏差太大，容易欠拟合。太多又容易训练慢，还过拟合，有人通过正则化解决这个问题。具体多少，没有确定的说法。经验上来说从（输入个数+输出个数）/2附近找。</p>
+<h1 id="具体应用"><a href="#具体应用" class="headerlink" title="具体应用"></a>具体应用</h1><p>开头的地方提出了部分应用，这里之后再补充。</p>
+<hr>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ol>
+<li><a href="https://www.researchgate.net/publication/35657389_Beyond_regression_new_tools_for_prediction_and_analysis_in_the_behavioral_sciences" target="_blank" rel="external">Werbos P. Beyond regression: New tools for prediction and analysis in the behavioral sciences[J].1974.</a></li>
+<li><a href="http://www4.di.uminho.pt/~mpr/etsfnnm.pdf" target="_blank" rel="external">Cortez P, Rocha M, Neves J. Evolving time series forecasting neural network models[J]. 2001.</a></li>
+<li><a href="https://arxiv.org/abs/1512.03385" target="_blank" rel="external">He K, Zhang X, Ren S, et al. Deep residual learning for image recognition[J]. arXiv preprint arXiv:1512.03385, 2015.</a></li>
+<li><a href="http://www.martinbroadhurst.com/graph-data-structures.html" target="_blank" rel="external">GRAPH DATA STRUCTURES</a></li>
+<li><a href="http://papers.nips.cc/paper/874-how-to-choose-an-activation-function.pdf" target="_blank" rel="external">Mhaskar H N, Micchelli C A. How to choose an activation function[J]. Advances in Neural Information Processing Systems, 1994: 319-319.</a></li>
+<li><a href="http://link.springer.com/content/pdf/10.1007%2FBF02551274.pdf" target="_blank" rel="external">Cybenko G. Approximation by superpositions of a sigmoidal function[J]. Mathematics of control, signals and systems, 1989, 2(4): 303-314.</a></li>
+<li><a href="http://page.mi.fu-berlin.de/rojas/neural/chapter/K7.pdf" target="_blank" rel="external">Chapter 7 The backpropagation algorithm of Neural Networks - A Systematic Introduction by Raúl Rojas (ISBN 978-3540605058)</a></li>
+<li><a href="http://neuralnetworksanddeeplearning.com/chap2.html" target="_blank" rel="external">How the backpropagation algorithm works</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/pay.JPG" alt="百色梵 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>觉得作者写的不错，就给点赏钱吧！_(:з」∠)_</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/06/【论文研读】VGG网络模型——Very Deep Convolutional NetWorks/" rel="next" title="【论文研读】VGG网络模型——Very Deep Convolutional NetWorks">
+                <i class="fa fa-chevron-left"></i> 【论文研读】VGG网络模型——Very Deep Convolutional NetWorks
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/10/31/深入MLP（2）/"
+           data-title="深入MLP（2）" data-url="http://lvvan.top/2016/10/31/深入MLP（2）/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://img1.doubanio.com/icon/ul61277596-19.jpg"
+               alt="百色梵" />
+          <p class="site-author-name" itemprop="name">百色梵</p>
+          <p class="site-description motion-element" itemprop="description">是翩翩公子，也是浊世烟枪
+是三分剑侠，又是三分骚客
+爱自由又言慎独
+明是非却性激愤
+轻装上阵，不忘万里山河
+欲登云天，谁人去我阡陌
+将错就错无人之过
+似醒非醒本是寂寞
+</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#再了解MLP"><span class="nav-number">1.</span> <span class="nav-text">再了解MLP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结构"><span class="nav-number">2.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BP训练"><span class="nav-number">3.</span> <span class="nav-text">BP训练</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题"><span class="nav-number">4.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#具体应用"><span class="nav-number">5.</span> <span class="nav-text">具体应用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">6.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">百色梵</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"lvvan"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
